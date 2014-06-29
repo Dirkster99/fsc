@@ -1,0 +1,10 @@
+﻿<Window x:Class="TestFolderBrowser.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+    <Button Content="Test Folder Browser" Click="Button_Click"
+            MinHeight="23" MinWidth="75"
+            HorizontalAlignment="Left" VerticalAlignment="Top" />
+  </Grid>
+</Window>

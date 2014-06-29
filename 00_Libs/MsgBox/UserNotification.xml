@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UserNotification</name>
+    </assembly>
+    <members>
+        <member name="T:UserNotification.Events.ShowNotificationEventHandler">
+            <summary>
+            Event handler delegation method to be used when handling <seealso cref="T:UserNotification.Events.ShowNotificationEvent"/> events.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:UserNotification.Events.ShowNotificationEvent">
+            <summary>
+            This class is used to message the fact that the sub-system would like to show another notification
+            to the user.
+            
+            Expectation: The connected view is processing the event and shows a (pop-up) message to the user.
+            </summary>
+        </member>
+        <member name="M:UserNotification.Events.ShowNotificationEvent.#ctor(System.String,System.String,System.Windows.Media.Imaging.BitmapImage)">
+            <summary>
+               Initializes a new instance of the ShowNotificationEvent class.
+            </summary>
+            <param name="imageUrl"></param>
+            <param name="message"></param>
+            <param name="title"></param>
+        </member>
+        <member name="P:UserNotification.Events.ShowNotificationEvent.Title">
+            <summary>
+            Get the title string of notification.
+            </summary>
+        </member>
+        <member name="P:UserNotification.Events.ShowNotificationEvent.Message">
+            <summary>
+            Get message of notification.
+            </summary>
+        </member>
+        <member name="P:UserNotification.Events.ShowNotificationEvent.ImageIcon">
+            <summary>
+            Get url string to an image resource that represents this type of notification.
+            </summary>
+        </member>
+        <member name="T:UserNotification.Local.Strings">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:UserNotification.Local.Strings.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:UserNotification.Local.Strings.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:UserNotification.Local.Strings.Close_Tip_Label">
+            <summary>
+              Looks up a localized string similar to Close.
+            </summary>
+        </member>
+        <member name="T:UserNotification.ViewModel.NotificationViewModel">
+            <summary>
+            The notification viewmodel organized the backend logic necessary to show the
+            information content for notifying users about something happening ...
+            
+            Based on: http://www.codeproject.com/Articles/499241/Growl-Alike-WPF-Notifications
+            </summary>
+        </member>
+        <member name="M:UserNotification.ViewModel.NotificationViewModel.#ctor">
+            <summary>
+            Class constructor
+            </summary>
+        </member>
+        <member name="M:UserNotification.ViewModel.NotificationViewModel.OnPropertyChanged(System.String)">
+            <summary>
+            Standard method for INotifyPropertyChanged interface.
+            </summary>
+            <param name="propertyName"></param>
+        </member>
+        <member name="E:UserNotification.ViewModel.NotificationViewModel.PropertyChanged">
+            <summary>
+            Standard event of INotifyPropertyChanged interface.
+            </summary>
+        </member>
+        <member name="P:UserNotification.ViewModel.NotificationViewModel.Id">
+            <summary>
+            Get/set notification id.
+            </summary>
+        </member>
+        <member name="P:UserNotification.ViewModel.NotificationViewModel.Title">
+            <summary>
+            Get/set title of notification
+            </summary>
+        </member>
+        <member name="P:UserNotification.ViewModel.NotificationViewModel.Message">
+            <summary>
+            Get/set message of notification
+            </summary>
+        </member>
+        <member name="P:UserNotification.ViewModel.NotificationViewModel.ImageIcon">
+            <summary>
+            Get/set ImageUrl to (icon) image shown in the notification
+            </summary>
+        </member>
+        <member name="P:UserNotification.ViewModel.NotificationViewModel.IsTopmost">
+            <summary>
+            Get/set property to determine whether notification
+            is shown in a topmost window or not.
+            </summary>
+        </member>
+        <member name="P:UserNotification.ViewModel.NotificationViewModel.ViewHeight">
+            <summary>
+            Get/set height of view that displays the notification.
+            </summary>
+        </member>
+        <member name="P:UserNotification.ViewModel.NotificationViewModel.ViewWidth">
+            <summary>
+            Get/set width of view that displays the notification.
+            </summary>
+        </member>
+        <member name="T:UserNotification.View.INotifyableViewModel">
+            <summary>
+            This interface can be used to connect viewmodel with view
+            when showing notifications that can pop-up over a window
+            or over all currently visible windows (IsTopMost = true in notification viewmodel)
+            </summary>
+        </member>
+        <member name="E:UserNotification.View.INotifyableViewModel.ShowNotificationMessage">
+            <summary>
+            Expose an event that is triggered when the viewmodel tells its view:
+            Here is another notification message please show it to the user.
+            </summary>
+        </member>
+        <member name="T:UserNotification.View.NotifyableWindow">
+            <summary>
+            Interaction logic for NotifyableWindow.xaml
+            
+            Based on: 
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.NotifyableWindow.#ctor">
+            <summary>
+            Class Constructor
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.NotifyableWindow.MsgBoxView_DataContextChanged(System.Object,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            Method is invoked when the datacontext is changed.
+            This requires changing event hook-up on attached viewmodel to enable
+            notification event conversion from viewmodel into view.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:UserNotification.View.NotifyableWindow.ViewModel_ShowNotificationMessage(System.Object,UserNotification.Events.ShowNotificationEvent)">
+            <summary>
+            Method is invoked when the viewmodel tells the view: Show another notification to the user.
+            (override this method if you want to use a different viewmodel and custom (re-styled) notification view.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:UserNotification.View.NotifyableWindow.SetNextNotificationPosition(UserNotification.ViewModel.NotificationViewModel)">
+            <summary>
+            Method is invoked to re-position the notification view such that it is close to the owning view.
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.NotifyableWindow.OnMsgBoxView_Loaded(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Method is invoked when the window is Loaded to set the notification owner property.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:UserNotification.View.NotifyableWindow.NotifyableWindow_Unloaded(System.Object,System.EventArgs)">
+            <summary>
+            Free notification resources when parent window is being closed.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:UserNotification.View.NotificationCloseButton">
+            <summary>
+            Implements a look-less control that should function and look like a window (X) close button.
+            </summary>
+        </member>
+        <member name="T:UserNotification.View.NotificationWindow">
+            <summary>
+            This class is used to view the content of a notification window.
+            
+            Based on: http://www.codeproject.com/Articles/499241/Growl-Alike-WPF-Notifications
+            </summary>
+            <summary>
+            NotificationWindow
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.NotificationWindow.#ctor">
+            <summary>
+            Class constructor
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.NotificationWindow.CloseInvokedByParent">
+            <summary>
+            Is called by parent window to tell the window to close for good
+            since parent view is also closing.
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.NotificationWindow.OnClosing(System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Overrides closing window behaviour to avoid that a user can close a notification
+            via ALT+F4 or Esc key. Overiding this is required since a window that is closed
+            cannot be shown via Show again - one would have to re-create the entire window
+            with new - which is not part of the current concept.
+            
+            Current concept is: use Show/hide durring livetime of hosting window and close
+            when hosting window is closed.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:UserNotification.View.NotificationWindow.ShowNotification(UserNotification.ViewModel.NotificationViewModel)">
+            <summary>
+            Show a new notification to the user.
+            </summary>
+            <param name="notification"></param>
+        </member>
+        <member name="M:UserNotification.View.NotificationWindow.HideNotification">
+            <summary>
+            Hide the notification window.
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.NotificationWindow.NotificationWindowSizeChanged(System.Object,System.Windows.SizeChangedEventArgs)">
+            <summary>
+            This method is invoked via XAML code to tell the code behind
+            that a notification is about to dissapper.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:UserNotification.View.NotificationWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="P:UserNotification.View.NotificationWindow.CanClose">
+            <summary>
+            Determine whether window can be closed or whether closing
+            via standard close functions should be cancelled in Closing override method.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,15 @@
+debug/
+release/
+build/
+bin/
+obj/
+cache/
+log/
+tmp/
+
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+*.sou

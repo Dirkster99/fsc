@@ -1,0 +1,129 @@
+﻿<UserControl x:Class="FileListViewTest.FileListItemOptionsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+
+             xmlns:localview="clr-namespace:FileListViewTest"
+             xmlns:conv="clr-namespace:FileListViewTest.Converter"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <Grid>
+  <Grid.RowDefinitions>
+    <RowDefinition Height="Auto" />
+    <RowDefinition Height="Auto" />
+    <RowDefinition Height="Auto" />
+    <RowDefinition Height="*" />
+  </Grid.RowDefinitions>
+    <!-- This is only interesting for testing 
+    <GroupBox Header="FolderComboBoxViewModel" HorizontalAlignment="Stretch">
+      <StackPanel Orientation="Vertical">
+        <Grid Margin="3">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <TextBlock Text="Selected Item:" Margin="3,3,3,0" Grid.Row="0"/>
+          <TextBox Margin="3,1,3,3"
+                Text="{Binding Path=FolderTextPath.SelectedItem,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
+                TextWrapping="WrapWithOverflow"
+                IsReadOnly="True"
+                BorderThickness="1"
+                BorderBrush="AliceBlue"
+                Grid.Row="1"/>
+        </Grid>
+
+        <Grid Margin="3">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <TextBlock Text="Current Folder:" Margin="3,3,3,0" Grid.Row="0"/>
+          <TextBox Margin="3,1,3,3"
+                Text="{Binding Path=FolderTextPath.CurrentFolder,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
+                TextWrapping="WrapWithOverflow"
+                IsReadOnly="True"
+                BorderThickness="1"
+                BorderBrush="AliceBlue"
+                Grid.Row="1"/>
+        </Grid>
+      </StackPanel>
+    </GroupBox>
+-->
+    <GroupBox Header="FolderListViewModel" HorizontalAlignment="Stretch" Grid.Row="0">
+      <StackPanel Orientation="Vertical">
+        <Grid Margin="3">
+          <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+          </Grid.RowDefinitions>
+          <TextBlock Text="Selected Folder:" Margin="3,3,3,0" Grid.Row="0"/>
+          <TextBox Margin="3,1,3,3"
+                    Text="{Binding Path=SelectedFolder,UpdateSourceTrigger=PropertyChanged,Mode=OneWay}"
+                    TextWrapping="WrapWithOverflow"
+                    IsReadOnly="True"
+                    BorderThickness="1"
+                    BorderBrush="AliceBlue"
+                    Grid.Row="1"/>
+        </Grid>
+      </StackPanel>
+    </GroupBox>
+
+    <GroupBox Header="FileListViewModel" HorizontalAlignment="Stretch"  Grid.Row="1">
+      <StackPanel Orientation="Vertical">
+        <CheckBox Content="Show Icons"
+                  DataContext="{Binding FolderItemsView}" 
+                  IsChecked="{Binding ShowIcons}" />
+
+        <CheckBox Content="Show Folders"
+                  DataContext="{Binding FolderItemsView}" 
+                  IsChecked="{Binding ShowFolders}" />
+
+        <CheckBox Content="Show Hidden Files/Folders"
+                  DataContext="{Binding FolderItemsView}" 
+                  IsChecked="{Binding ShowHidden}" />
+      </StackPanel>
+    </GroupBox>
+
+    <Label Content="Folder Bookmarks:" Grid.Row="2"/>
+    <Grid  Grid.Row="3">
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition Width="*"/>
+      </Grid.ColumnDefinitions>
+
+      <StackPanel Grid.Column="0">
+      <Button Margin="3" Content="+" VerticalAlignment="Top" Width="30"
+                Command="{Binding DataContext.AddRecentFolder, RelativeSource={RelativeSource AncestorType={x:Type localview:MainWindow}}}"
+                  
+                > <!-- CommandParameter="{Binding FolderTextPath.SelectedRecentLocation}" -->
+        <Button.CommandParameter>
+          <MultiBinding Converter="{conv:MultiBindingToObjectListConverter}">
+            <Binding Path="RecentFolders.SelectedItem" />
+            <Binding Path="." /> <!-- This is the viewmodel that request to add a recent folder entry -->
+          </MultiBinding>
+        </Button.CommandParameter>
+      </Button>
+      <Button Margin="3" Content="-" VerticalAlignment="Top" Width="30"
+              Command="{Binding DataContext.RemoveRecentFolder, RelativeSource={RelativeSource AncestorType={x:Type localview:MainWindow}}}"
+              ><!-- CommandParameter="{Binding FolderTextPath.SelectedRecentLocation}" -->
+        <Button.CommandParameter>
+          <MultiBinding Converter="{conv:MultiBindingToObjectListConverter}">
+            <Binding Path="RecentFolders.SelectedItem" />
+            <Binding Path="." />
+            <!-- This is the viewmodel that request to add a recent folder entry -->
+          </MultiBinding>
+        </Button.CommandParameter>
+      </Button>
+      </StackPanel>
+
+      <ListBox ItemsSource="{Binding RecentFolders.DropDownItems}"
+                SelectedItem="{Binding RecentFolders.SelectedItem}"
+                ToolTip="Recent File List"
+                VerticalAlignment="Stretch"
+                HorizontalAlignment="Stretch"
+                Grid.Column="1" />
+    </Grid>
+  </Grid>
+</UserControl>
