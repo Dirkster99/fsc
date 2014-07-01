@@ -98,6 +98,10 @@ namespace FileListView.ViewModels
       }
     }
 
+    /// <summary>
+    /// Gets a string that can be displayed as a tooltip for the
+    // viewmodel data pointing at the path of the currently selected folder.
+    /// </summary>
     public string CurrentFolderToolTip
     {
       get
@@ -116,15 +120,14 @@ namespace FileListView.ViewModels
     /// that the current path selection has changed (via selection changed
     /// event or keyup events).
     /// 
-    /// The parameter <paramref name="p"/> can be an array of objects
-    /// containing objects of the <seealso cref="FSItemVM"/> type or
+    /// The parameter p can be an array of objects
+    /// containing objects of the FSItemVM type or
     /// p can also be string.
     /// 
     /// Each parameter item that adheres to the above types results in
     /// a OnCurrentPathChanged event being fired with the folder path
     /// as parameter.
     /// </summary>
-    /// <param name="p"></param>
     public ICommand SelectionChanged
     {
       get

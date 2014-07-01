@@ -67,7 +67,7 @@ namespace FolderBrowser.Views.Behaviours
     /// <summary>
     /// This method is called when the TextChanged event occurs. The sender should be the control
     /// on which this behaviour is attached - so we convert the sender into a <seealso cref="TextBox"/>
-    /// and receive the Command through the <seealso cref="GetDropCommand"/> getter listed above.
+    /// and receive the Command through the GetDropCommand getter listed above.
     /// 
     /// The <paramref name="e"/> parameter contains the standard <seealso cref="DragEventArgs"/> data,
     /// which is unpacked and realesed upon the bound command.

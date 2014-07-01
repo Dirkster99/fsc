@@ -11,6 +11,9 @@ namespace FileListView.Views
   /// </summary>
   public class BindingProxy : Freezable
   {
+    /// <summary>
+    /// Backing store field of the Data dependency property.
+    /// </summary>
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), new UIPropertyMetadata(null));
 

@@ -1,4 +1,4 @@
-﻿namespace FileSystemModels.Models
+namespace FileSystemModels.Models
 {
   /// <summary>
   /// Wrapper class for <seealso cref="System.Environment.SpecialFolder"/> items.
@@ -17,6 +17,9 @@
       this.Path = PathModel.SpecialFolderHasPath(specialFolder);
     }
 
+    /// <summary>
+    /// Protected class constructor
+    /// </summary>
     protected CustomFolderItemModel()
     {
     }

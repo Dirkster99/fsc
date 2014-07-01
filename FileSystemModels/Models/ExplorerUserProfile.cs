@@ -1,8 +1,14 @@
-﻿namespace FileSystemModels.Models
+namespace FileSystemModels.Models
 {
   using System;
   using System.Xml.Serialization;
 
+  /// <summary>
+  /// Class implements an object that handles the user profile settings
+  /// of the explorer component. The user profile settings are typically
+  /// settings that change in every session and are therefore stored and
+  /// retrieved on EACH application start and shut-down.
+  /// </summary>
   [Serializable]
   [XmlRoot(ElementName = "ExplorerUserProfile", IsNullable = true)]
   public class ExplorerUserProfile
@@ -37,6 +43,10 @@
     #endregion properties
 
     #region methods
+    /// <summary>
+    /// Resets the currently viewed path to the path indicated by <paramref name="path"/>.
+    /// </summary>
+    /// <param name="path"></param>
     public void SetCurrentPath(string path)
     {
       this.CurrentPath = new PathModel(path, FSItemType.Folder);

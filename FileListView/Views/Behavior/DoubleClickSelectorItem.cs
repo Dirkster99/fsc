@@ -1,4 +1,4 @@
-﻿namespace FileListView.Views.Behavior
+namespace FileListView.Views.Behavior
 {
   using System.Windows;
   using System.Windows.Controls.Primitives;
@@ -30,11 +30,17 @@
 
     #region methods
     #region attached dependency property methods
+    /// <summary>
+    /// Gets the value of the DoubleClickItemCommand dependency property.
+    /// </summary>
     public static ICommand GetDoubleClickItemCommand(DependencyObject obj)
     {
       return (ICommand)obj.GetValue(DoubleClickItemCommandProperty);
     }
 
+    /// <summary>
+    /// Sets the value of the DoubleClickItemCommand dependency property.
+    /// </summary>
     public static void SetDoubleClickItemCommand(DependencyObject obj, ICommand value)
     {
       obj.SetValue(DoubleClickItemCommandProperty, value);

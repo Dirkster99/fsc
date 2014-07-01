@@ -22,6 +22,9 @@ namespace FileListView.ViewModels
   public class FileListViewViewModel : Base.ViewModelBase, IFileListViewModel
   {
     #region fields
+    /// <summary>
+    /// Log4Net facility to log errors and warnings for this class.
+    /// </summary>
     protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     private string mFilterString = string.Empty;
@@ -479,6 +482,10 @@ namespace FileListView.ViewModels
       }
     }
 
+    /// <summary>
+    /// Toggles whether a file filter is currently applied on a list
+    /// of files or not.
+    /// </summary>
     public ICommand ToggleIsFilteredCommand
     {
       get
@@ -640,8 +647,7 @@ namespace FileListView.ViewModels
     /// Process command when a hyperlink has been clicked.
     /// Start a web browser and let it browse to where this points to...
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sFileName"></param>
     private static void OpenInWindowsCommand_Executed(string sFileName)
     {
       if (string.IsNullOrEmpty(sFileName) == true)
@@ -663,8 +669,7 @@ namespace FileListView.ViewModels
     /// <summary>
     /// A hyperlink has been clicked. Start a web browser and let it browse to where this points to...
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sFileName"></param>
     private static void CopyPathCommand_Executed(string sFileName)
     {
       if (string.IsNullOrEmpty(sFileName) == true)

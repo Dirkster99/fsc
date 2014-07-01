@@ -1,11 +1,11 @@
-﻿namespace FileListView.ViewModels.Interfaces
+namespace FileListView.ViewModels.Interfaces
 {
   using FileSystemModels.Interfaces;
   using FolderBrowser.ViewModels.Interfaces;
 
   /// <summary>
   /// Interface implements a folder/file view model class
-  /// that can be used to dispaly filesystem related content in an <see cref="ItemsControl"/>.
+  /// that can be used to dispaly filesystem related content in an ItemsControl.
   /// </summary>
   public interface IFolderListViewModel : IConfigExplorerSettings
   {
@@ -46,7 +46,7 @@
     /// This collection can then be used in the folder combobox drop down
     /// list to store user specific customized folder short-cuts.
     /// </summary>
-    /// <param name="folderPath"></param>
+    /// <param name="selectNewFolder"></param>
     void AddRecentFolder(string folderPath, bool selectNewFolder = true);
 
     /// <summary>

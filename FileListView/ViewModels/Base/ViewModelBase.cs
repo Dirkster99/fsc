@@ -19,7 +19,7 @@ namespace FileListView.ViewModels.Base
     /// Tell bound controls (via WPF binding) to refresh their display.
     /// 
     /// Sample call: this.NotifyPropertyChanged(() => this.IsSelected);
-    /// where 'this' is derived from <seealso cref="BaseViewModel"/>
+    /// where 'this' is derived from <seealso cref="ViewModelBase"/>
     /// and IsSelected is a property.
     /// </summary>
     /// <typeparam name="TProperty"></typeparam>

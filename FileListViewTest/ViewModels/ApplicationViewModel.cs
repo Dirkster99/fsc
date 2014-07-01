@@ -10,7 +10,7 @@ namespace FileListViewTest.ViewModels
   using FolderBrowser.ViewModels.Interfaces;
 
   /// <summary>
-  /// Class implements ...
+  /// Class implements an application viewmodel that manages the test application.
   /// </summary>
   public class ApplicationViewModel : FileListViewTest.ViewModels.Base.ViewModelBase
   {
@@ -38,6 +38,8 @@ namespace FileListViewTest.ViewModels
       this.FolderView.AddFilter("All Files", "*.*");
 
       this.SyncFolderTreeFileListTest = new SnycFolderTreeAndFileListViewModel();
+
+      this.SyncFolderTreeFileListTest.SynchronizedFolderView.NavigateToFolder(@"G:\Myfiles\");
     }
     #endregion constructor
 

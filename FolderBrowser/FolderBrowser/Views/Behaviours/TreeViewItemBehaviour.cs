@@ -1,12 +1,19 @@
-﻿namespace FolderBrowser.Views.Behaviours
+namespace FolderBrowser.Views.Behaviours
 {
   using System.Windows;
   using System.Windows.Controls;
 
+  /// <summary>
+  /// Class implements an attached behaviour to bring a selected tree view item
+  /// into view when selection is driven by the viewmodel (not the user).
+  /// </summary>
   public static class TreeViewItemBehaviour
   {
     #region IsBroughtIntoViewWhenSelected
     #region IsBroughtIntoViewWhenSelectedDependencyProperty
+    /// <summary>
+    /// Backing storage of the IsBroughtIntoViewWhenSelected dependency property.
+    /// </summary>
     public static readonly DependencyProperty IsBroughtIntoViewWhenSelectedProperty =
         DependencyProperty.RegisterAttached(
         "IsBroughtIntoViewWhenSelected",
@@ -14,11 +21,17 @@
         typeof(TreeViewItemBehaviour),
         new UIPropertyMetadata(false, OnIsBroughtIntoViewWhenSelectedChanged));
 
+    /// <summary>
+    /// Gets the value of the IsBroughtIntoViewWhenSelected dependency property.
+    /// </summary>
     public static bool GetIsBroughtIntoViewWhenSelected(TreeViewItem treeViewItem)
     {
       return (bool)treeViewItem.GetValue(IsBroughtIntoViewWhenSelectedProperty);
     }
 
+    /// <summary>
+    /// Sets the value of the IsBroughtIntoViewWhenSelected dependency property.
+    /// </summary>
     public static void SetIsBroughtIntoViewWhenSelected(TreeViewItem treeViewItem, bool value)
     {
       treeViewItem.SetValue(IsBroughtIntoViewWhenSelectedProperty, value);

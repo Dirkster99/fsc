@@ -5,6 +5,8 @@ namespace FileSystemModels.Interfaces
   /// <summary>
   /// Define an interface for configuring and reading setting
   /// and user profile data for the explorer (tool window) viewmodel.
+  ///
+  /// This interface includes usage of the <see cref="ExplorerSettingsModel"/> class.
   /// </summary>
   public interface IConfigExplorerSettings
   {

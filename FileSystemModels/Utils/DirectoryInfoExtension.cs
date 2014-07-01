@@ -6,7 +6,7 @@ namespace FileSystemModels.Utils
   using System.Linq;
 
   /// <summary>
-  /// Class implements an extension of the <seealso="DirectoryInfo"> class.
+  /// Class implements an extension of the <seealso cref="System.IO.DirectoryInfo"/> class.
   /// </summary>
   public static class DirectoryInfoExtension
   {
@@ -15,7 +15,7 @@ namespace FileSystemModels.Utils
     /// with multiple filter aruments.
     /// </summary>
     /// <param name="dir">Points at the folder that is queried for files and folder entries.</param>
-    /// <param name="extensions">Contains the extension that we want to file for, eg: string[]{"*.*"} or string[]{"*.tex", "*.txt"}</param>
+    /// <param name="extensions">Contains the extension that we want to filter for, eg: string[]{"*.*"} or string[]{"*.tex", "*.txt"}</param>
     public static IEnumerable<FileInfo> SelectFilesByFilter(this DirectoryInfo dir,
                                                             params string[] extensions)
     {
@@ -62,26 +62,27 @@ namespace FileSystemModels.Utils
         yield break;
       }
 
-/**
-      try
-      {
-        foreach (var pattern in patterns)
-        {
-          matches = matches.Concat(dir.EnumerateFiles(pattern, SearchOption.TopDirectoryOnly));
-        }
-      }
-      catch (UnauthorizedAccessException)
-      {
-        Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
-        yield break;
-      }
-      catch (PathTooLongException ptle)
-      {
-        Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
-        yield break;
-      }
-**/
-      ////Console.WriteLine("Returning all objects that match the pattern(s) '{0}'", string.Join(",", patterns));
+
+////      try
+////      {
+////        foreach (var pattern in patterns)
+////        {
+////          matches = matches.Concat(dir.EnumerateFiles(pattern, SearchOption.TopDirectoryOnly));
+////        }
+////      }
+////      catch (UnauthorizedAccessException)
+////      {
+////        Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
+////        yield break;
+////      }
+////      catch (PathTooLongException ptle)
+////      {
+////        Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
+////        yield break;
+////      }
+////
+////      Console.WriteLine("Returning all objects that match the pattern(s) '{0}'", string.Join(",", patterns));
+
       foreach (var file in matches)
       {
         if (file as FileInfo != null)
@@ -89,6 +90,12 @@ namespace FileSystemModels.Utils
       }
     }
 
+    /// <summary>
+    /// Method implements an extension that lets us filter (sub-)directory entries
+    /// with multiple filter aruments.
+    /// </summary>
+    /// <param name="dir">Points at the folder that is queried for sub-directory entries.</param>
+    /// <param name="extensions">Contains the extension that we want to filter for, eg: string[]{"*.*"} or string[]{"*.tex", "*.txt"}</param>
     public static IEnumerable<DirectoryInfo> SelectDirectoriesByFilter(this DirectoryInfo dir,
                                                                        params string[] extensions)
     {

@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.ViewModels
+namespace FolderBrowser.ViewModels
 {
   using FileSystemModels.Models;
 
@@ -19,6 +19,9 @@
       this.Path = PathModel.SpecialFolderHasPath(specialFolder);
     }
 
+    /// <summary>
+    /// Protected standard class constructor
+    /// </summary>
     protected CustomFolderItemViewModel()
     {
     }

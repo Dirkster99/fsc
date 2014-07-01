@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.ViewModels
+namespace FolderBrowser.ViewModels
 {
   using System;
   using System.Collections.ObjectModel;
@@ -197,7 +197,7 @@
 
     /// <summary>
     /// Implements a command that adds a removes a folder location.
-    /// Expected parameter is of type <seealso cref="FSItemVM"/>.
+    /// Expected parameter is of type FSItemVM.
     /// </summary>
     public ICommand RecentFolderRemoveCommand
     {
@@ -213,7 +213,7 @@
 
     /// <summary>
     /// Implements a command that adds a recent folder location.
-    /// Expected parameter is of type <seealso cref="FSItemVM"/>.
+    /// Expected parameter is of type FSItemVM.
     /// </summary>
     public ICommand RecentFolderAddCommand
     {
@@ -330,6 +330,7 @@
     /// Assign the currently selected folder with this path.
     /// </summary>
     /// <param name="selectedFolder"></param>
+    /// <param name="updateViews"></param>
     private void SetSelectedFolder(string selectedFolder, bool updateViews)
     {
       this.SelectedFolder = PathModel.NormalizePath(selectedFolder);

@@ -138,6 +138,10 @@ namespace FileListView.ViewModels
     #endregion properties
 
     #region methods
+    /// <summary>
+    /// Clears the current list of filters and resets everything
+    /// that is file filter related to null.
+    /// </summary>
     public void ClearFilter()
     {
       if (this.CurrentItems != null)
@@ -190,6 +194,13 @@ namespace FileListView.ViewModels
       }
     }
 
+    /// <summary>
+    /// Attempts to find a filter in the list of current filters
+    /// based on the current display name and actual filter string (eg '*.tex').
+    /// </summary>
+    /// <param name="filterDisplayName"></param>
+    /// <param name="filterText"></param>
+    /// <returns>A collection of filters found or null.</returns>
     public IEnumerable<FilterItemViewModel> FindFilter(string name, string filterString)
     {
       if (this.CurrentItems == null)
@@ -212,6 +223,12 @@ namespace FileListView.ViewModels
       return null;
     }
 
+    /// <summary>
+    /// Applies the current display name and actual filter string (eg '*.tex')
+    /// as current file filter on the list of files being displayed.
+    /// </summary>
+    /// <param name="filterDisplayName"></param>
+    /// <param name="filterText"></param>
     public void SetCurrentFilter(string filterDisplayName, string filterText)
     {
       // Attempt to find this filter item

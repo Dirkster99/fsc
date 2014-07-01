@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.Converters
+namespace FolderBrowser.Converters
 {
   using System;
   using System.Windows;
@@ -9,7 +9,7 @@
   using FolderBrowser.ViewModels;
 
   /// <summary>
-  /// XAML markup extension to convert <seealso cref="BrowseItemType"/> enum members
+  /// XAML markup extension to convert <seealso cref="FSItemType"/> enum members
   /// into <seealso cref="ImageSource"/> from ResourceDictionary or fallback from static resource.
   /// </summary>
   [ValueConversion(typeof(FSItemType), typeof(ImageSource))]
@@ -17,6 +17,9 @@
   public class BrowseItemTypeToImageConverter : MarkupExtension, IMultiValueConverter
   {
     #region fields
+    /// <summary>
+    /// Log4net logger facility.
+    /// </summary>
     protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     private static BrowseItemTypeToImageConverter converter;
@@ -54,7 +57,7 @@
     }
 
     /// <summary>
-    /// Converts a <seealso cref="BrowseItemType"/> enumeration member
+    /// Converts a <seealso cref="FSItemType"/> enumeration member
     /// into a dynamic resource or a fallback image Url (if dynamic resource is not available).
     /// </summary>
     /// <param name="values"></param>
@@ -91,6 +94,14 @@
         return this.GetNotExpandedImages((FSItemType)itemType);
     }
 
+    /// <summary>
+    /// Converts back method is not implemented and will throw an exception.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetTypes"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
     {
       throw new NotImplementedException();

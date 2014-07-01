@@ -1,15 +1,18 @@
-﻿namespace FolderBrowser.ViewModels.Interfaces
+namespace FolderBrowser.ViewModels.Interfaces
 {
   using System.Collections.ObjectModel;
   using System.Windows.Input;
   using FileSystemModels.Models;
 
   /// <summary>
-  /// Implment the interface for a viewmodel for one folder entry for a collection of folders.
+  /// Implement the interface for a viewmodel for one folder entry for a collection of folders.
   /// </summary>
   public interface IFolderViewModel
   {
     #region properties
+    /// <summary>
+    /// Gets the actual name of the folder that is represented by this object.
+    /// </summary>
     string FolderName { get; }
 
     /// <summary>
@@ -46,7 +49,7 @@
 
     /// <summary>
     /// Gets a command that will open the selected item with the current default application
-    /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// in Windows. The selected item (path to a file) is expected as FSItemVM parameter.
     /// (eg: Item is HTML file -> Open in Windows starts the web browser for viewing the HTML
     /// file if thats the currently associated Windows default application.
     /// </summary>
@@ -54,7 +57,7 @@
 
     /// <summary>
     /// Gets a command that will copy the path of an item into the Windows Clipboard.
-    /// The item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// The item (path to a file) is expected as FSItemVM parameter.
     /// </summary>
     ICommand CopyPathCommand { get; }
     #endregion properties

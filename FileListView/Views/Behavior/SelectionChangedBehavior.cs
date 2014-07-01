@@ -102,12 +102,9 @@ namespace FileListView.Views.Behavior
     }
 
     /// <summary>
-    /// This method is called when the Drop event occurs. The sender should be the control
+    /// This method is called when the selection changed event occurs. The sender should be the control
     /// on which this behaviour is attached - so we convert the sender into a <seealso cref="UIElement"/>
-    /// and receive the Command through the <seealso cref="GetDropCommand"/> getter listed above.
-    /// 
-    /// The <paramref name="e"/> parameter contains the standard <seealso cref="DragEventArgs"/> data,
-    /// which is unpacked and reales upon the bound command.
+    /// and receive the Command through the <seealso cref="GetChangedCommand"/> getter listed above.
     /// 
     /// This implementation supports binding of delegate commands and routed commands.
     /// </summary>

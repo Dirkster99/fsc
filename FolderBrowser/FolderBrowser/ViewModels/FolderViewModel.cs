@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.ViewModels
+namespace FolderBrowser.ViewModels
 {
   using System;
   using System.Collections.ObjectModel;
@@ -18,6 +18,9 @@
   public class FolderViewModel : Base.ViewModelBase, IFolderViewModel
   {
     #region fields
+    /// <summary>
+    /// Log4net logger facility for this class.
+    /// </summary>
     protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     private bool mIsSelected;
@@ -234,7 +237,7 @@
 
     /// <summary>
     /// Gets a command that will open the selected item with the current default application
-    /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// in Windows. The selected item (path to a file) is expected as FSItemVM parameter.
     /// (eg: Item is HTML file -> Open in Windows starts the web browser for viewing the HTML
     /// file if thats the currently associated Windows default application.
     /// </summary>
@@ -263,7 +266,7 @@
 
     /// <summary>
     /// Gets a command that will copy the path of an item into the Windows Clipboard.
-    /// The item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// The item (path to a file) is expected as FSItemVM parameter.
     /// </summary>
     public ICommand CopyPathCommand
     {
@@ -404,11 +407,9 @@
     }
 
     /// <summary>
-    /// Process command when a hyperlink has been clicked.
-    /// Start a web browser and let it browse to where this points to...
+    /// Opens a file with the current Windows default application.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sFileName"></param>
     private static void OpenInWindowsCommand_Executed(string sFileName)
     {
       if (string.IsNullOrEmpty(sFileName) == true)
@@ -428,10 +429,9 @@
     }
 
     /// <summary>
-    /// A hyperlink has been clicked. Start a web browser and let it browse to where this points to...
+    /// Copies the given string into the Windows clipboard.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sFileName"></param>
     private static void CopyPathCommand_Executed(string sFileName)
     {
       if (string.IsNullOrEmpty(sFileName) == true)

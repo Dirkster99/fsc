@@ -9,11 +9,13 @@ namespace FolderBrowser.Views.Behaviours
   /// http://stackoverflow.com/questions/1034374/drag-and-drop-in-mvvm-with-scatterview
   /// http://social.msdn.microsoft.com/Forums/de-DE/wpf/thread/21bed380-c485-44fb-8741-f9245524d0ae
   /// 
-  /// Attached behaviour to implement the drop event via delegate command binding or routed commands.
+  /// Attached behaviour to implement the SelectionChanged command/event via delegate command binding or routed commands.
   /// </summary>
   public static class TreeViewSelectionChangedBehavior
   {
-    // Field of attached ICommand property
+    /// <summary>
+    /// Field of attached ICommand property
+    /// </summary>
     private static readonly DependencyProperty ChangedCommandProperty = DependencyProperty.RegisterAttached(
         "ChangedCommand",
         typeof(ICommand),
@@ -21,7 +23,7 @@ namespace FolderBrowser.Views.Behaviours
         new PropertyMetadata(null, OnSelectionChangedCommandChange));
 
     /// <summary>
-    /// Setter method of the attached DropCommand <seealso cref="ICommand"/> property
+    /// Setter method of the attached ChangedCommand <seealso cref="ICommand"/> property
     /// </summary>
     /// <param name="source"></param>
     /// <param name="value"></param>
@@ -31,7 +33,7 @@ namespace FolderBrowser.Views.Behaviours
     }
 
     /// <summary>
-    /// Getter method of the attached DropCommand <seealso cref="ICommand"/> property
+    /// Getter method of the attached ChangedCommand <seealso cref="ICommand"/> property
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
@@ -65,11 +67,11 @@ namespace FolderBrowser.Views.Behaviours
     }
 
     /// <summary>
-    /// This method is called when the Drop event occurs. The sender should be the control
+    /// This method is called when the selection changed event occurs. The sender should be the control
     /// on which this behaviour is attached - so we convert the sender into a <seealso cref="UIElement"/>
-    /// and receive the Command through the <seealso cref="GetDropCommand"/> getter listed above.
+    /// and receive the Command through the <seealso cref="GetChangedCommand"/> getter listed above.
     /// 
-    /// The <paramref name="e"/> parameter contains the standard <seealso cref="DragEventArgs"/> data,
+    /// The <paramref name="e"/> parameter contains the standard EventArgs data,
     /// which is unpacked and reales upon the bound command.
     /// 
     /// This implementation supports binding of delegate commands and routed commands.
@@ -78,7 +80,7 @@ namespace FolderBrowser.Views.Behaviours
     /// <param name="e"></param>
     private static void Selection_Changed(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
-      TreeView uiElement = sender as TreeView;
+      var uiElement = sender as TreeView;
 
       // Sanity check just in case this was somehow send by something else
       if (uiElement == null)

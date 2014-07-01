@@ -1,4 +1,4 @@
-﻿namespace FileSystemModels.Events
+namespace FileSystemModels.Events
 {
   using System;
   using FileSystemModels.Models;
@@ -56,6 +56,9 @@
     /// </summary>
     public PathModel Folder { get; set; }
 
+    /// <summary>
+    /// Gets/sets the type of recent folder action (eg Add/Remove).
+    /// </summary>
     public RecentFolderAction Action { get; set; }
     #endregion properties
   }

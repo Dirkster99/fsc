@@ -1,10 +1,17 @@
-﻿namespace FileSystemModels.Models
+namespace FileSystemModels.Models
 {
   using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Xml.Serialization;
 
+  /// <summary>
+  /// Class implements a low level model of the explorer settings that can
+  /// stored (up exit of application) and retrieved (upon re-start of application).
+  ///
+  /// This class is serializable and is a parameter of the
+  /// IConfigExplorerSettings methods.
+  /// </summary>
   [Serializable]
   [XmlRoot(ElementName = "ExplorerSettings", IsNullable = true)]
   public class ExplorerSettingsModel
@@ -113,6 +120,11 @@
     }
 
     #region filter settings
+    /// <summary>
+    /// Gets/sets the collection of file filter items. One of these
+    /// filter items can be applied in a file list view to filter for
+    /// file names with a certain pattern (eg: '*.cs')
+    /// </summary>
     [XmlElement(ElementName = "FilterCollection")]
     public List<FilterItemModel> FilterCollection
     {
@@ -312,7 +324,9 @@
     /// <summary>
     /// Add a filter item into the collection of filters.
     /// </summary>
-    /// <param name="folderPath"></param>
+    /// <param name="name"></param>
+    /// <param name="pattern"></param>
+    /// <param name="bSelectNewFilter"></param>
     public void AddFilter(string name,
                           string pattern,
                           bool bSelectNewFilter = false)

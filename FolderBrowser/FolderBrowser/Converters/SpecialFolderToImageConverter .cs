@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.Converters
+namespace FolderBrowser.Converters
 {
   using System;
   using System.Windows;
@@ -115,6 +115,14 @@
       return null;
     }
 
+    /// <summary>
+    /// Convert back method is not implemented an will throw an exception upon execution.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <param name="targetType"></param>
+    /// <param name="parameter"></param>
+    /// <param name="culture"></param>
+    /// <returns></returns>
     public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
       throw new NotImplementedException();

@@ -9,7 +9,7 @@ namespace FileListView.ViewModels
 
   /// <summary>
   /// Class implements a folder/file view model class
-  /// that can be used to dispaly filesystem related content in an <see cref="ItemsControl"/>.
+  /// that can be used to dispaly filesystem related content in an ItemsControl.
   /// </summary>
   public class FolderListViewModel : Base.ViewModelBase, IFolderListViewModel
   {
@@ -184,7 +184,8 @@ namespace FileListView.ViewModels
 
     #region Explorer settings model
     /// <summary>
-    /// Configure this viewmodel (+ attached browser viewmodel) with the given settings.
+    /// Configure this viewmodel (+ attached browser viewmodel) with the given settings and
+    /// initialize viewmodels with UserProfile.CurrentPath location.
     /// </summary>
     /// <param name="settings"></param>
     /// <returns></returns>
@@ -195,8 +196,8 @@ namespace FileListView.ViewModels
 
       try
       {
-        // Set currently view folder in Explorer Tool Window
-        this.ConfigureCurrentFolder(settings.UserProfile.CurrentPath.Path);
+        // Set currently viewed folder in Explorer Tool Window
+        this.NavigateToFolder(settings.UserProfile.CurrentPath.Path);
 
         this.Filters.ClearFilter();
 
@@ -318,6 +319,7 @@ namespace FileListView.ViewModels
     /// list to store user specific customized folder short-cuts.
     /// </summary>
     /// <param name="folderPath"></param>
+    /// <param name="selectNewFolder"></param>
     public void AddRecentFolder(string folderPath, bool selectNewFolder = false)
     {
       this.RecentFolders.AddRecentFolder(folderPath, selectNewFolder);
@@ -432,14 +434,6 @@ namespace FileListView.ViewModels
         default:
           break;
       }
-    }
-
-    private void ConfigureCurrentFolder(string path)
-    {
-      this.SelectedFolder = path;
-      this.FolderTextPath.SelectedItem = new FSItemVM(path, FSItemType.Folder, path, true, 0);
-
-      this.FolderBrowser.SetSelectedFolder(this.SelectedFolder);
     }
 
     /// <summary>

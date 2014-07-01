@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.Views
+namespace FolderBrowser.Views
 {
   using System.Windows.Controls;
 
@@ -7,6 +7,9 @@
   /// </summary>
   public partial class BrowseDirectoriesView : UserControl
   {
+	/// <summary>
+	/// Class constructor
+	/// </summary>
     public BrowseDirectoriesView()
     {
       this.InitializeComponent();

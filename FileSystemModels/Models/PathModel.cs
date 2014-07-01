@@ -169,7 +169,7 @@ namespace FileSystemModels.Models
 
     /// <summary>
     /// Make sure that a path reference does actually work with
-    /// <see cref="DirectoryInfo"/> by replacing 'C:' by 'C:\'.
+    /// <see cref="System.IO.DirectoryInfo"/> by replacing 'C:' by 'C:\'.
     /// </summary>
     /// <param name="dirOrFilePath"></param>
     /// <returns></returns>

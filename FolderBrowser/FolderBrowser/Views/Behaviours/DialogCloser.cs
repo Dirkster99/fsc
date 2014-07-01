@@ -2,6 +2,10 @@ namespace FolderBrowser.Views.Behaviours
 {
   using System.Windows;
 
+  /// <summary>
+  /// Implements an attached behaviour that can be used to signal the window close
+  /// event from the window (view) to the viewmodel.
+  /// </summary>
   public static class DialogCloser
   {
     /// <summary>

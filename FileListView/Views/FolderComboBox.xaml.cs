@@ -1,4 +1,4 @@
-﻿namespace FileListView.Views
+namespace FileListView.Views
 {
   using System.Windows;
   using System.Windows.Controls;
@@ -20,7 +20,7 @@
   {
     #region constructor
     /// <summary>
-    /// Static class constructor to register look-less <seealso cref="UnitCombobox"/> class
+    /// Static class constructor to register look-less <seealso cref="FolderComboBox"/> class
     /// control with the dependency property system.
     /// </summary>
     static FolderComboBox()

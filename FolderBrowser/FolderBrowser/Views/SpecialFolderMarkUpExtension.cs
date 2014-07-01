@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.Views
+namespace FolderBrowser.Views
 {
   using System;
   using System.Reflection;
@@ -17,17 +17,28 @@
   public class SpecialFolderMarkUpExtension : MarkupExtension
   {
     #region constructor
+    /// <summary>
+    /// Class constructor
+    /// </summary>
     public SpecialFolderMarkUpExtension()
     {
     }
     #endregion constructor
 
     #region properties
+    /// <summary>
+    /// Specifies that an object can be initialized by using a non-default constructor syntax,
+    /// and that a property of the specified name supplies construction information. This information
+    /// is primarily for XAML serialization.
+    /// </summary>
     [ConstructorArgument("SpecialFolder")]
     public object SpecialFolder { get; set; }
     #endregion properties
 
     #region methods
+    /// <summary>
+    /// returns an object that is provided as the value of the target property for this markup extension.
+    /// </summary>
     public override object ProvideValue(IServiceProvider serviceProvider)
     {
       if (this.SpecialFolder is string)

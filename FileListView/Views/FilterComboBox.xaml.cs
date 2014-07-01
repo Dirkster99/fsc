@@ -20,7 +20,7 @@ namespace FileListView.Views
   {
     #region constructor
     /// <summary>
-    /// Static class constructor to register look-less <seealso cref="UnitCombobox"/> class
+    /// Static class constructor to register look-less <seealso cref="FilterComboBox"/> class
     /// control with the dependency property system.
     /// </summary>
     static FilterComboBox()

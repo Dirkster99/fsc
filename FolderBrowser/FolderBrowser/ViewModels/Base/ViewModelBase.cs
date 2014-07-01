@@ -1,4 +1,4 @@
-﻿namespace FolderBrowser.ViewModels.Base
+namespace FolderBrowser.ViewModels.Base
 {
   using System;
   using System.ComponentModel;
@@ -18,9 +18,17 @@
     }
     #endregion constructor
 
+    /// <summary>
+    /// Standard event of the <seealso cref="INotifyPropertyChanged"/> interface.
+    /// </summary>
     public event PropertyChangedEventHandler PropertyChanged;
 
     #region methods
+    /// <summary>
+    /// Tell bound controls (via WPF binding) to refresh their display
+    /// for the viewmodel property indicated as string.
+    /// </summary>
+    /// <param name="propName"></param>
     protected virtual void RaisePropertyChanged(string propName)
     {
       if (this.PropertyChanged != null)
@@ -31,11 +39,11 @@
     /// Tell bound controls (via WPF binding) to refresh their display.
     /// 
     /// Sample call: this.OnPropertyChanged(() => this.IsSelected);
-    /// where 'this' is derived from <seealso cref="BaseViewModel"/>
+    /// where 'this' is derived from <seealso cref="ViewModelBase"/>
     /// and IsSelected is a property.
     /// </summary>
-    /// <typeparam name="TProperty"></typeparam>
-    /// <param name="property"></param>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="propertyExpression"></param>
     protected void RaisePropertyChanged<T>(Expression<Func<T>> propertyExpression)
     {
       if (propertyExpression.Body.NodeType == ExpressionType.MemberAccess)

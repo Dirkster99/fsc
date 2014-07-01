@@ -11,11 +11,17 @@ namespace FolderBrowser.Views
   /// </summary>
   public class BindingProxy : Freezable
   {
+    /// <summary>
+    /// Backing storage of the Data dependency property.
+    ///
+    /// Gets/sets the data object this class is forwarding to everyone
+    /// who has a reference to this object.
+    /// </summary>
     public static readonly DependencyProperty DataProperty =
         DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), new UIPropertyMetadata(null));
 
     /// <summary>
-    /// Gets the data object this class is forwarding to everyone
+    /// Gets/sets the data object this class is forwarding to everyone
     /// who has a reference to this object.
     /// </summary>
     public object Data

@@ -1,4 +1,4 @@
-﻿namespace FileListView.ViewModels.Interfaces
+namespace FileListView.ViewModels.Interfaces
 {
   using System;
   using System.Collections.ObjectModel;
@@ -101,8 +101,6 @@
     /// <summary>
     /// Browse into a given a path.
     /// </summary>
-    /// <param name="infoType"></param>
-    /// <param name="newPath"></param>
     /// <returns></returns>
     ICommand NavigateDownCommand
     {
@@ -204,7 +202,7 @@
     /// Call this method to determine whether folders are part of the list of
     /// files and folders or not (list only files without folders).
     /// </summary>
-    /// <param name="isFiltered"></param>
+    /// <param name="isFolderVisible"></param>
     void SetIsFiltered(bool isFolderVisible);
     #endregion methods
   }

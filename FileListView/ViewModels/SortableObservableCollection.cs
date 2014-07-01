@@ -22,7 +22,7 @@ namespace FileListView.ViewModels
     }
 
     /// <summary>
-    /// Class constructor from <see cref="IList" interface. />
+    /// Class constructor from IList interface. />
     /// </summary>
     /// <param name="list"></param>
     public SortableObservableCollection(List<T> list)
@@ -31,7 +31,7 @@ namespace FileListView.ViewModels
     }
 
     /// <summary>
-    /// Class constructor from <see cref="IEnumerable"/>.
+    /// Class constructor from IEnumerable.
     /// </summary>
     /// <param name="collection"></param>
     public SortableObservableCollection(IEnumerable<T> collection)

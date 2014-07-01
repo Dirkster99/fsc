@@ -10,6 +10,9 @@ namespace FileSystemModels.Models
   public class BrowseNavigation : IBrowseNavigation
   {
     #region fields
+    /// <summary>
+    /// Log4Net instance for logging errors, warnings etc
+    /// </summary>
     protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     /// <summary>
@@ -55,6 +58,11 @@ namespace FileSystemModels.Models
     #endregion properties
 
     #region methods
+    /// <summary>
+    /// Converts a filter string from "*.txt;*.tex" into a
+    /// string array based format string[] filterString = { "*.txt", "*.tex" };
+    /// </summary>
+    /// <param name="inputFilterString"></param>
     public static string[] GetParsedFilters(string inputFilterString)
     {
       string[] filterString = { "*" };
@@ -218,7 +226,8 @@ namespace FileSystemModels.Models
     /// <summary>
     /// Method is executed when a listview item is double clicked.
     /// </summary>
-    /// <param name="p"></param>
+    /// <param name="infoType"></param>
+    /// <param name="newPath"></param>
     FSItemType IBrowseNavigation.BrowseDown(FSItemType infoType, string newPath)
     {
       if (infoType == FSItemType.Folder)
