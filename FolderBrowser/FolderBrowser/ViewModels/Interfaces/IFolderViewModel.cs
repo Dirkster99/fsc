@@ -3,9 +3,13 @@ namespace FolderBrowser.ViewModels.Interfaces
   using System.Collections.ObjectModel;
   using System.Windows.Input;
   using FileSystemModels.Models;
+  using InplaceEditBoxLib.Events;
 
   /// <summary>
   /// Implement the interface for a viewmodel for one folder entry for a collection of folders.
+  /// 
+  /// This interface enables the parent viewmodel to abstact away from the actual collection
+  /// viewmodel and use this interface (instead) whenever a collection item is accessed.
   /// </summary>
   public interface IFolderViewModel
   {
@@ -60,6 +64,15 @@ namespace FolderBrowser.ViewModels.Interfaces
     /// The item (path to a file) is expected as FSItemVM parameter.
     /// </summary>
     ICommand CopyPathCommand { get; }
+
+    void RenameFolder(string newFolder);
+
+    /// <summary>
+    /// Call this method to request of start editing mode for renaming this item.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>Returns true if event was successfully send (listener is attached), otherwise false</returns>
+    bool RequestEditMode(RequestEditEvent request);
     #endregion properties
   }
 }

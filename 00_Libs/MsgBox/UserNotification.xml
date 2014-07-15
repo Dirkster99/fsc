@@ -23,7 +23,7 @@
             <summary>
                Initializes a new instance of the ShowNotificationEvent class.
             </summary>
-            <param name="imageUrl"></param>
+            <param name="imageIcon"></param>
             <param name="message"></param>
             <param name="title"></param>
         </member>
@@ -40,6 +40,19 @@
         <member name="P:UserNotification.Events.ShowNotificationEvent.ImageIcon">
             <summary>
             Get url string to an image resource that represents this type of notification.
+            </summary>
+        </member>
+        <member name="T:UserNotification.Interfaces.INotifyableViewModel">
+            <summary>
+            This interface can be used to connect viewmodel with view
+            when showing notifications that can pop-up over a window
+            or over all currently visible windows (IsTopMost = true in notification viewmodel)
+            </summary>
+        </member>
+        <member name="E:UserNotification.Interfaces.INotifyableViewModel.ShowNotificationMessage">
+            <summary>
+            Expose an event that is triggered when the viewmodel tells its view:
+            Here is another notification message please show it to the user.
             </summary>
         </member>
         <member name="T:UserNotification.Local.Strings">
@@ -121,19 +134,6 @@
         <member name="P:UserNotification.ViewModel.NotificationViewModel.ViewWidth">
             <summary>
             Get/set width of view that displays the notification.
-            </summary>
-        </member>
-        <member name="T:UserNotification.View.INotifyableViewModel">
-            <summary>
-            This interface can be used to connect viewmodel with view
-            when showing notifications that can pop-up over a window
-            or over all currently visible windows (IsTopMost = true in notification viewmodel)
-            </summary>
-        </member>
-        <member name="E:UserNotification.View.INotifyableViewModel.ShowNotificationMessage">
-            <summary>
-            Expose an event that is triggered when the viewmodel tells its view:
-            Here is another notification message please show it to the user.
             </summary>
         </member>
         <member name="T:UserNotification.View.NotifyableWindow">
@@ -247,6 +247,74 @@
             </summary>
         </member>
         <member name="P:UserNotification.View.NotificationWindow.CanClose">
+            <summary>
+            Determine whether window can be closed or whether closing
+            via standard close functions should be cancelled in Closing override method.
+            </summary>
+        </member>
+        <member name="T:UserNotification.View.SimpleNotificationWindow">
+            <summary>
+            This class is used to view the content of a notification window.
+            
+            Based on: http://www.codeproject.com/Articles/499241/Growl-Alike-WPF-Notifications
+            </summary>
+            <summary>
+            SimpleNotificationWindow
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.#ctor">
+            <summary>
+            Class constructor
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.CloseInvokedByParent">
+            <summary>
+            Is called by parent window to tell the window to close for good
+            since parent view is also closing.
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.OnClosing(System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Overrides closing window behaviour to avoid that a user can close a notification
+            via ALT+F4 or Esc key. Overiding this is required since a window that is closed
+            cannot be shown via Show again - one would have to re-create the entire window
+            with new - which is not part of the current concept.
+            
+            Current concept is: use Show/hide durring livetime of hosting window and close
+            when hosting window is closed.
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.SetNextNotificationPosition(System.Windows.Media.Visual)">
+            <summary>
+            Method is invoked to re-position the notification view such that it is close to the owning view.
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.ShowNotification(UserNotification.ViewModel.NotificationViewModel,System.Windows.Media.Visual)">
+            <summary>
+            Show a new notification to the user.
+            </summary>
+            <param name="notification"></param>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.HideNotification">
+            <summary>
+            Hide the notification window.
+            </summary>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.NotificationWindowSizeChanged(System.Object,System.Windows.SizeChangedEventArgs)">
+            <summary>
+            This method is invoked via XAML code to tell the code behind
+            that a notification is about to dissapper.
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:UserNotification.View.SimpleNotificationWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="P:UserNotification.View.SimpleNotificationWindow.CanClose">
             <summary>
             Determine whether window can be closed or whether closing
             via standard close functions should be cancelled in Closing override method.

@@ -115,7 +115,7 @@ namespace FolderBrowser.Local {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete folder bookmark.
+        ///   Looks up a localized string similar to Remove folder bookmark.
         /// </summary>
         public static string CMD_RecentFolderRemove_Label {
             get {
@@ -124,7 +124,7 @@ namespace FolderBrowser.Local {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Removes the selected folder from the list of recent folders..
+        ///   Looks up a localized string similar to Removes the selected folder from the list of bookmarked folders..
         /// </summary>
         public static string CMD_RecentFolderRemove_TT {
             get {
@@ -174,6 +174,15 @@ namespace FolderBrowser.Local {
         public static string STR_MSG_ERROR_FINDING_RESOURCE {
             get {
                 return ResourceManager.GetString("STR_MSG_ERROR_FINDING_RESOURCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input Error.
+        /// </summary>
+        public static string STR_MSG_InvalidChar_TITLE {
+            get {
+                return ResourceManager.GetString("STR_MSG_InvalidChar_TITLE", resourceCulture);
             }
         }
         

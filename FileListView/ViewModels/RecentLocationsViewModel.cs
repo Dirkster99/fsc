@@ -20,6 +20,7 @@ namespace FileListView.ViewModels
     private object mLockObject = new object();
 
     private RelayCommand<object> mChangeOfDirectoryCommand;
+    private RelayCommand<object> mRemoveFolderBookmark;
     private bool mIsOpen;
     #endregion fields
 
@@ -59,6 +60,28 @@ namespace FileListView.ViewModels
           });
 
         return this.mChangeOfDirectoryCommand;
+      }
+    }
+
+    /// <summary>
+    /// Command removes a folder bookmark from the list of
+    /// currently bookmarked folders. Required command parameter
+    /// is of type <seealso cref="FSItemVM"/>.
+    /// </summary>
+    public ICommand RemoveFolderBookmark
+    {
+      get
+      {
+        if (this.mRemoveFolderBookmark == null)
+          this.mRemoveFolderBookmark = new RelayCommand<object>((p) =>
+          {
+            var param = p as FSItemVM;
+
+            if (param != null)
+              this.RemoveFolderBookmark_Executed(param);
+          });
+
+        return this.mRemoveFolderBookmark;
       }
     }
 
@@ -216,6 +239,15 @@ namespace FileListView.ViewModels
         displayName = folderPath;
 
       return new FSItemVM(folderPath, FSItemType.Folder, displayName, true);
+    }
+
+    /// <summary>
+    /// Method removes a folder bookmark from the list of currently bookmarked folders.
+    /// </summary>
+    /// <param name="param"></param>
+    private void RemoveFolderBookmark_Executed(FSItemVM param)
+    {
+      this.RemoveRecentFolder(param.GetModel);
     }
     #endregion methods
   }

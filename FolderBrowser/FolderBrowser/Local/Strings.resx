@@ -157,13 +157,16 @@
     <value>Adds the selected folder to the list of bookmarked folders.</value>
   </data>
   <data name="CMD_RecentFolderRemove_Label" xml:space="preserve">
-    <value>Delete folder bookmark</value>
+    <value>Remove folder bookmark</value>
   </data>
   <data name="CMD_RecentFolderRemove_TT" xml:space="preserve">
-    <value>Removes the selected folder from the list of recent folders.</value>
+    <value>Removes the selected folder from the list of bookmarked folders.</value>
   </data>
   <data name="STR_MSG_DEVICE_NOT_READY" xml:space="preserve">
     <value>Device is not ready.</value>
     <comment>Meesage is shown when user attempts to browse a drive with changeable medium (eg: CD-ROM drive without inserting a CD).</comment>
+  </data>
+  <data name="STR_MSG_InvalidChar_TITLE" xml:space="preserve">
+    <value>Input Error</value>
   </data>
 </root>

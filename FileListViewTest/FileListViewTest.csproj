@@ -157,6 +157,10 @@
       <Project>{0b8c3b19-940d-408d-9f6b-4afee7246642}</Project>
       <Name>FolderBrowser</Name>
     </ProjectReference>
+    <ProjectReference Include="..\InplaceEditBoxLib\InplaceEditBoxLib.csproj">
+      <Project>{b1f5cf22-f192-4dae-bdf3-c0c604a29c88}</Project>
+      <Name>InplaceEditBoxLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

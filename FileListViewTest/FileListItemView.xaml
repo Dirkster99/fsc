@@ -103,8 +103,40 @@
             </ctrls:DropDownItemsButton.Resources>
             <ctrls:DropDownItemsButton.ItemTemplate>
               <DataTemplate>
-                <Grid>
-                  <TextBlock Margin="3,1">
+                  <Grid Name="MyBorder">
+                  <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                  </Grid.ColumnDefinitions>
+
+                    <Button Content="-" Grid.Column="0"
+                            ToolTip="Remove Folder Bookmark"
+                            Command="{Binding Path=Data.RemoveFolderBookmark, Source={StaticResource DropDownItemsButtonProxy}}"
+                            CommandParameter="{Binding}"
+                            HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Padding="0"
+                            MinWidth="16" MinHeight="16" x:Name="RemoveFolderBookmarkButton"
+                            />
+
+                    <TextBlock Margin="0" Grid.Column="1">
+                    <TextBlock.Resources>
+                      <Style TargetType="{x:Type Hyperlink}" x:Key="FolderBookmarkHyperlinkStyle">
+                        <Style.Triggers>
+                          <Trigger Property="IsMouseOver" Value="true">
+                            <Setter Property="Foreground" Value="Black" />
+                            <Setter Property="Cursor"     Value="Arrow"/>
+                          </Trigger>
+                          <Trigger Property="IsEnabled"   Value="false">
+                            <Setter Property="Cursor" Value="Arrow"/>
+                            <Setter Property="Foreground" Value="Black"/>
+                          </Trigger>
+                          <Trigger Property="IsEnabled" Value="true">
+                            <Setter Property="Cursor" Value="Arrow"/>
+                          </Trigger>
+                        </Style.Triggers>
+                        <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
+                        <Setter Property="Foreground" Value="Black" />
+                      </Style>
+                    </TextBlock.Resources>
                     <TextBlock.Style>
                       <Style TargetType="{x:Type TextBlock}">
                         <Style.Triggers>
@@ -115,33 +147,25 @@
                         </Style.Triggers>
                       </Style>
                     </TextBlock.Style>
-                  <!-- A hyperlink in disguise without change of mouse pointer or underline indicator  -->
-                  <Hyperlink Command="{Binding Path=Data.ChangeOfDirectoryCommand, Source={StaticResource DropDownItemsButtonProxy}}"
-                             CommandParameter="{Binding}"><!-- Send this item for processing to the bound command -->
-                        <Hyperlink.Style>
-                          <Style TargetType="{x:Type Hyperlink}">
-                            <Style.Triggers>
-                              <Trigger Property="IsMouseOver" Value="true">
-                                <Setter Property="Foreground" Value="Black" />
-                                <Setter Property="Cursor"     Value="Arrow"/>
-                              </Trigger>
-                              <Trigger Property="IsEnabled"   Value="false">
-                                <Setter Property="Cursor" Value="Arrow"/>
-                                <Setter Property="Foreground" Value="Black"/>
-                              </Trigger>
-                              <Trigger Property="IsEnabled" Value="true">
-                                <Setter Property="Cursor" Value="Arrow"/>
-                              </Trigger>
-                            </Style.Triggers>
-                            <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
-                            <Setter Property="Background" Value="{DynamicResource {x:Static dbthemes:ResourceKeys.ControlNormalBackgroundKey}}" />
-                            <Setter Property="Foreground" Value="Black" />
-                          </Style>
-                        </Hyperlink.Style>
-                    <TextBlock Text="{Binding DisplayName}" ToolTip="{Binding FullPath}" />
-                  </Hyperlink>                        
-                </TextBlock>
+
+                    <!-- A hyperlink in disguise without change of mouse pointer or underline indicator  -->
+                    <Hyperlink Command="{Binding Path=Data.ChangeOfDirectoryCommand, Source={StaticResource DropDownItemsButtonProxy}}"
+                               CommandParameter="{Binding}"
+                               Style="{StaticResource FolderBookmarkHyperlinkStyle}"><!-- Send this item for processing to the bound command -->
+                      <TextBlock Text=" "/>
+                      <TextBlock Text="{Binding DisplayName}" ToolTip="{Binding FullPath}" />
+                    </Hyperlink>                        
+                  </TextBlock>
                 </Grid>
+              
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="True" >
+                    <Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Visible" />
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="False" >
+                    <Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Hidden" />
+                  </DataTrigger>
+                </DataTemplate.Triggers>
               </DataTemplate>
             </ctrls:DropDownItemsButton.ItemTemplate>
           </ctrls:SplitItemsButton>

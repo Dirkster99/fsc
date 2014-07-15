@@ -133,7 +133,7 @@ namespace FileListView.Local {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add recent folder.
+        ///   Looks up a localized string similar to Bookmark folder.
         /// </summary>
         public static string CMD_RecentFolderAdd_Label {
             get {
@@ -142,7 +142,7 @@ namespace FileListView.Local {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds the selected folder to the list of recent folders..
+        ///   Looks up a localized string similar to Adds the selected folder to the list of bookmarked folders..
         /// </summary>
         public static string CMD_RecentFolderAdd_TT {
             get {
@@ -151,7 +151,7 @@ namespace FileListView.Local {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove recent folder.
+        ///   Looks up a localized string similar to Remove folder bookmark.
         /// </summary>
         public static string CMD_RecentFolderRemove_Label {
             get {
@@ -160,7 +160,7 @@ namespace FileListView.Local {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Removes the selected folder from the list of recent folders..
+        ///   Looks up a localized string similar to Removes the selected folder from the list of bookmarked folders..
         /// </summary>
         public static string CMD_RecentFolderRemove_TT {
             get {

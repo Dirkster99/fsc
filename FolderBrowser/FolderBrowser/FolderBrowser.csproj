@@ -75,6 +75,10 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UserNotification, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\00_Libs\MsgBox\UserNotification.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +234,10 @@
       <Project>{c3eb23fd-78e7-4298-922c-48c254551cc9}</Project>
       <Name>FileSystemModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\InplaceEditBoxLib\InplaceEditBoxLib.csproj">
+      <Project>{b1f5cf22-f192-4dae-bdf3-c0c604a29c88}</Project>
+      <Name>InplaceEditBoxLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Local\Strings.de-DE.resx">
@@ -270,6 +278,7 @@
       <LastGenOutput>Strings.zh-CHS.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Import Project="$(ProgramFiles)\MSBuild\StyleCop\v4.7\StyleCop.Targets" / -->
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -46,6 +46,12 @@ ECHO Deleting BIN and OBJ Folders in FileSystemModels
 ECHO.
 RMDIR /S /Q .\FileSystemModels\bin
 RMDIR /S /Q .\FileSystemModels\obj
+ECHO.
+ECHO Deleting BIN and OBJ Folders in FileSystemModels
+ECHO.
+RMDIR /S /Q .\InplaceEditBoxLib\bin
+RMDIR /S /Q .\InplaceEditBoxLib\obj
+ECHO.
 
 PAUSE
 

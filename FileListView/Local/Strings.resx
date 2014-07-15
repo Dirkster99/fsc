@@ -200,16 +200,16 @@
     <value>Error finding requested resource.</value>
   </data>
   <data name="CMD_RecentFolderAdd_Label" xml:space="preserve">
-    <value>Add recent folder</value>
+    <value>Bookmark folder</value>
   </data>
   <data name="CMD_RecentFolderAdd_TT" xml:space="preserve">
-    <value>Adds the selected folder to the list of recent folders.</value>
+    <value>Adds the selected folder to the list of bookmarked folders.</value>
   </data>
   <data name="CMD_RecentFolderRemove_Label" xml:space="preserve">
-    <value>Remove recent folder</value>
+    <value>Remove folder bookmark</value>
   </data>
   <data name="CMD_RecentFolderRemove_TT" xml:space="preserve">
-    <value>Removes the selected folder from the list of recent folders.</value>
+    <value>Removes the selected folder from the list of bookmarked folders.</value>
   </data>
   <data name="ToggleIsFilteredCommand_TT" xml:space="preserve">
     <value>Apply or remove the currently configured filter</value>

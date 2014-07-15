@@ -9,9 +9,11 @@
              xmlns:conv="clr-namespace:FolderBrowser.Converters"
 
              xmlns:loc="clr-namespace:FolderBrowser.Local"
+             xmlns:EditInPlace="clr-namespace:InplaceEditBoxLib.Views;assembly=InplaceEditBoxLib"
 
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             d:DesignHeight="100" d:DesignWidth="100"
+             >
     <Grid>
     <!-- The windows explorer style treeview of folders -->
     <TreeView ItemsSource="{Binding Folders}" x:Name="FolderTreeView"
@@ -35,14 +37,20 @@
       </TreeView.ItemContainerStyle>
 
       <TreeView.ItemTemplate>
+
         <HierarchicalDataTemplate ItemsSource="{Binding Folders}">
           <StackPanel Orientation="Horizontal">
+          <!-- StackPanel.InputBindings>
+            <KeyBinding Key="F2"
+              Command="{Binding Path=Data.StartRenameCommand, Source={StaticResource DataContextProxy}}"
+              CommandParameter="{Binding}" />
+          </StackPanel.InputBindings -->
             <StackPanel.ContextMenu>
               <ContextMenu>
                 <ContextMenu.Resources>
                   <BooleanToVisibilityConverter x:Key="BoolToVis" />
                 </ContextMenu.Resources>
-                  <MenuItem Command="{Binding Path=Data.FinalSelectDirectoryCommand, Source={StaticResource DataContextProxy}}"
+                <MenuItem Command="{Binding Path=Data.FinalSelectDirectoryCommand, Source={StaticResource DataContextProxy}}"
                           CommandParameter="{Binding}"
                           Header="{x:Static loc:Strings.CMD_Select_Folder_Label}"
                           ToolTip="{x:Static loc:Strings.CMD_Select_Folder_Label_TT}"
@@ -77,9 +85,17 @@
                           ToolTip="{x:Static loc:Strings.CMD_RecentFolderRemove_TT}"
                           Visibility="{Binding Data.RecentFolderCommandCanExecute, Source={StaticResource DataContextProxy}, Converter={StaticResource BoolToVis}}"
                           />
+
+                <Separator />
+                <MenuItem Command="{Binding Path=Data.StartRenameCommand, Source={StaticResource DataContextProxy}}"
+                          CommandParameter="{Binding}"
+                          Header="Rename"
+                          ToolTip="Rename this item"
+                          />
+
               </ContextMenu>
               </StackPanel.ContextMenu>
-              <Image Margin="2" VerticalAlignment="Center" Width="16" Height="16" >
+              <Image Margin="2,0" VerticalAlignment="Center" Width="16" Height="16" >
                 <Image.Source>
                   <MultiBinding Converter="{conv:BrowseItemTypeToImageConverter}">
                     <Binding Path="IsExpanded" />
@@ -87,10 +103,28 @@
                   </MultiBinding>
                 </Image.Source>
               </Image>
-              <TextBlock Text="{Binding DisplayItemString}"
-                         ToolTip="{Binding FolderPath}"
-                         ToolTipService.ShowOnDisabled="True"
-                         VerticalAlignment="Center" Margin="2" />
+
+              <EditInPlace:EditBox Text="{Binding FolderName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                   DisplayText="{Binding DisplayItemString, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                   ToolTip="{Binding FolderPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                   
+                                   VerticalAlignment="Stretch"
+                                   HorizontalAlignment="Left"
+                                   IsReadOnly="{Binding IsReadOnly}"
+                                   Command="{Binding Path=Data.RenameCommand, Source={StaticResource DataContextProxy}}"
+                                   ToolTipService.ShowOnDisabled="True"
+
+                                   InvalidInputCharacters="\\/:*?&quot;&lt;&gt;|"
+                                   InvalidInputCharactersErrorMessage="A name cannot contain any of the following characters:\n\\/:*?\&quot;&lt;&gt;|"
+                                   InvalidInputCharactersErrorMessageTitle="Invalid Character Input"
+
+                                   Margin="2,0" />
+            <!-- Its important to use margin Margin="2,0" since overlay will otherwise not work -->
+
+            <!-- TextBlock Text="{Binding DisplayItemString}"
+                           ToolTip="{Binding FolderPath}"
+                           ToolTipService.ShowOnDisabled="True"
+                           VerticalAlignment="Center" Margin="2" / -->
             </StackPanel>
         </HierarchicalDataTemplate>
       </TreeView.ItemTemplate>

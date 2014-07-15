@@ -26,7 +26,9 @@ namespace FolderBrowser.ViewModels
 
     private RelayCommand<object> mRecentFolderRemoveCommand = null;
     private RelayCommand<object> mRecentFolderAddCommand = null;
-    
+
+    private RelayCommand<object> mRenameCommand = null;
+    private RelayCommand<object> mStartRenameCommand = null;
     private object mLockObject = new object();
 
     private bool mIsSpecialFoldersVisisble;
@@ -177,6 +179,57 @@ namespace FolderBrowser.ViewModels
           });
 
         return this.mFinalSelectDirectoryCommand;
+      }
+    }
+
+    /// <summary>
+    /// Renames the folder that is represented by this viewmodel.
+    /// This command should be called directly by the implementing view
+    /// since the new name of the folder is delivered as string.
+    /// </summary>
+    public ICommand RenameCommand
+    {
+      get
+      {
+        if (this.mRenameCommand == null)
+          this.mRenameCommand = new RelayCommand<object>(it =>
+          {
+            var tuple = it as Tuple<string, object>;
+
+            if (tuple != null)
+            {
+              var folderVM = tuple.Item2 as IFolderViewModel;
+
+              if (tuple.Item1 != null && folderVM != null)
+                folderVM.RenameFolder(tuple.Item1);
+            }
+          });
+
+        return this.mRenameCommand;
+      }
+    }
+
+    /// <summary>
+    /// Starts the rename folder process by that renames the folder
+    /// that is represented by this viewmodel.
+    /// 
+    /// This command implements an event that triggers the actual rename
+    /// process in the connected view.
+    /// </summary>
+    public ICommand StartRenameCommand
+    {
+      get
+      {
+        if (this.mStartRenameCommand == null)
+          this.mStartRenameCommand = new RelayCommand<object>(it =>
+          {
+            var tuple = it as IFolderViewModel;
+
+            if (tuple != null)
+              tuple.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
+          });
+
+        return this.mStartRenameCommand;
       }
     }
 
