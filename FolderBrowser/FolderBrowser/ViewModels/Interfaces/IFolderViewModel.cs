@@ -13,6 +13,15 @@ namespace FolderBrowser.ViewModels.Interfaces
   /// </summary>
   public interface IFolderViewModel
   {
+    #region events
+    /// <summary>
+    /// Call this method to request of start editing mode for renaming this item.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns>Returns true if event was successfully send (listener is attached), otherwise false</returns>
+    bool RequestEditMode(RequestEditEvent request);
+    #endregion events
+
     #region properties
     /// <summary>
     /// Gets the actual name of the folder that is represented by this object.
@@ -64,15 +73,12 @@ namespace FolderBrowser.ViewModels.Interfaces
     /// The item (path to a file) is expected as FSItemVM parameter.
     /// </summary>
     ICommand CopyPathCommand { get; }
+    #endregion properties
+
+    #region methods
+    IFolderViewModel CreateNewDirector();
 
     void RenameFolder(string newFolder);
-
-    /// <summary>
-    /// Call this method to request of start editing mode for renaming this item.
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns>Returns true if event was successfully send (listener is attached), otherwise false</returns>
-    bool RequestEditMode(RequestEditEvent request);
-    #endregion properties
+    #endregion methods
   }
 }

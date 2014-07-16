@@ -1,11 +1,5 @@
 namespace FolderBrowser.ViewModels
 {
-  using FileSystemModels.Models;
-  using FolderBrowser.Command;
-  using FolderBrowser.ViewModels.Interfaces;
-  using InplaceEditBoxLib.Events;
-  using InplaceEditBoxLib.Interfaces;
-  using MsgBox;
   using System;
   using System.Collections.ObjectModel;
   using System.Diagnostics;
@@ -13,6 +7,12 @@ namespace FolderBrowser.ViewModels
   using System.IO;
   using System.Linq;
   using System.Windows.Input;
+  using FileSystemModels.Models;
+  using FolderBrowser.Command;
+  using FolderBrowser.ViewModels.Interfaces;
+  using InplaceEditBoxLib.Events;
+  using InplaceEditBoxLib.Interfaces;
+  using MsgBox;
   using UserNotification.Events;
   using UserNotification.Interfaces;
 
@@ -434,7 +434,7 @@ namespace FolderBrowser.ViewModels
     /// </summary>
     /// <param name="request"></param>
     /// <returns>Returns true if event was successfully send (listener is attached), otherwise false</returns>
-    bool IFolderViewModel.RequestEditMode(RequestEditEvent request)
+    public bool RequestEditMode(RequestEditEvent request)
     {
       if (this.RequestEdit != null)
       {
@@ -443,6 +443,50 @@ namespace FolderBrowser.ViewModels
       }
 
       return false;
+    }
+
+    public IFolderViewModel CreateNewDirector()
+    {
+      // Compute default name for new folder
+      var newDefaultFolderName = "New Folder";
+      var newFolderName = newDefaultFolderName;
+      var newFolderPath = newFolderName;
+
+      try
+      {
+        if (System.IO.Directory.Exists(this.FolderPath) == false)
+          return null;
+
+        // Compute default name for new folder
+        newFolderPath = System.IO.Path.Combine(this.FolderPath, newDefaultFolderName);
+
+        for (int i = 1; System.IO.Directory.Exists(newFolderPath) == true; i++)
+        {
+          newFolderName = string.Format("{0} {1}", newDefaultFolderName, i);
+          newFolderPath = System.IO.Path.Combine(this.FolderPath, newFolderName);
+        }
+
+        // Create that new folder
+        System.IO.Directory.CreateDirectory(newFolderPath);
+
+        return this.AddFolder(newFolderPath);
+      }
+      catch (Exception exp)
+      {
+        Logger.Error(string.Format("Creating new folder '{0}' was not succesful.", newFolderPath), exp);
+
+        if (this.ShowNotificationMessage != null)
+        {
+          this.ShowNotificationMessage(this, new ShowNotificationEvent
+          (
+            "Error while creating new folder",
+            exp.Message,
+            null
+          ));
+        }
+      }
+
+      return null;
     }
 
     #region FileSystem Commands
@@ -578,24 +622,7 @@ namespace FolderBrowser.ViewModels
         if (dirs != null)
         {
           foreach (string dir in dirs)
-          {
-            try
-            {
-              DirectoryInfo di = new DirectoryInfo(dir);
-
-              // create the sub-structure only if this is not a hidden directory
-              if ((di.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
-                this.Folders.Add(ConstructFolderFolderViewModel(dir));
-            }
-            catch (UnauthorizedAccessException ae)
-            {
-              Logger.Warn("Directory Access not authorized", ae);
-            }
-            catch (Exception e)
-            {
-              Logger.Warn(e);
-            }
-          }
+            AddFolder(dir);
         }
       }
       catch (UnauthorizedAccessException ae)
@@ -606,6 +633,39 @@ namespace FolderBrowser.ViewModels
       {
         Console.WriteLine(ie.Message);
       }
+    }
+
+    /// <summary>
+    /// Add a new folder indicated by <paramref name="dir"/> as path
+    /// into the sub-folder viewmodel collection of this folder item.
+    /// </summary>
+    /// <param name="dir"></param>
+    /// <returns></returns>
+    private FolderViewModel AddFolder(string dir)
+    {
+      try
+      {
+        DirectoryInfo di = new DirectoryInfo(dir);
+
+        // create the sub-structure only if this is not a hidden directory
+        if ((di.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
+        {
+          var newFolder = FolderViewModel.ConstructFolderFolderViewModel(dir);
+          this.Folders.Add(newFolder);
+
+          return newFolder;
+        }
+      }
+      catch (UnauthorizedAccessException ae)
+      {
+        Logger.Warn("Directory Access not authorized", ae);
+      }
+      catch (Exception e)
+      {
+        Logger.Warn(e);
+      }
+
+      return null;
     }
     #endregion methods
   }

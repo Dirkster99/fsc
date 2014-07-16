@@ -16,8 +16,11 @@
              >
     <Grid>
     <!-- The windows explorer style treeview of folders -->
-    <TreeView ItemsSource="{Binding Folders}" x:Name="FolderTreeView"
-              behav:TreeViewSelectionChangedBehavior.ChangedCommand="{Binding FolderSelectedCommand}">
+    <TreeView ItemsSource="{Binding Folders}"
+              
+              behav:TreeViewSelectionChangedBehavior.ChangedCommand="{Binding FolderSelectedCommand}"
+              
+              >
       <TreeView.Resources>
         <!-- Use a proxy to bind items to root properties of this collection -->
         <bindLocal:BindingProxy  x:Key="DataContextProxy"  Data="{Binding}" />
@@ -27,7 +30,7 @@
           <Setter Property="behav:TreeViewItemBehaviour.IsBroughtIntoViewWhenSelected" Value="True" />
           <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
           <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-          <Setter Property="FontWeight" Value="Normal" />
+          <!-- Setter Property="FontWeight" Value="Normal" / -->
           <!-- Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
               <Setter Property="FontWeight" Value="Bold" />
@@ -87,12 +90,18 @@
                           />
 
                 <Separator />
+
+                <MenuItem Command="{Binding Path=Data.CreateFolderCommand, Source={StaticResource DataContextProxy}}"
+                          CommandParameter="{Binding}"
+                          Header="New Folder"
+                          ToolTip="Create a new folder"
+                          />
+
                 <MenuItem Command="{Binding Path=Data.StartRenameCommand, Source={StaticResource DataContextProxy}}"
                           CommandParameter="{Binding}"
                           Header="Rename"
-                          ToolTip="Rename this item"
+                          ToolTip="Rename a folder"
                           />
-
               </ContextMenu>
               </StackPanel.ContextMenu>
               <Image Margin="2,0" VerticalAlignment="Center" Width="16" Height="16" >

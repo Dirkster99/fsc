@@ -13,6 +13,8 @@ namespace FolderBrowser.Views
     public FolderBrowserView()
     {
       this.InitializeComponent();
+
+      TreeView t = new TreeView();
     }
   }
 }
