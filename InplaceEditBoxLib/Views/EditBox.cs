@@ -175,30 +175,7 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     public EditBox()
     {
-      this.DataContextChanged += OnDataContextChanged;
-    }
-
-    /// <summary>
-    /// Method is invoked when the datacontext is changed.
-    /// This requires changing event hook-up on attached viewmodel to enable
-    /// notification event conversion from viewmodel into view.
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    protected void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-      if (this.mViewModel != null)
-        this.mViewModel.ShowNotificationMessage -= ViewModel_ShowNotificationMessage;
-
-      this.mViewModel = e.NewValue as IEditBox;
-
-      if (this.mViewModel != null)
-      {
-        // Link to show notification pop-up message event
-        this.mViewModel.ShowNotificationMessage += ViewModel_ShowNotificationMessage;
-
-        this.mViewModel.RequestEdit += ViewModel_RequestEdit;
-      }
+      this.DataContextChanged += this.OnDataContextChanged;
     }
     #endregion constructor
 
@@ -259,7 +236,9 @@ namespace InplaceEditBoxLib.Views
       private set
       {
         SetValue(EditBox.IsEditingProperty, value);
-        this.mAdorner.UpdateVisibilty(value);
+
+        if (this.mAdorner != null)
+          this.mAdorner.UpdateVisibilty(value);
       }
     }
 
@@ -370,7 +349,35 @@ namespace InplaceEditBoxLib.Views
 
       // Free event hook-up bewteen view and viewmodel
       if (this.mViewModel != null)
+      {
         this.mViewModel.ShowNotificationMessage -= ViewModel_ShowNotificationMessage;
+        this.mViewModel.RequestEdit -= this.ViewModel_RequestEdit;
+      }
+    }
+
+    /// <summary>
+    /// Method is invoked when the datacontext is changed.
+    /// This requires changing event hook-up on attached viewmodel to enable
+    /// notification event conversion from viewmodel into view.
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    protected void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+      if (this.mViewModel != null)
+      {
+        this.mViewModel.ShowNotificationMessage -= ViewModel_ShowNotificationMessage;
+        this.mViewModel.RequestEdit -= ViewModel_RequestEdit;
+      }
+
+      this.mViewModel = e.NewValue as IEditBox;
+
+      if (this.mViewModel != null)
+      {
+        // Link to show notification pop-up message event
+        this.mViewModel.ShowNotificationMessage += ViewModel_ShowNotificationMessage;
+        this.mViewModel.RequestEdit += ViewModel_RequestEdit;
+      }
     }
 
     #region Mouse Events to trigger renaming gesture with 3 clicks
