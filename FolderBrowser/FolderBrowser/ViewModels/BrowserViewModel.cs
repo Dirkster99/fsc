@@ -483,17 +483,17 @@ namespace FolderBrowser.ViewModels
     }
     #endregion Add Remove Recent Folder commands
 
-    private void CreateFolderCommandNewFolder(IFolderViewModel folder)
+    private void CreateFolderCommandNewFolder(IFolderViewModel parentFolder)
     {
-      if (folder == null)
+      if (parentFolder == null)
         return;
 
-      IFolderViewModel f = folder.CreateNewDirector();
+      IFolderViewModel newSubFolder = parentFolder.CreateNewDirector();
 
-      if (f != null)
+      if (newSubFolder != null)
       {
-        this.SetSelectedFolder(f.FolderPath, true);
-        folder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
+        this.SetSelectedFolder(newSubFolder.FolderPath, true);
+        newSubFolder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
       }
     }
     #endregion methods
