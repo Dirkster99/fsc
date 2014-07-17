@@ -103,7 +103,7 @@
             </ctrls:DropDownItemsButton.Resources>
             <ctrls:DropDownItemsButton.ItemTemplate>
               <DataTemplate>
-                  <Grid Name="MyBorder">
+                  <Grid Name="MyBorder" Margin="3">
                   <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
@@ -117,7 +117,7 @@
                             MinWidth="16" MinHeight="16" x:Name="RemoveFolderBookmarkButton"
                             />
 
-                    <TextBlock Margin="0" Grid.Column="1">
+                    <TextBlock Margin="0,0,3,0" Grid.Column="1">
                     <TextBlock.Resources>
                       <Style TargetType="{x:Type Hyperlink}" x:Key="FolderBookmarkHyperlinkStyle">
                         <Style.Triggers>
@@ -152,8 +152,7 @@
                     <Hyperlink Command="{Binding Path=Data.ChangeOfDirectoryCommand, Source={StaticResource DropDownItemsButtonProxy}}"
                                CommandParameter="{Binding}"
                                Style="{StaticResource FolderBookmarkHyperlinkStyle}"><!-- Send this item for processing to the bound command -->
-                      <TextBlock Text=" "/>
-                      <TextBlock Text="{Binding DisplayName}" ToolTip="{Binding FullPath}" />
+                      <TextBlock Text="{Binding DisplayName}" ToolTip="{Binding FullPath}" Margin="6,0,3,0" />
                     </Hyperlink>                        
                   </TextBlock>
                 </Grid>
