@@ -615,9 +615,9 @@ namespace FileListView.ViewModels
 
           if (System.IO.Directory.Exists(sParentDir) == false)
           {
-            Msg.Show(string.Format(Local.Strings.STR_MSG_DIRECTORY_DOES_NOT_EXIST, sParentDir),
-                 Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
-                     MsgBoxButtons.OK, MsgBoxImage.Error);
+            Msg.Show(string.Format(FileSystemModels.Local.Strings.STR_MSG_DIRECTORY_DOES_NOT_EXIST, sParentDir),
+                                   FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
+                                   MsgBoxButtons.OK, MsgBoxImage.Error);
 
             return false;
           }
@@ -636,7 +636,7 @@ namespace FileListView.ViewModels
       {
         Logger.Error(ex);
         Msg.Show(string.Format("{0}\n'{1}'.", ex.Message, (sFileName == null ? string.Empty : sFileName)),
-                  Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
+                  FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
                   MsgBoxButtons.OK, MsgBoxImage.Error);
 
         return false;
@@ -661,7 +661,7 @@ namespace FileListView.ViewModels
       catch (System.Exception ex)
       {
         Msg.Show(string.Format(CultureInfo.CurrentCulture, "{0}", ex.Message),
-                 Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
+                 FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
                  MsgBoxButtons.OK, MsgBoxImage.Error);
       }
     }

@@ -148,7 +148,7 @@ namespace FolderBrowser.ViewModels
                 if (di.IsReady == true)
                   this.mVolumeLabel = di.VolumeLabel;
                 else
-                  return string.Format("{0} ({1})", this.FolderName, Local.Strings.STR_MSG_DEVICE_NOT_READY);
+                  return string.Format("{0} ({1})", this.FolderName, FileSystemModels.Local.Strings.STR_MSG_DEVICE_NOT_READY);
               }
 
               return string.Format("{0} {1}", this.FolderName, (string.IsNullOrEmpty(this.mVolumeLabel)
@@ -209,6 +209,11 @@ namespace FolderBrowser.ViewModels
       }
     }
 
+    /// <summary>
+    /// Gets/sets whether this folder is readonly (can be renamed) or not.
+    /// A drive can, for example, not be renamed and is therefore, readonly
+    /// on this context.
+    /// </summary>
     public bool IsReadOnly
     {
       get
@@ -216,7 +221,7 @@ namespace FolderBrowser.ViewModels
         return this.mIsReadOnly;
       }
 
-      set
+      private set
       {
         if (this.mIsReadOnly != value)
         {
@@ -445,10 +450,15 @@ namespace FolderBrowser.ViewModels
       return false;
     }
 
+    /// <summary>
+    /// Create a new folder with a standard name
+    /// 'New folder n' underneath this folder.
+    /// </summary>
+    /// <returns></returns>
     public IFolderViewModel CreateNewDirector()
     {
       // Compute default name for new folder
-      var newDefaultFolderName = "New Folder";
+      var newDefaultFolderName = FileSystemModels.Local.Strings.STR_NEW_DEFAULT_FOLDER_NAME;
       var newFolderName = newDefaultFolderName;
       var newFolderPath = newFolderName;
 
@@ -479,7 +489,7 @@ namespace FolderBrowser.ViewModels
         {
           this.ShowNotificationMessage(this, new ShowNotificationEvent
           (
-            "Error while creating new folder",
+            FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE,
             exp.Message,
             null
           ));
@@ -522,8 +532,8 @@ namespace FolderBrowser.ViewModels
 
           if (System.IO.Directory.Exists(sParentDir) == false)
           {
-            Msg.Show(string.Format(Local.Strings.STR_MSG_DIRECTORY_DOES_NOT_EXIST, sParentDir),
-                                   Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
+            Msg.Show(string.Format(FileSystemModels.Local.Strings.STR_MSG_DIRECTORY_DOES_NOT_EXIST, sParentDir),
+                                   FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
                                    MsgBoxButtons.OK, MsgBoxImage.Error);
 
             return false;
@@ -542,8 +552,8 @@ namespace FolderBrowser.ViewModels
       catch (System.Exception ex)
       {
         Msg.Show(string.Format("{0}\n'{1}'.", ex.Message, (sFileName == null ? string.Empty : sFileName)),
-                  Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
-                  MsgBoxButtons.OK, MsgBoxImage.Error);
+                 FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
+                 MsgBoxButtons.OK, MsgBoxImage.Error);
 
         return false;
       }
@@ -566,7 +576,7 @@ namespace FolderBrowser.ViewModels
       catch (System.Exception ex)
       {
         Msg.Show(string.Format(CultureInfo.CurrentCulture, "{0}", ex.Message),
-                 Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
+                 FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
                  MsgBoxButtons.OK, MsgBoxImage.Error);
       }
     }

@@ -8,7 +8,7 @@
              xmlns:bindLocal="clr-namespace:FolderBrowser.Views"
              xmlns:conv="clr-namespace:FolderBrowser.Converters"
 
-             xmlns:loc="clr-namespace:FolderBrowser.Local"
+             xmlns:loc="clr-namespace:FileSystemModels.Local;assembly=FileSystemModels"
              xmlns:EditInPlace="clr-namespace:InplaceEditBoxLib.Views;assembly=InplaceEditBoxLib"
 
              mc:Ignorable="d" 

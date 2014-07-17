@@ -98,14 +98,14 @@ namespace FileListView.ViewModels
           if (string.IsNullOrEmpty(this.mSelectedItem.FilterText) == false)
             return string.Format("{0} ({1})\n{2}", this.mSelectedItem.FilterDisplayName, 
                                                    this.mSelectedItem.FilterText,
-                                                   Local.Strings.SelectFilterCommand_TT);
+                                                   FileSystemModels.Local.Strings.SelectFilterCommand_TT);
         }
 
         if (string.IsNullOrEmpty(this.mCurrentFilter) == false)
           return string.Format("{0}\n{1}", this.mCurrentFilter,
-                                            Local.Strings.SelectFilterCommand_TT);
+                                            FileSystemModels.Local.Strings.SelectFilterCommand_TT);
         else
-          return Local.Strings.SelectFilterCommand_TT;
+          return FileSystemModels.Local.Strings.SelectFilterCommand_TT;
       }
     }
     

@@ -6,7 +6,7 @@
 
              xmlns:fview="clr-namespace:FileListView.Views;assembly=FileListView"
              xmlns:fvbehav="clr-namespace:FileListView.Views.Behavior;assembly=FileListView"
-             xmlns:fvloc="clr-namespace:FileListView.Local;assembly=FileListView"
+             xmlns:fvloc="clr-namespace:FileSystemModels.Local;assembly=FileSystemModels"
 
              xmlns:ctrls="clr-namespace:DropDownButtonLib.Controls;assembly=DropDownButtonLib"
              xmlns:bindLocal="clr-namespace:FolderBrowser.Views;assembly=FolderBrowser"

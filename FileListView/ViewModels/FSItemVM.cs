@@ -227,7 +227,7 @@ namespace FileListView.ViewModels
               if (di.IsReady == true)
                 this.mVolumeLabel = di.VolumeLabel;
               else
-                return string.Format("{0} ({1})", this.FullPath, Local.Strings.STR_MSG_DEVICE_NOT_READY);
+                return string.Format("{0} ({1})", this.FullPath, FileSystemModels.Local.Strings.STR_MSG_DEVICE_NOT_READY);
             }
 
             return string.Format("{0} {1}", this.FullPath, (string.IsNullOrEmpty(this.mVolumeLabel)

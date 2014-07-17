@@ -108,9 +108,9 @@ namespace FileListView.ViewModels
       {
         if (string.IsNullOrEmpty(this.mCurrentFolder) == false)
           return string.Format("{0}\n{1}", this.mCurrentFolder,
-                                           Local.Strings.SelectLocationCommand_TT);
+                                           FileSystemModels.Local.Strings.SelectLocationCommand_TT);
         else
-          return Local.Strings.SelectLocationCommand_TT;
+          return FileSystemModels.Local.Strings.SelectLocationCommand_TT;
       }
     }
     

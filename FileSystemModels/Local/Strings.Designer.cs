@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FileListView.Local {
+namespace FileSystemModels.Local {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace FileListView.Local {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FileListView.Local.Strings", typeof(Strings).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FileSystemModels.Local.Strings", typeof(Strings).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -75,6 +75,24 @@ namespace FileListView.Local {
         public static string CMD_Copy_Path_To_Clipboard_Label_TT {
             get {
                 return ResourceManager.GetString("CMD_Copy_Path_To_Clipboard_Label_TT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy as path into Windows clipboard..
+        /// </summary>
+        public static string CMD_Copy_Path_To_Clipboard_Label_TT1 {
+            get {
+                return ResourceManager.GetString("CMD_Copy_Path_To_Clipboard_Label_TT1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy path into Windows Clipboard....
+        /// </summary>
+        public static string CMD_Copy_Path_To_Clipboard_Label1 {
+            get {
+                return ResourceManager.GetString("CMD_Copy_Path_To_Clipboard_Label1", resourceCulture);
             }
         }
         
@@ -115,6 +133,24 @@ namespace FileListView.Local {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Displays the Windows Explorer with the selected folder..
+        /// </summary>
+        public static string CMD_Open_in_Windows_Label_TT1 {
+            get {
+                return ResourceManager.GetString("CMD_Open_in_Windows_Label_TT1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open folder in Windows Explorer....
+        /// </summary>
+        public static string CMD_Open_in_Windows_Label1 {
+            get {
+                return ResourceManager.GetString("CMD_Open_in_Windows_Label1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open in Windows....
         /// </summary>
         public static string CMD_Open_with_Windows_Association_Label {
@@ -142,11 +178,29 @@ namespace FileListView.Local {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bookmark folder.
+        /// </summary>
+        public static string CMD_RecentFolderAdd_Label1 {
+            get {
+                return ResourceManager.GetString("CMD_RecentFolderAdd_Label1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds the selected folder to the list of bookmarked folders..
         /// </summary>
         public static string CMD_RecentFolderAdd_TT {
             get {
                 return ResourceManager.GetString("CMD_RecentFolderAdd_TT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adds the selected folder to the list of bookmarked folders..
+        /// </summary>
+        public static string CMD_RecentFolderAdd_TT1 {
+            get {
+                return ResourceManager.GetString("CMD_RecentFolderAdd_TT1", resourceCulture);
             }
         }
         
@@ -160,11 +214,47 @@ namespace FileListView.Local {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove folder bookmark.
+        /// </summary>
+        public static string CMD_RecentFolderRemove_Label1 {
+            get {
+                return ResourceManager.GetString("CMD_RecentFolderRemove_Label1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Removes the selected folder from the list of bookmarked folders..
         /// </summary>
         public static string CMD_RecentFolderRemove_TT {
             get {
                 return ResourceManager.GetString("CMD_RecentFolderRemove_TT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removes the selected folder from the list of bookmarked folders..
+        /// </summary>
+        public static string CMD_RecentFolderRemove_TT1 {
+            get {
+                return ResourceManager.GetString("CMD_RecentFolderRemove_TT1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Folder....
+        /// </summary>
+        public static string CMD_Select_Folder_Label {
+            get {
+                return ResourceManager.GetString("CMD_Select_Folder_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selects the current folder and updates all related views..
+        /// </summary>
+        public static string CMD_Select_Folder_Label_TT {
+            get {
+                return ResourceManager.GetString("CMD_Select_Folder_Label_TT", resourceCulture);
             }
         }
         
@@ -259,11 +349,29 @@ namespace FileListView.Local {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while creating new folder.
+        /// </summary>
+        public static string STR_CREATE_FOLDER_ERROR_TITLE {
+            get {
+                return ResourceManager.GetString("STR_CREATE_FOLDER_ERROR_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Device is not ready..
         /// </summary>
         public static string STR_MSG_DEVICE_NOT_READY {
             get {
                 return ResourceManager.GetString("STR_MSG_DEVICE_NOT_READY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Device is not ready..
+        /// </summary>
+        public static string STR_MSG_DEVICE_NOT_READY1 {
+            get {
+                return ResourceManager.GetString("STR_MSG_DEVICE_NOT_READY1", resourceCulture);
             }
         }
         
@@ -277,11 +385,56 @@ namespace FileListView.Local {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The directory &apos;{0}&apos; does not exist or cannot be accessed..
+        /// </summary>
+        public static string STR_MSG_DIRECTORY_DOES_NOT_EXIST1 {
+            get {
+                return ResourceManager.GetString("STR_MSG_DIRECTORY_DOES_NOT_EXIST1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error finding requested resource..
         /// </summary>
         public static string STR_MSG_ERROR_FINDING_RESOURCE {
             get {
                 return ResourceManager.GetString("STR_MSG_ERROR_FINDING_RESOURCE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error finding requested resource..
+        /// </summary>
+        public static string STR_MSG_ERROR_FINDING_RESOURCE1 {
+            get {
+                return ResourceManager.GetString("STR_MSG_ERROR_FINDING_RESOURCE1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input Error.
+        /// </summary>
+        public static string STR_MSG_InvalidChar_TITLE {
+            get {
+                return ResourceManager.GetString("STR_MSG_InvalidChar_TITLE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occured..
+        /// </summary>
+        public static string STR_MSG_UnknownError {
+            get {
+                return ResourceManager.GetString("STR_MSG_UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New folder.
+        /// </summary>
+        public static string STR_NEW_DEFAULT_FOLDER_NAME {
+            get {
+                return ResourceManager.GetString("STR_NEW_DEFAULT_FOLDER_NAME", resourceCulture);
             }
         }
         

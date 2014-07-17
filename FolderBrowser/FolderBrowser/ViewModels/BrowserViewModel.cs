@@ -4,6 +4,7 @@ namespace FolderBrowser.ViewModels
   using System.Collections.ObjectModel;
   using System.Linq;
   using System.Windows.Input;
+  using System.Windows.Threading;
   using FileSystemModels.Events;
   using FileSystemModels.Models;
   using FolderBrowser.Command;
@@ -483,6 +484,12 @@ namespace FolderBrowser.ViewModels
     }
     #endregion Add Remove Recent Folder commands
 
+    /// <summary>
+    /// Create a new folder underneath the given parent folder. This method creates
+    /// the folder with a standard name (eg 'New folder n') on disk and selects it
+    /// in editing mode to give users a chance for renaming it right away.
+    /// </summary>
+    /// <param name="parentFolder"></param>
     private void CreateFolderCommandNewFolder(IFolderViewModel parentFolder)
     {
       if (parentFolder == null)
@@ -492,8 +499,12 @@ namespace FolderBrowser.ViewModels
 
       if (newSubFolder != null)
       {
-        this.SetSelectedFolder(newSubFolder.FolderPath, true);
-        newSubFolder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
+        // Do this with low priority (thanks for that tip to Joseph Leung)
+        Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
+        {
+          this.SetSelectedFolder(newSubFolder.FolderPath, true);
+          newSubFolder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
+        });
       }
     }
     #endregion methods
