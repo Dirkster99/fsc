@@ -678,6 +678,7 @@ namespace InplaceEditBoxLib.Views
 
           this.IsEditing = false;
           this.MouseDownCount = 0;
+          this.mPART_TextBlock.Visibility = System.Windows.Visibility.Visible;
           this.mPART_MeasureTextBlock.Visibility = System.Windows.Visibility.Hidden;
         }
       }
@@ -693,6 +694,7 @@ namespace InplaceEditBoxLib.Views
         if (this.mPART_MeasureTextBlock != null &&
             this.mPART_TextBlock != null && this.mTextBox != null)
         {
+          this.mPART_TextBlock.Visibility = System.Windows.Visibility.Hidden;
           this.mPART_MeasureTextBlock.Visibility = System.Windows.Visibility.Hidden;
 
           this.mTextBox.Text = this.mPART_TextBlock.Text;
