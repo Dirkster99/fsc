@@ -89,6 +89,9 @@ namespace FileListView.ViewModels
       }
     }
 
+    /// <summary>
+    /// Gets the viewmodel that exposes recently visited locations (bookmarked folders).
+    /// </summary>
     public RecentLocationsViewModel RecentFolders { get; private set; }
 
     /// <summary>

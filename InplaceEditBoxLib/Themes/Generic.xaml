@@ -28,9 +28,7 @@
                        HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        Visibility="Hidden"
-                     >
-            </TextBlock>
-
+                     />
           </Grid>
         </ControlTemplate>
       </Setter.Value>

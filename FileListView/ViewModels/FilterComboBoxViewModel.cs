@@ -89,6 +89,9 @@ namespace FileListView.ViewModels
       }
     }
 
+    /// <summary>
+    /// Gets an informative text for the currently selected filter.
+    /// </summary>
     public string CurrentFilterToolTip
     {
       get
@@ -115,7 +118,7 @@ namespace FileListView.ViewModels
     /// that the current path selection has changed (via selection changed
     /// event or keyup events).
     /// 
-    /// The parameter <paramref name="p"/> can be an array of objects
+    /// The parameter can be an array of objects
     /// containing objects of the <seealso cref="FilterItemViewModel"/> type or
     /// p can also be string.
     /// 
@@ -123,7 +126,6 @@ namespace FileListView.ViewModels
     /// a OnFilterChanged event being fired with the folder path
     /// as parameter.
     /// </summary>
-    /// <param name="p"></param>
     public ICommand SelectionChanged
     {
       get
@@ -198,8 +200,8 @@ namespace FileListView.ViewModels
     /// Attempts to find a filter in the list of current filters
     /// based on the current display name and actual filter string (eg '*.tex').
     /// </summary>
-    /// <param name="filterDisplayName"></param>
-    /// <param name="filterText"></param>
+    /// <param name="name"></param>
+    /// <param name="filterString"></param>
     /// <returns>A collection of filters found or null.</returns>
     public IEnumerable<FilterItemViewModel> FindFilter(string name, string filterString)
     {

@@ -53,8 +53,6 @@ namespace InplaceEditBoxLib.Views
                                     typeof(EditBox),
                                     new PropertyMetadata(string.Empty));
 
-    
-
     /// <summary>
     /// IsEditingProperty DependencyProperty
     /// </summary>
@@ -65,7 +63,6 @@ namespace InplaceEditBoxLib.Views
                     typeof(EditBox),
                     new FrameworkPropertyMetadata(false));
 
-    //TODO: Change this to Rename property enumeration: readonly, F2KeyOnly, MouseClickOnly, F2KeyMouseClick
     /// <summary>
     /// Implement dependency property to determine whether editing data is allowed or not
     /// (control never enters editing mode if IsReadOnly is set to true [default is false])
@@ -109,6 +106,24 @@ namespace InplaceEditBoxLib.Views
         DependencyProperty.Register("InvalidInputCharactersErrorMessageTitle",
                            typeof(string), typeof(EditBox), new PropertyMetadata(null));
     #endregion InvalidCharacters dependency properties
+
+    #region Mouse Events to trigger renaming with timed mouse click gesture
+    /// <summary>
+    /// The maximum time between the last click and the current one that will allow the user to edit the text block.
+    /// This will allow the user to still be able to "double click to close" the TreeViewItem.
+    /// </summary>
+    public static readonly DependencyProperty MaximumClickTimeProperty =
+        DependencyProperty.Register("MaximumClickTime", typeof(double), typeof(EditBox), new UIPropertyMetadata(700d));
+
+    /// <summary>
+    /// The minimum time between the last click and the current one that will allow the user to edit the text block.
+    /// This will help prevent against accidental edits when they are double clicking.
+    /// </summary>
+    public static readonly DependencyProperty MinimumClickTimeProperty =
+        DependencyProperty.Register("MinimumClickTime", typeof(double), typeof(EditBox), new UIPropertyMetadata(300d));
+
+    DateTime _lastClicked;
+    #endregion Mouse Events to trigger renaming with timed mouse click gesture
     #endregion dependency properties
 
     /// <summary>
@@ -116,6 +131,10 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     private readonly object mlockObject = new object();
 
+    /// <summary>
+    /// This is the adorner that is visible when the
+    /// <seealso cref="EditBox"/> is in editing mode.
+    /// </summary>
     private EditBoxAdorner mAdorner;
 
     /// <summary>
@@ -124,26 +143,10 @@ namespace InplaceEditBoxLib.Views
     private TextBox mTextBox;
 
     /// <summary>
-    /// Specifies whether an EditBox can switch to editing mode. 
-    /// Set to true if the ListViewItem that contains the EditBox is 
-    /// selected, when the mouse pointer moves over the EditBox
-    /// </summary>
-    private bool mCanBeEdit = false;
-
-    /// <summary>
-    /// Specifies whether an EditBox can switch to editing mode.
-    /// Set to true when the ListViewItem that contains the EditBox is 
-    /// selected when the mouse pointer moves over the EditBox.
-    /// </summary>
-    private bool mIsMouseWithinScope = false;
-
-    /// <summary>
     /// This refers to the <seealso cref="ItemsControl"/> (TreeView/listView/ListBox)
     /// control that contains the EditBox
     /// </summary>
     private ItemsControl mParentItemsControl;
-
-    private int mSelectionCount = 0;
 
     private TextBlock mPART_MeasureTextBlock;
     private TextBlock mPART_TextBlock;
@@ -292,19 +295,27 @@ namespace InplaceEditBoxLib.Views
     }
     #endregion InvalidCharacters dependency properties
 
-    private int MouseDownCount
+    #region Mouse Events to trigger renaming with timed mouse click gesture
+    /// <summary>
+    /// The minimum time between the last click and the current one that will allow the user to edit the text block.
+    /// This will help prevent against accidental edits when they are double clicking.
+    /// </summary>
+    public double MinimumClickTime
     {
-      get
-      {
-        return this.mSelectionCount;
-      }
-
-      set
-      {
-        if (this.mSelectionCount != value)
-          this.mSelectionCount = value;
-      }
+      get { return (double)GetValue(MinimumClickTimeProperty); }
+      set { SetValue(MinimumClickTimeProperty, value); }
     }
+
+    /// <summary>
+    /// The maximum time between the last click and the current one that will allow the user to edit the text block.
+    /// This will allow the user to still be able to "double click to close" the TreeViewItem.
+    /// </summary>
+    public double MaximumClickTime
+    {
+      get { return (double)GetValue(MaximumClickTimeProperty); }
+      set { SetValue(MaximumClickTimeProperty, value); }
+    }
+    #endregion Mouse Events to trigger renaming with timed mouse click gesture
     #endregion properties
 
     #region methods
@@ -319,8 +330,10 @@ namespace InplaceEditBoxLib.Views
       this.mPART_MeasureTextBlock = this.GetTemplateChild("PART_MeasureTextBlock") as TextBlock;
 
       // No TextBlock element -> no adorning element -> no adorener!
-      if (this.mPART_MeasureTextBlock == null)
+      if (this.mPART_MeasureTextBlock == null || this.mPART_TextBlock == null)
         return;
+
+      this.mPART_TextBlock.MouseDown += TextBlock_MouseDown;
 
       this.mTextBox = new TextBox();
 
@@ -380,92 +393,25 @@ namespace InplaceEditBoxLib.Views
       }
     }
 
-    #region Mouse Events to trigger renaming gesture with 3 clicks
+    #region Mouse Events to trigger renaming with timed mouse click gesture
     /// <summary>
-    /// The MouseDown event is fired when when the mouse is clicked on the EditBox
+    /// Source: http://www.codeproject.com/Articles/31592/Editable-TextBlock-in-WPF-for-In-place-Editing
     /// </summary>
-    protected override void OnMouseDown(MouseButtonEventArgs e)
-    {
-      base.OnMouseDown(e);
-      ////Console.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-      ////Console.WriteLine("-> OnMouseDown First selection IsMouseWithinScope: {0}", this.mIsMouseWithinScope);
-
-      this.MouseDownCount += 1;
-    }
-
-    /// <summary>
-    /// If the ListViewItem that contains the EditBox is selected, 
-    /// when the mouse pointer moves over the EditBox, the corresponding
-    /// MouseEnter event is the first of two events (MouseUp is the second)
-    /// that allow the EditBox to change to editing mode.
-    /// </summary>
-    protected override void OnMouseEnter(MouseEventArgs e)
-    {
-      ////Console.WriteLine("-> OnMouseEnter");
-      ////Console.WriteLine("-> OnMouseEnter IsEditing {0} IsParentSelected: {1}", this.IsEditing, this.MouseDownCount);
-
-      base.OnMouseEnter(e);
-
-      if (!this.IsEditing && this.MouseDownCount > 1)
-      {
-        this.mCanBeEdit = true;
-      }
-    }
-
-    /// <summary>
-    /// If the MouseLeave event occurs for an EditBox control that
-    /// is in normal mode, the mode cannot be changed to editing mode
-    /// until a MouseEnter event followed by a MouseUp event occurs.
-    /// </summary>
-    protected override void OnMouseLeave(MouseEventArgs e)
-    {
-      ////Console.WriteLine("-> OnMouseLeave");
-
-      base.OnMouseLeave(e);
-
-      this.mIsMouseWithinScope = false;
-      this.mCanBeEdit = false;
-    }
-
-    /// <summary>
-    /// An EditBox switches to editing mode when the MouseUp event occurs
-    /// for that EditBox and the following conditions are satisfied:
-    /// 1. A MouseEnter event for the EditBox occurred before the 
-    /// MouseUp event.
-    /// 2. The mouse did not leave the EditBox between the
-    /// MouseEnter and MouseUp events.
-    /// 3. The ListViewItem that contains the EditBox was selected
-    /// when the MouseEnter event occurred.
-    /// </summary>
+    /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected override void OnMouseUp(MouseButtonEventArgs e)
+    private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
     {
-      base.OnMouseUp(e);
+      double timeBetweenClicks = (DateTime.Now - _lastClicked).TotalMilliseconds;
+      _lastClicked = DateTime.Now;
 
-      if (e.ChangedButton == MouseButton.Right || e.ChangedButton == MouseButton.Middle)
-        return;
-
-      if (this.IsEditing == false)
+      if (timeBetweenClicks > MinimumClickTime && timeBetweenClicks < MaximumClickTime)
       {
-        if (!e.Handled && (this.mCanBeEdit || this.mIsMouseWithinScope))
-        {
-          TextBox t = this.mTextBox as TextBox;
-
-          if (t != null)
-            t.SelectAll();
-
-          ////this.IsEditing = true;
-          this.OnSwitchToEditingMode();
-        }
-
-        // If the first MouseUp event selects the parent TreeViewItem,
-        // then the second MouseUp event can open the item and the
-        // third event puts the EditBox into editing mode
-        if (this.MouseDownCount > 1)
-          this.mIsMouseWithinScope = true;
+        this.OnSwitchToEditingMode();
       }
+
+      e.Handled = false;
     }
-    #endregion Mouse Events to trigger renaming gesture with 3 clicks
+    #endregion Mouse Events to trigger renaming with timed mouse click gesture
 
     /// <summary>
     /// Method is invoked when the viewmodel tells the view: Start to edit the name of the item we represent.
@@ -560,8 +506,8 @@ namespace InplaceEditBoxLib.Views
 
           if (e.Handled == true && string.IsNullOrEmpty(this.InvalidInputCharactersErrorMessage) == false)
           {
-            ShowNotification(this.InvalidInputCharactersErrorMessageTitle,
-                             this.InvalidInputCharactersErrorMessage, false);
+            this.ShowNotification(this.InvalidInputCharactersErrorMessageTitle,
+                                  this.InvalidInputCharactersErrorMessage, false);
           }
           else
             this.DestroyTip(); // Entered string seems to be valid so lets put away that pop-up thing
@@ -594,7 +540,6 @@ namespace InplaceEditBoxLib.Views
         if (e.Key == Key.Escape)
         {
           this.OnSwitchToNormalMode();
-          this.mCanBeEdit = false;
 
           return;
         }
@@ -603,7 +548,6 @@ namespace InplaceEditBoxLib.Views
         if (this.IsEditing == true && (e.Key == Key.Enter || e.Key == Key.F2))
         {
             this.OnSwitchToNormalMode(false);
-            this.mCanBeEdit = false;
 
             return;
         }
@@ -677,7 +621,7 @@ namespace InplaceEditBoxLib.Views
           }
 
           this.IsEditing = false;
-          this.MouseDownCount = 0;
+          this.mPART_TextBlock.Focus();
           this.mPART_TextBlock.Visibility = System.Windows.Visibility.Visible;
           this.mPART_MeasureTextBlock.Visibility = System.Windows.Visibility.Hidden;
         }
@@ -689,18 +633,21 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     private void OnSwitchToEditingMode()
     {
-      if (this.IsReadOnly == false && this.IsEditing == false)
+      lock (this.mlockObject)
       {
-        if (this.mPART_MeasureTextBlock != null &&
-            this.mPART_TextBlock != null && this.mTextBox != null)
+        if (this.IsReadOnly == false && this.IsEditing == false)
         {
-          this.mPART_TextBlock.Visibility = System.Windows.Visibility.Hidden;
-          this.mPART_MeasureTextBlock.Visibility = System.Windows.Visibility.Hidden;
+          if (this.mPART_MeasureTextBlock != null &&
+              this.mPART_TextBlock != null && this.mTextBox != null)
+          {
+            this.mPART_TextBlock.Visibility = System.Windows.Visibility.Hidden;
+            this.mPART_MeasureTextBlock.Visibility = System.Windows.Visibility.Hidden;
 
-          this.mTextBox.Text = this.mPART_TextBlock.Text;
+            this.mTextBox.Text = this.mPART_TextBlock.Text;
+          }
+
+          this.IsEditing = true;
         }
-
-        this.IsEditing = true;
       }
     }
 

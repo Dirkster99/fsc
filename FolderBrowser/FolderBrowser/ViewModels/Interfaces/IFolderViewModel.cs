@@ -76,8 +76,17 @@ namespace FolderBrowser.ViewModels.Interfaces
     #endregion properties
 
     #region methods
+    /// <summary>
+    /// Create a new folder with a standard name
+    /// 'New folder n' underneath this folder.
+    /// </summary>
+    /// <returns>a viewmodel of the newly created directory or null</returns>
     IFolderViewModel CreateNewDirector();
 
+    /// <summary>
+    /// Rename the name of the folder into a new name.
+    /// </summary>
+    /// <param name="newFolder"></param>
     void RenameFolder(string newFolder);
     #endregion methods
   }

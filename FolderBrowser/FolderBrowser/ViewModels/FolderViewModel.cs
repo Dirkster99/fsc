@@ -10,26 +10,23 @@ namespace FolderBrowser.ViewModels
   using FileSystemModels.Models;
   using FolderBrowser.Command;
   using FolderBrowser.ViewModels.Interfaces;
-  using InplaceEditBoxLib.Events;
   using InplaceEditBoxLib.Interfaces;
+  using InplaceEditBoxLib.ViewModels;
   using MsgBox;
-  using UserNotification.Events;
-  using UserNotification.Interfaces;
 
   /// <summary>
   /// Implment the viewmodel for one folder entry for a collection of folders.
   /// </summary>
-  public class FolderViewModel : Base.ViewModelBase, IFolderViewModel, INotifyableViewModel, IEditBox
+  public class FolderViewModel : EditInPlaceViewModel, IFolderViewModel, IEditBox
   {
     #region fields
     /// <summary>
     /// Log4net logger facility for this class.
     /// </summary>
-    protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    protected new static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     private bool mIsSelected;
     private bool mIsExpanded;
-    private bool mIsReadOnly;
     private FSItemType mItemType;
     private string mFolderName;
     private string mFolderPath;
@@ -56,8 +53,9 @@ namespace FolderBrowser.ViewModels
     /// Standard <seealso cref="FolderViewModel"/> constructor
     /// </summary>
     public FolderViewModel()
+      : base()
     {
-      this.mIsExpanded = this.mIsSelected = this.IsReadOnly = false;
+      this.mIsExpanded = this.mIsSelected = false;
       this.mItemType = FSItemType.Unknown;
       this.mFolderName = this.mFolderPath = string.Empty;
 
@@ -69,20 +67,6 @@ namespace FolderBrowser.ViewModels
       this.mVolumeLabel = null;
     }
     #endregion constructor
-
-    #region events
-    /// <summary>
-    /// Expose an event that is triggered when the viewmodel tells its view:
-    /// Here is another notification message please show it to the user.
-    /// </summary>
-    public event UserNotification.Events.ShowNotificationEventHandler ShowNotificationMessage;
-
-    /// <summary>
-    /// Expose an event that is triggered when the viewmodel requests its view to
-    /// start the editing mode for rename this item.
-    /// </summary>
-    public event InplaceEditBoxLib.Events.RequestEditEventHandler RequestEdit;
-    #endregion events
 
     #region properties
     /// <summary>
@@ -101,27 +85,6 @@ namespace FolderBrowser.ViewModels
         {
           this.mFolderName = value;
           this.RaisePropertyChanged(() => this.FolderName);
-          this.RaisePropertyChanged(() => this.DisplayItemString);
-        }
-      }
-    }
-
-    /// <summary>
-    /// Get/set file system Path for this folder.
-    /// </summary>
-    public string FolderPath
-    {
-      get
-      {
-        return this.mFolderPath;
-      }
-
-      private set
-      {
-        if (this.mFolderPath != value)
-        {
-          this.mFolderPath = value;
-          this.RaisePropertyChanged(() => this.FolderPath);
           this.RaisePropertyChanged(() => this.DisplayItemString);
         }
       }
@@ -172,6 +135,27 @@ namespace FolderBrowser.ViewModels
     }
 
     /// <summary>
+    /// Get/set file system Path for this folder.
+    /// </summary>
+    public string FolderPath
+    {
+      get
+      {
+        return this.mFolderPath;
+      }
+
+      private set
+      {
+        if (this.mFolderPath != value)
+        {
+          this.mFolderPath = value;
+          this.RaisePropertyChanged(() => this.FolderPath);
+          this.RaisePropertyChanged(() => this.DisplayItemString);
+        }
+      }
+    }
+
+    /// <summary>
     /// Get/set observable collection of sub-folders of this folder.
     /// </summary>
     public ObservableCollection<IFolderViewModel> Folders
@@ -205,29 +189,6 @@ namespace FolderBrowser.ViewModels
 
           if (value == true)
             this.IsExpanded = true;                 // Default windows behaviour of expanding the selected folder
-        }
-      }
-    }
-
-    /// <summary>
-    /// Gets/sets whether this folder is readonly (can be renamed) or not.
-    /// A drive can, for example, not be renamed and is therefore, readonly
-    /// on this context.
-    /// </summary>
-    public bool IsReadOnly
-    {
-      get
-      {
-        return this.mIsReadOnly;
-      }
-
-      private set
-      {
-        if (this.mIsReadOnly != value)
-        {
-          this.mIsReadOnly = value;
-
-          this.RaisePropertyChanged(() => this.IsReadOnly);
         }
       }
     }
@@ -416,15 +377,7 @@ namespace FolderBrowser.ViewModels
       {
         Logger.Error(string.Format("RenameFolder into '{0}' was not succesful.", newFolderName) , exp);
 
-        if (this.ShowNotificationMessage != null)
-        {
-          this.ShowNotificationMessage(this, new ShowNotificationEvent
-          (
-            "Error while renaming folder",
-            exp.Message,
-            null
-          ));
-        }
+        base.ShowNotification(FileSystemModels.Local.Strings.STR_RenameFolderErrorTitle, exp.Message);
       }
       finally
       {
@@ -435,26 +388,10 @@ namespace FolderBrowser.ViewModels
     }
 
     /// <summary>
-    /// Call this method to request of start editing mode for renaming this item.
-    /// </summary>
-    /// <param name="request"></param>
-    /// <returns>Returns true if event was successfully send (listener is attached), otherwise false</returns>
-    public bool RequestEditMode(RequestEditEvent request)
-    {
-      if (this.RequestEdit != null)
-      {
-        this.RequestEdit(this, new RequestEdit(request));
-        return true;
-      }
-
-      return false;
-    }
-
-    /// <summary>
     /// Create a new folder with a standard name
     /// 'New folder n' underneath this folder.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>a viewmodel of the newly created directory or null</returns>
     public IFolderViewModel CreateNewDirector()
     {
       // Compute default name for new folder
@@ -485,15 +422,7 @@ namespace FolderBrowser.ViewModels
       {
         Logger.Error(string.Format("Creating new folder '{0}' was not succesful.", newFolderPath), exp);
 
-        if (this.ShowNotificationMessage != null)
-        {
-          this.ShowNotificationMessage(this, new ShowNotificationEvent
-          (
-            FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE,
-            exp.Message,
-            null
-          ));
-        }
+        base.ShowNotification(FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE, exp.Message);
       }
 
       return null;
@@ -542,7 +471,6 @@ namespace FolderBrowser.ViewModels
           {
             // combine the arguments together it doesn't matter if there is a space after ','
             string argument = @"/select, " + sParentDir;
-
             System.Diagnostics.Process.Start("explorer.exe", argument);
 
             return true;

@@ -238,7 +238,7 @@ namespace FolderBrowser.ViewModels
 
     /// <summary>
     /// Starts the create folder process by creating a new folder
-    /// in the given location. The location is supplied as <seealso cref="CommandParameter"/>
+    /// in the given location. The location is supplied as <seealso cref="System.Windows.Input.ICommandSource.CommandParameter"/>
     /// which is a <seealso cref="IFolderViewModel"/> item. So, the <seealso cref="IFolderViewModel"/> item
     /// is the parent of the new folder and the new folder is created with a standard name:
     /// 'New Folder n'. The new folder n is selected and in rename mode such that users can edit

@@ -276,9 +276,6 @@ namespace FileListView.ViewModels
     /// <summary>
     /// Browse into a given a path.
     /// </summary>
-    /// <param name="infoType"></param>
-    /// <param name="newPath"></param>
-    /// <returns></returns>
     public ICommand NavigateDownCommand
     {
       get

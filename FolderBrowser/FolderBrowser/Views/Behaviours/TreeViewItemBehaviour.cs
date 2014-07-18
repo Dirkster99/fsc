@@ -2,6 +2,7 @@ namespace FolderBrowser.Views.Behaviours
 {
   using System.Windows;
   using System.Windows.Controls;
+  using InplaceEditBoxLib.Views;
 
   /// <summary>
   /// Class implements an attached behaviour to bring a selected tree view item
@@ -61,8 +62,12 @@ namespace FolderBrowser.Views.Behaviours
     private static void item_Selected(object sender, RoutedEventArgs e)
     {
       TreeViewItem item = e.OriginalSource as TreeViewItem;
+
       if (item != null)
+      {
         item.BringIntoView();
+        item.Focus();
+      }
     }
     #endregion methods
     #endregion // IsBroughtIntoViewWhenSelected

@@ -13,6 +13,9 @@ namespace FileListView.ViewModels
   public class FSItemVM : Base.ViewModelBase
   {
     #region fields
+    /// <summary>
+    /// Logger facility
+    /// </summary>
     protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
     private ImageSource mDisplayIcon;

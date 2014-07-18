@@ -279,4 +279,21 @@
     <value>Show or hide hidden files and folders.</value>
     <comment>A tool tip string for a command that toggles between show or hide hidden files and folders.</comment>
   </data>
+  <data name="ForbiddenRenameKeys" xml:space="preserve">
+    <value>\/:*?"&lt;&gt;|</value>
+    <comment>This is a list of keys that cannot be applied when renaming folder or file names (do not translate this string!)</comment>
+  </data>
+  <data name="ForbiddenRenameKeysMessage" xml:space="preserve">
+    <value>A name cannot contain any of the following characters:
+\/:*?"&lt;&gt;|</value>
+    <comment>This is the message being shown when a user tries a character that is invalid for the file system (do not translate list of characters).</comment>
+  </data>
+  <data name="ForbiddenRenameKeysTitle" xml:space="preserve">
+    <value>Invalid Character Input</value>
+    <comment>This is the title being shown when a user tries a character that is invalid for the file system.</comment>
+  </data>
+  <data name="STR_RenameFolderErrorTitle" xml:space="preserve">
+    <value>Error while renaming folder</value>
+    <comment>This title is shown in the pop-up of a generic  error notification when renaming did not result in success.</comment>
+  </data>
 </root>

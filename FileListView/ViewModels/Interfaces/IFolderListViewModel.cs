@@ -46,6 +46,7 @@ namespace FileListView.ViewModels.Interfaces
     /// This collection can then be used in the folder combobox drop down
     /// list to store user specific customized folder short-cuts.
     /// </summary>
+    /// <param name="folderPath"></param>
     /// <param name="selectNewFolder"></param>
     void AddRecentFolder(string folderPath, bool selectNewFolder = true);
 

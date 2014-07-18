@@ -17,30 +17,14 @@
     <Grid>
     <!-- The windows explorer style treeview of folders -->
     <TreeView ItemsSource="{Binding Folders}"
-              
               behav:TreeViewSelectionChangedBehavior.ChangedCommand="{Binding FolderSelectedCommand}"
-              
               >
       <TreeView.Resources>
         <!-- Use a proxy to bind items to root properties of this collection -->
         <bindLocal:BindingProxy  x:Key="DataContextProxy"  Data="{Binding}" />
       </TreeView.Resources>
-      <TreeView.ItemContainerStyle>
-        <Style TargetType="{x:Type TreeViewItem}">
-          <Setter Property="behav:TreeViewItemBehaviour.IsBroughtIntoViewWhenSelected" Value="True" />
-          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
-          <!-- Setter Property="FontWeight" Value="Normal" / -->
-          <!-- Style.Triggers>
-            <Trigger Property="IsSelected" Value="True">
-              <Setter Property="FontWeight" Value="Bold" />
-            </Trigger>
-          </Style.Triggers-->
-        </Style>
-      </TreeView.ItemContainerStyle>
-
+      
       <TreeView.ItemTemplate>
-
         <HierarchicalDataTemplate ItemsSource="{Binding Folders}">
           <StackPanel Orientation="Horizontal">
           <!-- StackPanel.InputBindings>
@@ -104,7 +88,11 @@
                           />
               </ContextMenu>
               </StackPanel.ContextMenu>
-              <Image Margin="2,0" VerticalAlignment="Center" Width="16" Height="16" >
+              <Image Margin="2,0"
+                     VerticalAlignment="Center"
+                     Width="16"
+                     Height="16"
+                     Focusable="False">
                 <Image.Source>
                   <MultiBinding Converter="{conv:BrowseItemTypeToImageConverter}">
                     <Binding Path="IsExpanded" />
@@ -116,6 +104,7 @@
               <EditInPlace:EditBox Text="{Binding FolderName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    DisplayText="{Binding DisplayItemString, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    ToolTip="{Binding FolderPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Focusable="True"
                                    
                                    VerticalAlignment="Stretch"
                                    HorizontalAlignment="Left"
@@ -123,9 +112,9 @@
                                    Command="{Binding Path=Data.RenameCommand, Source={StaticResource DataContextProxy}}"
                                    ToolTipService.ShowOnDisabled="True"
 
-                                   InvalidInputCharacters="\\/:*?&quot;&lt;&gt;|"
-                                   InvalidInputCharactersErrorMessage="A name cannot contain any of the following characters:\n\\/:*?\&quot;&lt;&gt;|"
-                                   InvalidInputCharactersErrorMessageTitle="Invalid Character Input"
+                                   InvalidInputCharacters="{x:Static loc:Strings.ForbiddenRenameKeys}"
+                                   InvalidInputCharactersErrorMessage="{x:Static loc:Strings.ForbiddenRenameKeysMessage}"
+                                   InvalidInputCharactersErrorMessageTitle="{x:Static loc:Strings.ForbiddenRenameKeysTitle}"
 
                                    Margin="2,0" />
             <!-- Its important to use margin Margin="2,0" since overlay will otherwise not work -->
@@ -137,6 +126,20 @@
             </StackPanel>
         </HierarchicalDataTemplate>
       </TreeView.ItemTemplate>
+      <TreeView.ItemContainerStyle>
+        <Style TargetType="{x:Type TreeViewItem}">
+          <Setter Property="behav:TreeViewItemBehaviour.IsBroughtIntoViewWhenSelected" Value="True" />
+          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+          <!-- Setter Property="FontWeight" Value="Normal" />
+          <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter Property="FontWeight" Value="Bold" />
+            </Trigger>
+          </Style.Triggers -->
+        </Style>
+      </TreeView.ItemContainerStyle>
     </TreeView>
   </Grid>
 </UserControl>

@@ -100,7 +100,7 @@ namespace FileListView.ViewModels
 
     /// <summary>
     /// Gets a string that can be displayed as a tooltip for the
-    // viewmodel data pointing at the path of the currently selected folder.
+    /// viewmodel data pointing at the path of the currently selected folder.
     /// </summary>
     public string CurrentFolderToolTip
     {
