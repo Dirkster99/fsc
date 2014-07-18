@@ -122,7 +122,7 @@ namespace InplaceEditBoxLib.Views
     public static readonly DependencyProperty MinimumClickTimeProperty =
         DependencyProperty.Register("MinimumClickTime", typeof(double), typeof(EditBox), new UIPropertyMetadata(300d));
 
-    DateTime _lastClicked;
+    DateTime mLastClicked;
     #endregion Mouse Events to trigger renaming with timed mouse click gesture
     #endregion dependency properties
 
@@ -393,7 +393,6 @@ namespace InplaceEditBoxLib.Views
       }
     }
 
-    #region Mouse Events to trigger renaming with timed mouse click gesture
     /// <summary>
     /// Source: http://www.codeproject.com/Articles/31592/Editable-TextBlock-in-WPF-for-In-place-Editing
     /// </summary>
@@ -401,17 +400,21 @@ namespace InplaceEditBoxLib.Views
     /// <param name="e"></param>
     private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
     {
-      double timeBetweenClicks = (DateTime.Now - _lastClicked).TotalMilliseconds;
-      _lastClicked = DateTime.Now;
+      double timeBetweenClicks = (DateTime.Now - mLastClicked).TotalMilliseconds;
+      this.mLastClicked = DateTime.Now;
 
       if (timeBetweenClicks > MinimumClickTime && timeBetweenClicks < MaximumClickTime)
       {
+        var t = this.mTextBox as TextBox;
+
+        if (t != null)
+          t.SelectAll();
+
         this.OnSwitchToEditingMode();
       }
 
       e.Handled = false;
     }
-    #endregion Mouse Events to trigger renaming with timed mouse click gesture
 
     /// <summary>
     /// Method is invoked when the viewmodel tells the view: Start to edit the name of the item we represent.
@@ -423,7 +426,7 @@ namespace InplaceEditBoxLib.Views
     {
       if (this.IsEditing == false)
       {
-        TextBox t = this.mTextBox as TextBox;
+        var t = this.mTextBox as TextBox;
 
         if (t != null)
           t.SelectAll();
