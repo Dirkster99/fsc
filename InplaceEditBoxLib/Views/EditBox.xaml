@@ -1,0 +1,38 @@
+<ResourceDictionary 
+  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+
+  mc:Ignorable="d"
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+
+  xmlns:local="clr-namespace:InplaceEditBoxLib.Views">
+
+  <!-- Visibale part of InPlace Edit Control when Editing is turned off -->
+  <Style TargetType="{x:Type local:EditBox}" >
+    <Setter Property="HorizontalAlignment" Value="Left"  />
+    <Setter Property="VerticalAlignment"   Value="Center" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type local:EditBox}">
+          <Grid>
+            <TextBlock x:Name="PART_TextBlock" MinWidth="10"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                     />
+
+            <!-- The measurment textblock is never visible it's simply there to tell the length of a string to the textbox
+                 but it should have the same font and layout as the visbile textblock and the in place textbox (!)
+            -->
+            <TextBlock x:Name="PART_MeasureTextBlock" MinWidth="10"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       Visibility="Hidden"
+                     />
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+</ResourceDictionary>

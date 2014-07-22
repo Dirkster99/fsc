@@ -16,6 +16,9 @@
              xmlns:ctrls="clr-namespace:DropDownButtonLib.Controls;assembly=DropDownButtonLib"
              xmlns:dbthemes="clr-namespace:DropDownButtonLib.Core.Themes;assembly=DropDownButtonLib"
 
+             xmlns:EditInPlace="clr-namespace:InplaceEditBoxLib.Views;assembly=InplaceEditBoxLib"
+             xmlns:view ="clr-namespace:UserNotification.View;assembly=UserNotification"
+
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              >
@@ -193,7 +196,7 @@
                 <Button Command="{Binding Path=Data.FolderSelectedCommand, Source={StaticResource DataContextProxy}}"
                         CommandParameter="{Binding Path=Path}"
                         Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                    <Image Source="{Binding SpecialFolder, Converter={StaticResource SpecialFolderToImageConv}}"
+                  <Image Source="{Binding SpecialFolder, Converter={StaticResource SpecialFolderToImageConv}}"
                            ToolTip="{Binding Path=Path}"
                            ToolTipService.IsEnabled="True"
                            Height="16" Width="16" />
@@ -236,8 +239,8 @@
                           ToolTipService.ShowOnDisabled="True"
                           Grid.Column="4" Margin="1"
                           BorderThickness="0" HorizontalAlignment="Left" MinHeight="16" MinWidth="16">
-                <Image Source="{DynamicResource FLV_Image_IsFoldersVisible}" Width="16" Margin="3,0" />
-              </ToggleButton>
+              <Image Source="{DynamicResource FLV_Image_IsFoldersVisible}" Width="16" Margin="3,0" />
+            </ToggleButton>
             <ToggleButton DataContext="{Binding SynchronizedFolderView.FolderItemsView}"
                           Command="{Binding ToggleIsIconVisibleCommand}"
                           IsChecked="{Binding ShowIcons, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
@@ -245,8 +248,8 @@
                           ToolTipService.ShowOnDisabled="True"
                           Grid.Column="5" Margin="1"
                           BorderThickness="0" HorizontalAlignment="Left" MinHeight="16" MinWidth="16">
-                <Image Source="{DynamicResource FLV_Image_IsIconVisible}" Width="16" Margin="3,0" />
-              </ToggleButton>
+              <Image Source="{DynamicResource FLV_Image_IsIconVisible}" Width="16" Margin="3,0" />
+            </ToggleButton>
             <ToggleButton DataContext="{Binding SynchronizedFolderView.FolderItemsView}"
                           Command="{Binding ToggleIsHiddenVisibleCommand}"
                           IsChecked="{Binding ShowHidden, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
@@ -254,8 +257,8 @@
                           ToolTipService.ShowOnDisabled="True"
                           Grid.Column="6" Margin="1"
                           BorderThickness="0" HorizontalAlignment="Left" MinHeight="16" MinWidth="16">
-                <Image Source="{DynamicResource FLV_Image_IsHiddenFileVisible}" Width="16" Margin="3,0" />
-              </ToggleButton>
+              <Image Source="{DynamicResource FLV_Image_IsHiddenFileVisible}" Width="16" Margin="3,0" />
+            </ToggleButton>
           </ToolBar>
         </ToolBarTray>
 
@@ -294,10 +297,12 @@
       </Grid>
 
       <!-- List files and folders here -->
-      <ListBox DataContext="{Binding SynchronizedFolderView.FolderItemsView}"
-               ItemsSource="{Binding CurrentItems}"
+      <view:NotifyableContentControl
+        DataContext="{Binding SynchronizedFolderView.FolderItemsView}"
+        Notification="{Binding Notification}"  Margin="0,26,0,2" Grid.RowSpan="2">
+
+        <ListBox ItemsSource="{Binding CurrentItems}"
                fvbehav:DoubleClickSelectorItem.DoubleClickItemCommand="{Binding Path=NavigateDownCommand}"
-               Grid.Row="1"
                xmlns:bindLocal="clr-namespace:FileListView.Views;assembly=FileListView"
               >
         <ListBox.Resources>
@@ -311,24 +316,38 @@
                       Header="{x:Static fvloc:Strings.CMD_Open_in_Application_Label}"
                       ToolTip="{x:Static fvloc:Strings.CMD_Open_in_Application_Label_TT}"
                       />
-    
+
             <MenuItem Command="{Binding OpenContainingFolderCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                       Header="{x:Static fvloc:Strings.CMD_Open_in_Windows_Label}"
                       ToolTip="{x:Static fvloc:Strings.CMD_Open_in_Windows_Label_TT}"
                       />
-    
+
             <MenuItem Command="{Binding OpenInWindowsCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                       Header="{x:Static fvloc:Strings.CMD_Open_with_Windows_Association_Label}"
                       ToolTip="{x:Static fvloc:Strings.CMD_Open_with_Windows_Association_Label_TT}"
                       />
-    
+
             <MenuItem Command="{Binding CopyPathCommand}"
                       CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
                       Header="{x:Static fvloc:Strings.CMD_Copy_Path_To_Clipboard_Label}"
                       ToolTip="{x:Static fvloc:Strings.CMD_Copy_Path_To_Clipboard_Label_TT}"
                       />
+
+            <Separator />
+
+              <MenuItem Command="{Binding Path=Data.CreateFolderCommand, Source={StaticResource DataContextProxy}}"
+                    CommandParameter="{Binding Path=Data.CurrentFolder, Source={StaticResource DataContextProxy}}"
+                    Header="New Folder"
+                    ToolTip="Create a new folder"
+                    />
+
+              <MenuItem Command="{Binding Path=Data.StartRenameCommand, Source={StaticResource DataContextProxy}}"
+                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
+                    Header="Rename"
+                    ToolTip="Rename a folder"
+                 />
           </ContextMenu>
         </ListBox.ContextMenu>
         <ListBox.ItemTemplate>
@@ -353,42 +372,25 @@
                 </Image.InputBindings>
               </Image>
 
-              <TextBlock Width="Auto"
-                       Grid.Column="1"
-                       SnapsToDevicePixels="True"
-                       ToolTipService.IsEnabled="True"
-                       ToolTip="{Binding DisplayName}"
-                       >
-                <TextBlock.InputBindings>
-                </TextBlock.InputBindings>
-                <Hyperlink Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorLevel=1, AncestorType={x:Type ListBox}}, Path=DataContext.NavigateDownCommand}"
-                           CommandParameter="{Binding .}">
-                  <Hyperlink.Style>
-                    <!-- Change resource to show underline on mouseover only -->
-                    <Style TargetType="{x:Type Hyperlink}">
-                      <Style.Triggers>
-                        <Trigger Property="IsMouseOver"      Value="true">
-                          <Setter Property="TextDecorations" Value="Underline" />
-                          <Setter Property="Foreground"      Value="{DynamicResource HyperlinkForeground}" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled"   Value="false">
-                          <Setter Property="Foreground" Value="{DynamicResource HyperlinkForegroundDisabled}" />
-                        </Trigger>
-                        <Trigger Property="IsEnabled" Value="true">
-                          <Setter Property="Cursor"   Value="Hand" />
-                        </Trigger>
-                      </Style.Triggers>
-                      <Setter Property="TextBlock.TextDecorations" Value="{x:Null}" />
-                      <Setter Property="Foreground"                Value="{DynamicResource HyperlinkForeground}" />
-                    </Style>
-                  </Hyperlink.Style>
-                  <TextBlock Text="{Binding DisplayName}"/>
-                </Hyperlink>
-              </TextBlock>
+              <EditInPlace:EditBox Grid.Column="1"
+                                 Text="{Binding DisplayName}"
+                                 DisplayText="{Binding DisplayName}"
+                                 Command="{Binding Path=Data.RenameCommand, Source={StaticResource DataContextProxy}}"
+                                 ToolTipService.ShowOnDisabled="True"
+                                 
+                                 InvalidInputCharacters="{x:Static fvloc:Strings.ForbiddenRenameKeys}"
+                                 InvalidInputCharactersErrorMessage="{x:Static fvloc:Strings.ForbiddenRenameKeysMessage}"
+                                 InvalidInputCharactersErrorMessageTitle="{x:Static fvloc:Strings.ForbiddenRenameKeysTitle}"
+
+                                 IsEditableOnDoubleClick ="False"
+                              />
+
             </Grid>
           </DataTemplate>
         </ListBox.ItemTemplate>
       </ListBox>
+    
+      </view:NotifyableContentControl>
     </Grid>
   </Grid>
 </UserControl>

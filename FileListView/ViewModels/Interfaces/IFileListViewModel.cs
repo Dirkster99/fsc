@@ -32,7 +32,7 @@ namespace FileListView.ViewModels.Interfaces
     /// <summary>
     /// Gets/sets list of files and folders to be displayed in connected view.
     /// </summary>
-    ObservableCollection<FSItemVM> CurrentItems { get; set; }
+    ObservableCollection<FSItemViewModel> CurrentItems { get; set; }
 
     /// <summary>
     /// Gets/sets whether the list of folders and files should include folders or not.
@@ -142,7 +142,7 @@ namespace FileListView.ViewModels.Interfaces
 
     /// <summary>
     /// Gets a command that will open the folder in which an item is stored.
-    /// The item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
     /// </summary>
     ICommand OpenContainingFolderCommand
     {
@@ -151,7 +151,7 @@ namespace FileListView.ViewModels.Interfaces
 
     /// <summary>
     /// Gets a command that will open the selected item with the current default application
-    /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
     /// (eg: Item is HTML file -> Open in Windows starts the web browser for viewing the HTML
     /// file if thats the currently associated Windows default application.
     /// </summary>
@@ -162,7 +162,7 @@ namespace FileListView.ViewModels.Interfaces
 
     /// <summary>
     /// Gets a command that will copy the path of an item into the Windows Clipboard.
-    /// The item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
     /// </summary>
     ICommand CopyPathCommand
     {

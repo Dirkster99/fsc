@@ -1,9 +1,11 @@
 namespace InplaceEditBoxLib.Views
 {
   using System;
+  using System.ComponentModel;
   using System.Diagnostics;
   using System.Windows;
   using System.Windows.Controls;
+  using System.Windows.Data;
   using System.Windows.Documents;
   using System.Windows.Input;
   using System.Windows.Media;
@@ -34,7 +36,7 @@ namespace InplaceEditBoxLib.Views
     /// TextProperty DependencyProperty should be used to indicate
     /// the string that should be edit in the <seealso cref="EditBox"/> control.
     /// </summary>
-    public static readonly DependencyProperty TextProperty =
+    private static readonly DependencyProperty TextProperty =
             DependencyProperty.Register(
                     "Text",
                     typeof(string),
@@ -47,11 +49,11 @@ namespace InplaceEditBoxLib.Views
     /// the string that should displayed when <seealso cref="EditBox"/>
     /// control is not in edit mode.
     /// </summary>
-    public static readonly DependencyProperty DisplayTextProperty =
-        DependencyProperty.Register("DisplayText",
-                                    typeof(string),
-                                    typeof(EditBox),
-                                    new PropertyMetadata(string.Empty));
+    private static readonly DependencyProperty DisplayTextProperty =
+            DependencyProperty.Register("DisplayText",
+                                        typeof(string),
+                                        typeof(EditBox),
+                                        new PropertyMetadata(string.Empty));
 
     /// <summary>
     /// IsEditingProperty DependencyProperty
@@ -109,18 +111,30 @@ namespace InplaceEditBoxLib.Views
 
     #region Mouse Events to trigger renaming with timed mouse click gesture
     /// <summary>
+    /// This property can be used to enable/disable maouse "double click"
+    /// gesture to start the edit mode (edit mode may also be started via
+    /// context menu or F2 key only).
+    /// </summary>
+    public static readonly DependencyProperty IsEditableOnDoubleClickProperty =
+        DependencyProperty.Register("IsEditableOnDoubleClick", typeof(bool), typeof(EditBox), new PropertyMetadata(true));
+
+    /// <summary>
     /// The maximum time between the last click and the current one that will allow the user to edit the text block.
     /// This will allow the user to still be able to "double click to close" the TreeViewItem.
+    /// Default is 700 ms.
     /// </summary>
     public static readonly DependencyProperty MaximumClickTimeProperty =
-        DependencyProperty.Register("MaximumClickTime", typeof(double), typeof(EditBox), new UIPropertyMetadata(700d));
+        DependencyProperty.Register("MaximumClickTime", typeof(double),
+                                    typeof(EditBox), new UIPropertyMetadata(700d));
 
     /// <summary>
     /// The minimum time between the last click and the current one that will allow the user to edit the text block.
     /// This will help prevent against accidental edits when they are double clicking.
+    /// Default is 300 ms.
     /// </summary>
     public static readonly DependencyProperty MinimumClickTimeProperty =
-        DependencyProperty.Register("MinimumClickTime", typeof(double), typeof(EditBox), new UIPropertyMetadata(300d));
+        DependencyProperty.Register("MinimumClickTime",
+                                    typeof(double), typeof(EditBox), new UIPropertyMetadata(300d));
 
     DateTime mLastClicked;
     #endregion Mouse Events to trigger renaming with timed mouse click gesture
@@ -178,17 +192,22 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     public EditBox()
     {
+      this.mTextBox = null;
+
       this.DataContextChanged += this.OnDataContextChanged;
+
+      this.Unloaded += OnEditBox_Unloaded;
     }
     #endregion constructor
 
     #region properties
     /// <summary>
-    /// Gets or sets the value of the EditBox
+    /// Gets the text value for editing in the
+    /// text portion of the EditBox.
     /// </summary>
     public string Text
     {
-      get
+      private get
       {
         return (string)GetValue(EditBox.TextProperty);
       }
@@ -200,13 +219,15 @@ namespace InplaceEditBoxLib.Views
     }
 
     /// <summary>
-    /// DisplayText dependency property should be used to indicate
+    /// Gets the text to display.
+    /// 
+    /// The DisplayText dependency property should be used to indicate
     /// the string that should displayed when <seealso cref="EditBox"/>
     /// control is not in edit mode.
     /// </summary>
     public string DisplayText
     {
-      get { return (string)this.GetValue(DisplayTextProperty); }
+      private get { return (string)this.GetValue(DisplayTextProperty); }
       set { this.SetValue(DisplayTextProperty, value); }
     }
 
@@ -261,6 +282,17 @@ namespace InplaceEditBoxLib.Views
     }
 
     #region InvalidCharacters dependency properties
+    /// <summary>
+    /// This property can be used to enable/disable maouse "double click"
+    /// gesture to start the edit mode (edit mode may also be started via
+    /// context menu or F2 key only).
+    /// </summary>
+    public bool IsEditableOnDoubleClick
+    {
+      get { return (bool)GetValue(IsEditableOnDoubleClickProperty); }
+      set { SetValue(IsEditableOnDoubleClickProperty, value); }
+    }
+
     /// <summary>
     /// Gets/sets the string dependency property that contains the characters
     /// that are considered to be invalid in the textbox input overlay element.
@@ -327,28 +359,23 @@ namespace InplaceEditBoxLib.Views
       base.OnApplyTemplate();
 
       this.mPART_TextBlock = this.GetTemplateChild("PART_TextBlock") as TextBlock;
+
       this.mPART_MeasureTextBlock = this.GetTemplateChild("PART_MeasureTextBlock") as TextBlock;
 
       // No TextBlock element -> no adorning element -> no adorener!
       if (this.mPART_MeasureTextBlock == null || this.mPART_TextBlock == null)
         return;
 
-      this.mPART_TextBlock.MouseDown += TextBlock_MouseDown;
+      // Doing this here instead of in XAML makes the XAML easier to overview and apply correctly
+      // Text="{Binding Path=DisplayText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}"
+      // Bind TextBox onto editBox control property Text
+      Binding binding = new Binding("DisplayText");
+      binding.Source = this;
+      binding.Mode = BindingMode.OneWay;
+      binding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+      this.mPART_TextBlock.SetBinding(TextBlock.TextProperty, binding);
 
-      this.mTextBox = new TextBox();
-
-      this.mAdorner = new EditBoxAdorner(this.mPART_MeasureTextBlock, this.mTextBox, this);
-      AdornerLayer layer = AdornerLayer.GetAdornerLayer(this.mPART_MeasureTextBlock);
-      layer.Add(this.mAdorner);
-
-      this.mTextBox.PreviewTextInput += OnPreviewTextInput;
-      this.mTextBox.KeyDown += new KeyEventHandler(this.OnTextBoxKeyDown);
-      this.mTextBox.LostKeyboardFocus += new KeyboardFocusChangedEventHandler(this.OnTextBoxLostKeyboardFocus);
-
-      this.mTextBox.LostFocus += new RoutedEventHandler(this.OnLostFocus);
-
-      // Capture events that are send to the parent item and ItemContainer classes
-      this.HookItemsControlEvents();
+      this.mPART_TextBlock.MouseDown += TextBlock_LeftMouseDown;
     }
 
     /// <summary>
@@ -356,7 +383,7 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void OnControl_Unloaded(object sender, EventArgs e)
+    private void OnEditBox_Unloaded(object sender, EventArgs e)
     {
       this.DestroyTip();
 
@@ -375,7 +402,7 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    protected void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
       if (this.mViewModel != null)
       {
@@ -398,8 +425,14 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+    private void TextBlock_LeftMouseDown(object sender, MouseButtonEventArgs e)
     {
+      if (this.IsEditableOnDoubleClick == false)
+        return;
+
+      if (e.ChangedButton != MouseButton.Left)
+        return;
+
       double timeBetweenClicks = (DateTime.Now - mLastClicked).TotalMilliseconds;
       this.mLastClicked = DateTime.Now;
 
@@ -543,6 +576,7 @@ namespace InplaceEditBoxLib.Views
         if (e.Key == Key.Escape)
         {
           this.OnSwitchToNormalMode();
+          e.Handled = true;
 
           return;
         }
@@ -551,6 +585,7 @@ namespace InplaceEditBoxLib.Views
         if (this.IsEditing == true && (e.Key == Key.Enter || e.Key == Key.F2))
         {
             this.OnSwitchToNormalMode(false);
+            e.Handled = true;
 
             return;
         }
@@ -640,9 +675,11 @@ namespace InplaceEditBoxLib.Views
       {
         if (this.IsReadOnly == false && this.IsEditing == false)
         {
-          if (this.mPART_MeasureTextBlock != null &&
-              this.mPART_TextBlock != null && this.mTextBox != null)
+          if (this.mPART_MeasureTextBlock != null && this.mPART_TextBlock != null)
           {
+            if (this.mTextBox == null)
+              this.HookItemsControlEvents();
+
             this.mPART_TextBlock.Visibility = System.Windows.Visibility.Hidden;
             this.mPART_MeasureTextBlock.Visibility = System.Windows.Visibility.Hidden;
 
@@ -667,8 +704,23 @@ namespace InplaceEditBoxLib.Views
     /// </summary>
     private void HookItemsControlEvents()
     {
+      if (this.mPART_MeasureTextBlock == null)
+        return;
+
+      this.mTextBox = new TextBox();
+
+      this.mAdorner = new EditBoxAdorner(this.mPART_MeasureTextBlock, this.mTextBox, this);
+      AdornerLayer layer = AdornerLayer.GetAdornerLayer(this.mPART_MeasureTextBlock);
+      layer.Add(this.mAdorner);
+
+      this.mTextBox.PreviewTextInput += OnPreviewTextInput;
+      this.mTextBox.KeyDown += new KeyEventHandler(this.OnTextBoxKeyDown);
+      this.mTextBox.LostKeyboardFocus += new KeyboardFocusChangedEventHandler(this.OnTextBoxLostKeyboardFocus);
+
+      this.mTextBox.LostFocus += new RoutedEventHandler(this.OnLostFocus);
+
       this.mParentItemsControl = this.GetDpObjectFromVisualTree(this, typeof(ItemsControl)) as ItemsControl;
-      Debug.Assert(this.mParentItemsControl != null, "No FolderTreeView found");
+      Debug.Assert(this.mParentItemsControl != null, "DEBUG ISSUE: No FolderTreeView found.");
 
       if (this.mParentItemsControl != null)
       {
@@ -680,22 +732,23 @@ namespace InplaceEditBoxLib.Views
         this.mParentItemsControl.SizeChanged += new SizeChangedEventHandler((s, e) => this.OnSwitchToNormalMode());
 
         // Restrict text box to visible area of scrollviewer
-        this.ParentScrollViewer = this.GetDpObjectFromVisualTree(this.mParentItemsControl,
-                                                                 typeof(ScrollViewer)) as ScrollViewer;
+        this.ParentScrollViewer = this.GetDpObjectFromVisualTree(this.mParentItemsControl, typeof(ScrollViewer)) as ScrollViewer;
+
+        if (this.ParentScrollViewer == null)
+          this.ParentScrollViewer = FindVisualChild<ScrollViewer>(this.mParentItemsControl);
+        
+        Debug.Assert(this.ParentScrollViewer != null, "DEBUG ISSUE: No ScrollViewer found.");
 
         if (this.ParentScrollViewer != null)
           this.mTextBox.MaxWidth = this.ParentScrollViewer.ViewportWidth;
       }
-
-      this.Unloaded += OnControl_Unloaded;
     }
 
     /// <summary>
-    /// Walk visual tree to find the first DependencyObject 
-    /// of the specific type.
+    /// Walk visual tree to find the first DependencyObject of a specific type.
+    /// (This method works for finding a ScrollViewer within a TreeView).
     /// </summary>
-    private DependencyObject GetDpObjectFromVisualTree(DependencyObject startObject,
-                                                               Type type)
+    private DependencyObject GetDpObjectFromVisualTree(DependencyObject startObject, Type type)
     {
       // Walk the visual tree to get the parent(ItemsControl)
       // of this control
@@ -709,6 +762,35 @@ namespace InplaceEditBoxLib.Views
       }
 
       return parent;
+    }
+
+    /// <summary>
+    /// Walk visual tree to find the first DependencyObject of a specific type.
+    /// (This method works for finding a ScrollViewer within a TreeView).
+    /// Source: http://stackoverflow.com/questions/3963341/get-reference-to-my-wpf-listboxs-scrollviewer-in-c
+    /// </summary>
+    /// <typeparam name="childItem"></typeparam>
+    /// <param name="obj"></param>
+    /// <returns></returns>
+    private static childItem FindVisualChild<childItem>(DependencyObject obj) where childItem : DependencyObject
+    {
+      for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+      {
+        DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+
+        if (child != null && child is childItem)
+          return (childItem)child;
+
+        else
+        {
+          childItem childOfChild = FindVisualChild<childItem>(child);
+
+          if (childOfChild != null)
+            return childOfChild;
+        }
+      }
+
+      return null;
     }
 
     /// <summary>

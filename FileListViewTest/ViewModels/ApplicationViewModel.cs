@@ -17,7 +17,6 @@ namespace FileListViewTest.ViewModels
     #region fields
     private RelayCommand<object> mAddRecentFolder;
     private RelayCommand<object> mRemoveRecentFolder;
-    private object mSelectedTest;
     #endregion fields
 
     #region constructor
@@ -44,25 +43,11 @@ namespace FileListViewTest.ViewModels
     #endregion constructor
 
     #region properties
+    /// <summary>
+    /// Gets a test viewmodel that contains a synchronized treeview
+    /// and listview to work with file system items.
+    /// </summary>
     public SnycFolderTreeAndFileListViewModel SyncFolderTreeFileListTest { get; private set; }
-
-    public object SelectedTest
-    {
-      get
-      {
-        return this.mSelectedTest;
-      }
-
-      set
-      {
-        if (this.mSelectedTest != value)
-        {
-          this.mSelectedTest = value;
-          this.NotifyPropertyChanged(() => this.SelectedTest);
-        }
-      }
-    }
-    
 
     /// <summary>
     /// Expose a viewmodel that controls the combobox folder drop down
@@ -175,11 +160,21 @@ namespace FileListViewTest.ViewModels
 
       foreach (var item in l)
       {
-        if (item is string)
-          path = item as string;
+        if (item is FSItemViewModel)
+        {
+          var pathItem = item as FSItemViewModel;
+
+          if (pathItem != null)
+            path = pathItem.FullPath;
+        }
         else
           if (item is FolderListViewModel)
-            vm = item as FolderListViewModel;
+          {
+            var vmItem = item as FolderListViewModel;
+
+            if (vmItem != null)
+              vm = item as FolderListViewModel;
+          }
       }
 
       if (path == null)

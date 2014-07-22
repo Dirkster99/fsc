@@ -71,7 +71,7 @@ namespace FileListView.ViewModels
         if (this.mFilterItemModel.FilterText != value)
         {
           this.mFilterItemModel.FilterText = value;
-          this.NotifyPropertyChanged(() => this.FilterText);
+          this.RaisePropertyChanged(() => this.FilterText);
         }
       }
     }
@@ -92,7 +92,7 @@ namespace FileListView.ViewModels
         if (this.mFilterItemModel.FilterDisplayName != value)
         {
           this.mFilterItemModel.FilterDisplayName = value;
-          this.NotifyPropertyChanged(() => this.FilterDisplayName);
+          this.RaisePropertyChanged(() => this.FilterDisplayName);
         }
       }
     }

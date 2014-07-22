@@ -5,8 +5,25 @@ namespace FolderBrowser.Views.Behaviours
   using InplaceEditBoxLib.Views;
 
   /// <summary>
-  /// Class implements an attached behaviour to bring a selected tree view item
+  /// Class implements an attached behaviour to bring a selected TreeViewItem
   /// into view when selection is driven by the viewmodel (not the user).
+  /// 
+  /// Sample Usage:
+  /// &lt;TreeView.ItemContainerStyle>
+  ///   &lt;Style TargetType="{x:Type TreeViewItem}">
+  ///     &lt;Setter Property="behav:TreeViewItemBehaviour.IsBroughtIntoViewWhenSelected" Value="True" />
+  ///     &lt;Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+  ///     &lt;Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+  ///
+  ///     &lt;!-- Setter Property="FontWeight" Value="Normal" />
+  ///     &lt;Style.Triggers>
+  ///       &lt;Trigger Property="IsSelected" Value="True">
+  ///         &lt;Setter Property="FontWeight" Value="Bold" />
+  ///       &lt;/Trigger>
+  ///     &lt;/Style.Triggers -->
+  ///   &lt;/Style>
+  /// &lt;/TreeView.ItemContainerStyle>
+  /// 
   /// </summary>
   public static class TreeViewItemBehaviour
   {

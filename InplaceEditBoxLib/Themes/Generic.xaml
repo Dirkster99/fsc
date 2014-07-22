@@ -4,35 +4,9 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 
   mc:Ignorable="d"
-  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-
-  xmlns:EditInPlace="clr-namespace:InplaceEditBoxLib.Views">
-
-  <!-- Visibale part of InPlace Edit Control when Editing is turned off -->
-  <Style TargetType="{x:Type EditInPlace:EditBox}" >
-    <Setter Property="HorizontalAlignment" Value="Left"  />
-    <Setter Property="VerticalAlignment"   Value="Center" />
-    <Setter Property="Template">
-      <Setter.Value>
-        <ControlTemplate TargetType="{x:Type EditInPlace:EditBox}">
-          <Grid>
-            <TextBlock x:Name="PART_TextBlock" MinWidth="10"
-                       Text="{Binding Path=DisplayText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                     />
-
-            <!-- The measurment textblock is never visible it's simply there to tell the length of a string to the textbox -->
-            <TextBlock x:Name="PART_MeasureTextBlock" MinWidth="10"
-                       Text="{Binding Path=DisplayText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource TemplatedParent}}"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       Visibility="Hidden"
-                     />
-          </Grid>
-        </ControlTemplate>
-      </Setter.Value>
-    </Setter>
-  </Style>
+  xmlns:d="http://schemas.microsoft.com/expression/blend/2008">
+  <ResourceDictionary.MergedDictionaries>
+    <ResourceDictionary Source="/InplaceEditBoxLib;component/Views/EditBox.xaml" />
+  </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

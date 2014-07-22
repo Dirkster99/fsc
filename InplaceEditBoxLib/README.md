@@ -33,6 +33,7 @@ The user can 'double click' and item or use a context menu entry that is linked 
 The EditBox in-place overlay control should not exceed the view port area of the parent scrollviewer of the items control. That is, the EditBox should not exceed the visible area of a treeview if it was used within a treeview. This rule ensure that users do not end up typing in an invisible area (off-screen) when typing long string in small areas.
 
 The following sequence of images shows the application behavior when the user enters the string 'The quick fox jumps over the river' in a limited space scenario:
+
 ![](./00_Docu/SpaceLimits/Step1.png) ![](./00_Docu/SpaceLimits/Step2.png)
 ![](./00_Docu/SpaceLimits/Step3.png) ![](./00_Docu/SpaceLimits/Step4.png)
  ![](./00_Docu/SpaceLimits/Step5_Result.png)
@@ -46,6 +47,15 @@ Editing text can be confirmed pressing the enter key. The application shows the 
 ### IsReadOnly property ###
 
 The edit-in-place control supports a Boolean **IsReadonly** dependency property to lock individual items from being renamed. Default is **false** meaning every item is editable unless binding defines somtheing else.
+
+### IsEditableOnDoubleClick ###
+
+Editing the string that is displayed with the edit-in-place control can be triggered with a time 'double click'.
+This double click can be configured to occur in a certain time frame. There are 2 double dependency properties that can be setup to consume only those double clicks with a time frame that is larger than **MinimumClickTime** but smaller than **MaximumClickTime**.
+
+Default values for **MinimumClickTime** and **MaximumClickTime** are 300 ms and 700 ms, respectively.
+
+The **IsEditableOnDoubleClick** boolean dependency property can be setup to dermine whether double clicks are evaluated for editing or not. Default is true.
 
 ### IsEditable property ###
 
@@ -71,10 +81,14 @@ The control implements a pop-up message element to show hints to the user if he 
 
 - Key definitions entered in the in-place textbox cannot be defined through a white-list. The textbox does not support input masks.
 
+- Restyling TextBox with Hyperlink does not work since a Hyperlink is stored in the InlineCollection of a TextBox. But an InlineCollection cannot be set via dependency property and I cannot seem to work around this with a custom dependency property.
+
 # Credits #
 
-This code uses part of ATC Avalon Team's work:
+- Thanks to LYCJ@quickzip.org for coaching my along the way
+
+- This code uses part of ATC Avalon Team's work:
 http://blogs.msdn.com/atc_avalon_team/archive/2006/03/14/550934.aspx
 
-CodeProject Article "Editable TextBlock in WPF for In-place Editing"
+- CodeProject Article "Editable TextBlock in WPF for In-place Editing"
 http://www.codeproject.com/Articles/31592/Editable-TextBlock-in-WPF-for-In-place-Editing?fid=1532208&df=90&mpp=25&noise=3&prof=False&sort=Position&view=Normal&spc=Relaxed&fr=26#xx0xx

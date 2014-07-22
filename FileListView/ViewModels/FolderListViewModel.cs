@@ -43,7 +43,7 @@ namespace FileListView.ViewModels
       // This viewmodel can work with or without folderbrowser
       this.FolderBrowser = null;
 
-      this.FolderItemsView = new FileListViewViewModel(new BrowseNavigation());
+      this.FolderItemsView = new FileListViewModel(new BrowseNavigation());
 
       this.FolderTextPath = new FolderComboBoxViewModel();
 
@@ -134,7 +134,7 @@ namespace FileListView.ViewModels
         if (this.mSelectedFolder != value)
         {
           this.mSelectedFolder = value;
-          this.NotifyPropertyChanged(() => this.SelectedFolder);
+          this.RaisePropertyChanged(() => this.SelectedFolder);
         }
       }
     }
@@ -383,11 +383,15 @@ namespace FileListView.ViewModels
       lock (this.mLockObject)
       {
         this.SelectedFolder = folder;
-        this.FolderItemsView.NavigateToThisFolder(folder);
 
+        // Navigate Folder ComboBox to this folder
         this.FolderTextPath.CurrentFolder = folder;
         this.FolderTextPath.PopulateView();
+        
+        // Navigate Folder/File ListView to this folder
+        this.FolderItemsView.NavigateToThisFolder(folder);
 
+        // Navigate Folder Treeview to this folder
         if (this.FolderBrowser != null)
           this.FolderBrowser.SetSelectedFolder(folder);
       }

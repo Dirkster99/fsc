@@ -495,7 +495,7 @@ namespace FolderBrowser.ViewModels
       if (parentFolder == null)
         return;
 
-      IFolderViewModel newSubFolder = parentFolder.CreateNewDirector();
+      IFolderViewModel newSubFolder = parentFolder.CreateNewDirectory();
 
       if (newSubFolder != null)
       {

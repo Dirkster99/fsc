@@ -6,18 +6,20 @@ namespace FileListView.ViewModels
   using FileListView.Utils;
   using FileSystemModels.Models;
   using FileSystemModels.Utils;
+  using InplaceEditBoxLib.ViewModels;
 
   /// <summary>
   /// The Viewmodel for file system items
   /// </summary>
-  public class FSItemVM : Base.ViewModelBase
+  public class FSItemViewModel : EditInPlaceViewModel
   {
     #region fields
     /// <summary>
     /// Logger facility
     /// </summary>
-    protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    protected new static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
+    private string mDisplayName;
     private ImageSource mDisplayIcon;
     private PathModel mPathObject;
     private string mVolumeLabel;
@@ -32,7 +34,7 @@ namespace FileListView.ViewModels
     /// <param name="itemType"></param>
     /// <param name="showIcon"></param>
     /// <param name="indentation"></param>
-    public FSItemVM(string curdir,
+    public FSItemViewModel(string curdir,
                     FSItemType itemType,
                     string displayName,
                     bool showIcon,
@@ -49,7 +51,7 @@ namespace FileListView.ViewModels
     /// <param name="displayName"></param>
     /// <param name="itemType"></param>
     /// <param name="indentation"></param>
-    public FSItemVM(string curdir,
+    public FSItemViewModel(string curdir,
                     FSItemType itemType,
                     string displayName,
                     int indentation = 0)
@@ -63,7 +65,7 @@ namespace FileListView.ViewModels
     /// <summary>
     /// Hidden standard class constructor
     /// </summary>
-    protected FSItemVM()
+    protected FSItemViewModel()
     {
       this.mDisplayIcon = null;
       this.mPathObject = null;
@@ -78,7 +80,22 @@ namespace FileListView.ViewModels
     /// Gets a name that can be used for display
     /// (is not necessarily the same as path)
     /// </summary>
-    public string DisplayName { get; private set; }
+    public string DisplayName
+    {
+      get
+      {
+        return this.mDisplayName;
+      }
+      
+      private set
+      {
+        if (this.mDisplayName != value)
+        {
+          this.mDisplayName = value;
+          this.RaisePropertyChanged(() => this.DisplayName);
+        }
+      }
+    }
 
     /// <summary>
     /// Gets the path to this item
@@ -166,17 +183,20 @@ namespace FileListView.ViewModels
 
     #region methods
     /// <summary>
-    /// Public construction method to create a <see cref="FSItemVM"/>
+    /// Public construction method to create a <see cref="FSItemViewModel"/>
     /// object that represents a logical drive (eg 'C:\')
     /// </summary>
     /// <param name="curdir"></param>
     /// <returns></returns>
-    public static FSItemVM CreateLogicalDrive(string curdir)
+    public static FSItemViewModel CreateLogicalDrive(string curdir)
     {
-      FSItemVM item = new FSItemVM();
+      FSItemViewModel item = new FSItemViewModel();
 
       item.mPathObject = new PathModel(curdir, FSItemType.LogicalDrive);
       item.DisplayName = item.DisplayItemString();
+
+      // Names of Logical drives cannot be changed with this
+      item.IsReadOnly = true;
 
       return item;
     }
@@ -250,6 +270,37 @@ namespace FileListView.ViewModels
         case FSItemType.Unknown:
         default:
           return this.FullPath;
+      }
+    }
+
+    /// <summary>
+    /// Rename the name of a folder or file into a new name.
+    /// </summary>
+    /// <param name="newFolderName"></param>
+    public void RenameFileOrFolder(string newFolderName)
+    {
+      try
+      {
+        if (newFolderName != null)
+        {
+          PathModel newFolderPath;
+
+          if (PathModel.RenameFileOrDirectory(this.mPathObject, newFolderName, out newFolderPath) == true)
+          {
+            this.mPathObject = newFolderPath;
+            this.DisplayName = newFolderPath.Name;
+          }
+        }
+      }
+      catch (Exception exp)
+      {
+        Logger.Error(string.Format("Rename into '{0}' was not succesful.", newFolderName), exp);
+
+        base.ShowNotification(FileSystemModels.Local.Strings.STR_RenameFolderErrorTitle, exp.Message);
+      }
+      finally
+      {
+        this.RaisePropertyChanged(() => this.FullPath);
       }
     }
     #endregion methods

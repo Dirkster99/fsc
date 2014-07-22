@@ -15,7 +15,7 @@ namespace FileListView.ViewModels
   public class RecentLocationsViewModel : Base.ViewModelBase
   {
     #region fields
-    private FSItemVM mSelectedItem;
+    private FSItemViewModel mSelectedItem;
 
     private object mLockObject = new object();
 
@@ -30,7 +30,7 @@ namespace FileListView.ViewModels
     /// </summary>
     public RecentLocationsViewModel()
     {
-      this.DropDownItems = new ObservableCollection<FSItemVM>();
+      this.DropDownItems = new ObservableCollection<FSItemViewModel>();
       this.IsOpen = false;
     }
     #endregion constructor
@@ -53,7 +53,7 @@ namespace FileListView.ViewModels
         if (this.mChangeOfDirectoryCommand == null)
           this.mChangeOfDirectoryCommand = new RelayCommand<object>((p) =>
           {
-            var param = p as FSItemVM;
+            var param = p as FSItemViewModel;
 
             if (param != null)
               this.ChangeOfDirectoryCommand_Executed(param);
@@ -66,7 +66,7 @@ namespace FileListView.ViewModels
     /// <summary>
     /// Command removes a folder bookmark from the list of
     /// currently bookmarked folders. Required command parameter
-    /// is of type <seealso cref="FSItemVM"/>.
+    /// is of type <seealso cref="FSItemViewModel"/>.
     /// </summary>
     public ICommand RemoveFolderBookmark
     {
@@ -75,7 +75,7 @@ namespace FileListView.ViewModels
         if (this.mRemoveFolderBookmark == null)
           this.mRemoveFolderBookmark = new RelayCommand<object>((p) =>
           {
-            var param = p as FSItemVM;
+            var param = p as FSItemViewModel;
 
             if (param != null)
               this.RemoveFolderBookmark_Executed(param);
@@ -88,14 +88,14 @@ namespace FileListView.ViewModels
     /// <summary>
     /// <inheritedoc />
     /// </summary>
-    public ObservableCollection<FSItemVM> DropDownItems { get; private set; }
+    public ObservableCollection<FSItemViewModel> DropDownItems { get; private set; }
 
     /// <summary>
     /// Gets/set the selected item of the RecentLocations property.
     /// 
     /// This should be bound by the view (ItemsControl) to find the SelectedItem here.
     /// </summary>
-    public FSItemVM SelectedItem
+    public FSItemViewModel SelectedItem
     {
       get
       {
@@ -107,7 +107,7 @@ namespace FileListView.ViewModels
         if (this.mSelectedItem != value)
         {
           this.mSelectedItem = value;
-          this.NotifyPropertyChanged(() => this.SelectedItem);
+          this.RaisePropertyChanged(() => this.SelectedItem);
         }
       }
     }
@@ -127,7 +127,7 @@ namespace FileListView.ViewModels
         if (this.mIsOpen != value)
         {
           this.mIsOpen = value;
-          this.NotifyPropertyChanged(() => this.IsOpen);
+          this.RaisePropertyChanged(() => this.IsOpen);
         }
       }
     }
@@ -150,7 +150,7 @@ namespace FileListView.ViewModels
           return;
 
         // select this path if its already there
-        var results = this.DropDownItems.Where<FSItemVM>(folder => string.Compare(folder.FullPath, folderPath, true) == 0);
+        var results = this.DropDownItems.Where<FSItemViewModel>(folder => string.Compare(folder.FullPath, folderPath, true) == 0);
 
         // Do not add this twice
         if (results != null)
@@ -209,7 +209,7 @@ namespace FileListView.ViewModels
       }
     }
 
-    private void ChangeOfDirectoryCommand_Executed(FSItemVM path)
+    private void ChangeOfDirectoryCommand_Executed(FSItemViewModel path)
     {
       if (path == null)
         return;
@@ -221,7 +221,7 @@ namespace FileListView.ViewModels
         this.RequestChangeOfDirectory(this, new FolderChangedEventArgs(new PathModel(path.FullPath, FSItemType.Folder)));
     }
 
-    private FSItemVM CreateFSItemVMFromString(string folderPath)
+    private FSItemViewModel CreateFSItemVMFromString(string folderPath)
     {
       folderPath = System.IO.Path.GetDirectoryName(folderPath);
 
@@ -238,14 +238,14 @@ namespace FileListView.ViewModels
       if (displayName.Trim() == string.Empty)
         displayName = folderPath;
 
-      return new FSItemVM(folderPath, FSItemType.Folder, displayName, true);
+      return new FSItemViewModel(folderPath, FSItemType.Folder, displayName, true);
     }
 
     /// <summary>
     /// Method removes a folder bookmark from the list of currently bookmarked folders.
     /// </summary>
     /// <param name="param"></param>
-    private void RemoveFolderBookmark_Executed(FSItemVM param)
+    private void RemoveFolderBookmark_Executed(FSItemViewModel param)
     {
       this.RemoveRecentFolder(param.GetModel);
     }

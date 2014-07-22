@@ -81,7 +81,7 @@ namespace FolderBrowser.ViewModels.Interfaces
     /// 'New folder n' underneath this folder.
     /// </summary>
     /// <returns>a viewmodel of the newly created directory or null</returns>
-    IFolderViewModel CreateNewDirector();
+    IFolderViewModel CreateNewDirectory();
 
     /// <summary>
     /// Rename the name of the folder into a new name.

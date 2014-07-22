@@ -101,7 +101,7 @@
                 </Image.Source>
               </Image>
 
-              <EditInPlace:EditBox Text="{Binding FolderName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+              <EditInPlace:EditBox Text="{Binding Path=FolderName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    DisplayText="{Binding DisplayItemString, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    ToolTip="{Binding FolderPath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    Focusable="True"

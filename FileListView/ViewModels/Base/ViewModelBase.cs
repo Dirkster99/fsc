@@ -24,7 +24,7 @@ namespace FileListView.ViewModels.Base
     /// </summary>
     /// <typeparam name="TProperty"></typeparam>
     /// <param name="property"></param>
-    public void NotifyPropertyChanged<TProperty>(Expression<Func<TProperty>> property)
+    public void RaisePropertyChanged<TProperty>(Expression<Func<TProperty>> property)
     {
       var lambda = (LambdaExpression)property;
       MemberExpression memberExpression;

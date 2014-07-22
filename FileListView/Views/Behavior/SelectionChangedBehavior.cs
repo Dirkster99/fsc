@@ -6,11 +6,9 @@ namespace FileListView.Views.Behavior
   using System.Windows.Input;
 
   /// <summary>
-  /// Source:
-  /// http://stackoverflow.com/questions/1034374/drag-and-drop-in-mvvm-with-scatterview
-  /// http://social.msdn.microsoft.com/Forums/de-DE/wpf/thread/21bed380-c485-44fb-8741-f9245524d0ae
-  /// 
-  /// Attached behaviour to implement the drop event via delegate command binding or routed commands.
+  /// Attached behaviour to implement a selection changed command on a combobox.
+  /// The combobox generates a SelectionChanged event which in turn generates a
+  /// Command (in this behavior), which in turn is, when bound, invoked on the viewmodel.
   /// </summary>
   public static class SelectionChangedCommand
   {

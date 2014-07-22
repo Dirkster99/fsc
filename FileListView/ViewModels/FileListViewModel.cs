@@ -8,18 +8,21 @@ namespace FileListView.ViewModels
   using System.Windows.Input;
   using System.Windows.Media;
   using System.Windows.Media.Imaging;
+  using System.Windows.Threading;
   using FileListView.Command;
   using FileListView.ViewModels.Interfaces;
   using FileSystemModels.Events;
   using FileSystemModels.Interfaces;
   using FileSystemModels.Models;
   using FileSystemModels.Utils;
+  using FolderBrowser.ViewModels.Interfaces;
   using MsgBox;
+  using UserNotification.ViewModel;
 
   /// <summary>
   /// Class implements a list of file items viewmodel for a given directory.
   /// </summary>
-  public class FileListViewViewModel : Base.ViewModelBase, IFileListViewModel
+  public class FileListViewModel : Base.ViewModelBase, IFileListViewModel
   {
     #region fields
     /// <summary>
@@ -34,6 +37,7 @@ namespace FileListView.ViewModels
     private bool mShowHidden = true;
     private bool mShowIcons = true;
     private bool mIsFiltered = false;
+    private FSItemViewModel mSelectedItem;
 
     private IBrowseNavigation mBrowseNavigation = null;
 
@@ -53,19 +57,33 @@ namespace FileListView.ViewModels
     private RelayCommand<object> mOpenContainingFolderCommand = null;
     private RelayCommand<object> mOpenInWindowsCommand = null;
     private RelayCommand<object> mCopyPathCommand = null;
+
+    private RelayCommand<object> mRenameCommand = null;
+    private RelayCommand<object> mStartRenameCommand = null;
+    private RelayCommand<object> mCreateFolderCommand = null;
+
+    private SendNotificationViewModel mNotification;
     #endregion fields
 
     #region constructor
     /// <summary>
     /// Class constructor
     /// </summary>
-    public FileListViewViewModel(IBrowseNavigation browseNavigation)
+    public FileListViewModel(IBrowseNavigation browseNavigation)
+      : this()
     {
-      this.CurrentItems = new ObservableCollection<FSItemVM>();
-
       this.mBrowseNavigation = browseNavigation;
 
       this.mParsedFilter = BrowseNavigation.GetParsedFilters(this.mFilterString);
+    }
+
+    /// <summary>
+    /// Standard class constructor
+    /// </summary>
+    protected FileListViewModel()
+    {
+      this.Notification = new SendNotificationViewModel();
+      this.CurrentItems = new ObservableCollection<FSItemViewModel>();
     }
     #endregion constructor
 
@@ -90,7 +108,29 @@ namespace FileListView.ViewModels
     /// <summary>
     /// Gets/sets list of files and folders to be displayed in connected view.
     /// </summary>
-    public ObservableCollection<FSItemVM> CurrentItems { get; set; }
+    public ObservableCollection<FSItemViewModel> CurrentItems { get; set; }
+
+    /// <summary>
+    /// Get/set select item in filelist viemodel. This property is used to bind
+    /// the selectitem of the listbox and enable the BringIntoView behaviour
+    /// to scroll a selected item into view.
+    /// </summary>
+    public FSItemViewModel SelectedItem
+    {
+      get
+      {
+        return this.mSelectedItem;
+      }
+
+      set
+      {
+        if (this.mSelectedItem != value)
+        {
+          this.mSelectedItem = value;
+          this.RaisePropertyChanged(() => this.SelectedItem);
+        }
+      }
+    }
 
     /// <summary>
     /// Gets/sets whether the list of folders and files should include folders or not.
@@ -107,7 +147,7 @@ namespace FileListView.ViewModels
         if (this.mShowFolders != value)
         {
           this.mShowFolders = value;
-          this.NotifyPropertyChanged(() => this.ShowFolders);
+          this.RaisePropertyChanged(() => this.ShowFolders);
         }
       }
     }
@@ -127,7 +167,7 @@ namespace FileListView.ViewModels
         if (this.mShowHidden != value)
         {
           this.mShowHidden = value;
-          this.NotifyPropertyChanged(() => this.ShowHidden);
+          this.RaisePropertyChanged(() => this.ShowHidden);
         }
       }
     }
@@ -147,7 +187,7 @@ namespace FileListView.ViewModels
         if (this.mShowIcons != value)
         {
           this.mShowIcons = value;
-          this.NotifyPropertyChanged(() => this.ShowIcons);
+          this.RaisePropertyChanged(() => this.ShowIcons);
         }
       }
     }
@@ -167,7 +207,7 @@ namespace FileListView.ViewModels
         if (this.mIsFiltered != value)
         {
           this.mIsFiltered = value;
-          this.NotifyPropertyChanged(() => this.IsFiltered);
+          this.RaisePropertyChanged(() => this.IsFiltered);
         }
       }
     }
@@ -283,7 +323,7 @@ namespace FileListView.ViewModels
         if (this.mNavigateDownCommand == null)
           this.mNavigateDownCommand = new RelayCommand<object>((p) =>
           {
-            var info = p as FSItemVM;
+            var info = p as FSItemViewModel;
 
             if (info == null)
               return;
@@ -302,7 +342,7 @@ namespace FileListView.ViewModels
           },
           (p) =>
           {
-            return (p as FSItemVM) != null;          
+            return (p as FSItemViewModel) != null;          
           });
 
         return this.mNavigateDownCommand;
@@ -368,7 +408,7 @@ namespace FileListView.ViewModels
 
     /// <summary>
     /// Implements a command that adds a removes a folder location.
-    /// Expected parameter is of type <seealso cref="FSItemVM"/>.
+    /// Expected parameter is of type <seealso cref="FSItemViewModel"/>.
     /// </summary>
     public ICommand RecentFolderRemoveCommand
     {
@@ -383,7 +423,7 @@ namespace FileListView.ViewModels
 
     /// <summary>
     /// Implements a command that adds a recent folder location.
-    /// Expected parameter is of type <seealso cref="FSItemVM"/>.
+    /// Expected parameter is of type <seealso cref="FSItemViewModel"/>.
     /// </summary>
     public ICommand RecentFolderAddCommand
     {
@@ -396,9 +436,10 @@ namespace FileListView.ViewModels
       }
     }
 
+    #region Windows Integration FileSystem Commands
     /// <summary>
     /// Gets a command that will open the folder in which an item is stored.
-    /// The item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
     /// </summary>
     public ICommand OpenContainingFolderCommand
     {
@@ -408,7 +449,7 @@ namespace FileListView.ViewModels
           this.mOpenContainingFolderCommand = new RelayCommand<object>(
             (p) => 
             {
-              var path = p as FSItemVM;
+              var path = p as FSItemViewModel;
 
               if (path == null)
                 return;
@@ -416,7 +457,7 @@ namespace FileListView.ViewModels
               if (string.IsNullOrEmpty(path.FullPath) == true)
                 return;
 
-              FileListViewViewModel.OpenContainingFolderCommand_Executed(path.FullPath);
+              FileListViewModel.OpenContainingFolderCommand_Executed(path.FullPath);
             });
 
         return this.mOpenContainingFolderCommand;
@@ -425,7 +466,7 @@ namespace FileListView.ViewModels
 
     /// <summary>
     /// Gets a command that will open the selected item with the current default application
-    /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
     /// (eg: Item is HTML file -> Open in Windows starts the web browser for viewing the HTML
     /// file if thats the currently associated Windows default application.
     /// </summary>
@@ -437,7 +478,7 @@ namespace FileListView.ViewModels
           this.mOpenInWindowsCommand = new RelayCommand<object>(
             (p) =>
             {
-              var path = p as FSItemVM;
+              var path = p as FSItemViewModel;
 
               if (path == null)
                 return;
@@ -445,7 +486,7 @@ namespace FileListView.ViewModels
               if (string.IsNullOrEmpty(path.FullPath) == true)
                 return;
 
-              FileListViewViewModel.OpenInWindowsCommand_Executed(path.FullPath);
+              FileListViewModel.OpenInWindowsCommand_Executed(path.FullPath);
             });
 
         return this.mOpenInWindowsCommand;
@@ -454,7 +495,7 @@ namespace FileListView.ViewModels
 
     /// <summary>
     /// Gets a command that will copy the path of an item into the Windows Clipboard.
-    /// The item (path to a file) is expected as <seealso cref="FSItemVM"/> parameter.
+    /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
     /// </summary>
     public ICommand CopyPathCommand
     {
@@ -464,7 +505,7 @@ namespace FileListView.ViewModels
           this.mCopyPathCommand = new RelayCommand<object>(
             (p) =>
             {
-              var path = p as FSItemVM;
+              var path = p as FSItemViewModel;
 
               if (path == null)
                 return;
@@ -472,7 +513,7 @@ namespace FileListView.ViewModels
               if (string.IsNullOrEmpty(path.FullPath) == true)
                 return;
 
-              FileListViewViewModel.CopyPathCommand_Executed(path.FullPath);
+              FileListViewModel.CopyPathCommand_Executed(path.FullPath);
             });
 
         return this.mCopyPathCommand;
@@ -497,7 +538,110 @@ namespace FileListView.ViewModels
         return this.mToggleIsFilteredCommand;
       }
     }
+    #endregion Windows Integration FileSystem Commands
+
+    /// <summary>
+    /// Renames the folder that is represented by this viewmodel.
+    /// This command should be called directly by the implementing view
+    /// since the new name of the folder is delivered as string.
+    /// </summary>
+    public ICommand RenameCommand
+    {
+      get
+      {
+        if (this.mRenameCommand == null)
+          this.mRenameCommand = new RelayCommand<object>(it =>
+          {
+            var tuple = it as Tuple<string, object>;
+
+            if (tuple != null)
+            {
+              var folderVM = tuple.Item2 as FSItemViewModel;
+
+              if (tuple.Item1 != null && folderVM != null)
+                folderVM.RenameFileOrFolder(tuple.Item1);
+            }
+          });
+
+        return this.mRenameCommand;
+      }
+    }
+
+    /// <summary>
+    /// Starts the rename folder process by that renames the folder
+    /// that is represented by this viewmodel.
+    /// 
+    /// This command implements an event that triggers the actual rename
+    /// process in the connected view.
+    /// </summary>
+    public ICommand StartRenameCommand
+    {
+      get
+      {
+        if (this.mStartRenameCommand == null)
+          this.mStartRenameCommand = new RelayCommand<object>(it =>
+          {
+            var folder = it as FSItemViewModel;
+
+            if (folder != null)
+              folder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
+          });
+
+        return this.mStartRenameCommand;
+      }
+    }
+
+    /// <summary>
+    /// Starts the create folder process by creating a new folder
+    /// in the given location. The location is supplied as <seealso cref="System.Windows.Input.ICommandSource.CommandParameter"/>
+    /// which is a <seealso cref="IFolderViewModel"/> item. So, the <seealso cref="IFolderViewModel"/> item
+    /// is the parent of the new folder and the new folder is created with a standard name:
+    /// 'New Folder n'. The new folder n is selected and in rename mode such that users can edit
+    /// the name of the new folder right away.
+    /// 
+    /// This command implements an event that triggers the actual rename
+    /// process in the connected view.
+    /// </summary>
+    public ICommand CreateFolderCommand
+    {
+      get
+      {
+        if (this.mCreateFolderCommand == null)
+          this.mCreateFolderCommand = new RelayCommand<object>(it =>
+          {
+            var folder = it as string;
+            this.CreateFolderCommandNewFolder(folder);
+          });
+
+        return this.mCreateFolderCommand;
+      }
+    }
     #endregion commands
+
+    /// <summary>
+    /// Gets a property that can be bound to the Notification dependency property
+    /// of the <seealso cref="UserNotification.View.NotifyableContentControl"/>.
+    /// Application developers can invoke the ShowNotification method to show a
+    /// short pop-up message to the user. The pop-up message is shown in the
+    /// vicinity of the content control that contains the real control (eg: ListBox)
+    /// to which this notfication is related to.
+    /// </summary>
+    public SendNotificationViewModel Notification
+    {
+      get
+      {
+        return mNotification;
+      }
+
+      set
+      {
+        if (this.mNotification != value)
+        {
+          this.mNotification = value;
+          this.RaisePropertyChanged(() => this.Notification);
+        }
+      }
+    }
     #endregion properties
 
     #region methods
@@ -523,6 +667,7 @@ namespace FileListView.ViewModels
 
       ////this.RecentFolders.Push(this.CurrentFolder);
       this.UpdateView(sFolder);
+      this.RaisePropertyChanged(() => this.CurrentFolder);
     }
 
     /// <summary>
@@ -577,6 +722,7 @@ namespace FileListView.ViewModels
     protected void PopulateView()
     {
       this.PopulateView(this.mParsedFilter);
+      this.RaisePropertyChanged(() => this.CurrentFolder);
     }
 
     #region FileSystem Commands
@@ -722,7 +868,7 @@ namespace FileListView.ViewModels
               }
             }
 
-            FSItemVM info = new FSItemVM(dir.FullName, FSItemType.Folder, dir.Name);
+            FSItemViewModel info = new FSItemViewModel(dir.FullName, FSItemType.Folder, dir.Name);
 
             // to prevent the icon from being loaded from file later
             if (this.ShowIcons == false)
@@ -747,7 +893,7 @@ namespace FileListView.ViewModels
             }
           }
 
-          FSItemVM info = new FSItemVM(f.FullName, FSItemType.File, f.Name);
+          FSItemViewModel info = new FSItemViewModel(f.FullName, FSItemType.File, f.Name);
 
           if (this.ShowIcons == false)
             info.SetDisplayIcon(dummy);  // to prevent the icon from being loaded from file later
@@ -784,7 +930,7 @@ namespace FileListView.ViewModels
 
     private void RecentFolderRemove_Executed(object param)
     {
-      var item = param as FSItemVM;
+      var item = param as FSItemViewModel;
 
       if (item == null)
         return;
@@ -796,7 +942,7 @@ namespace FileListView.ViewModels
 
     private void RecentFolderAdd_Executed(object param)
     {
-      var item = param as FSItemVM;
+      var item = param as FSItemViewModel;
 
       if (item == null)
         return;
@@ -804,6 +950,60 @@ namespace FileListView.ViewModels
       if (this.RequestEditRecentFolder != null)
         this.RequestEditRecentFolder(this, new RecentFolderEvent(item.GetModel,
                                                                  RecentFolderEvent.RecentFolderAction.Add));
+    }
+
+    /// <summary>
+    /// Create a new folder underneath the given parent folder. This method creates
+    /// the folder with a standard name (eg 'New folder n') on disk and selects it
+    /// in editing mode to give users a chance for renaming it right away.
+    /// </summary>
+    /// <param name="parentFolder"></param>
+    private void CreateFolderCommandNewFolder(string parentFolder)
+    {
+      if (parentFolder == null)
+        return;
+
+      FSItemViewModel newSubFolder = this.CreateNewDirectory(parentFolder);
+
+      if (newSubFolder != null)
+      {
+        this.SelectedItem = newSubFolder;
+
+        // Do this with low priority (thanks for that tip to Joseph Leung)
+        Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
+        {
+          newSubFolder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
+        });
+      }
+    }
+
+    /// <summary>
+    /// Creates a new folder with a standard name (eg: 'New folder n').
+    /// </summary>
+    /// <returns></returns>
+    private FSItemViewModel CreateNewDirectory(string parentFolder)
+    {
+      try
+      {
+        var newSubFolder = PathModel.CreateDir(new PathModel(parentFolder, FSItemType.Folder));
+
+        if (newSubFolder != null)
+        {
+          var newFolderVM = new FSItemViewModel(newSubFolder.Path, newSubFolder.PathType, newSubFolder.Name);
+
+          this.CurrentItems.Add(newFolderVM);
+
+          return newFolderVM;
+        }
+      }
+      catch (Exception exp)
+      {
+        Logger.Error(string.Format("Creating new folder underneath '{0}' was not succesful.", parentFolder), exp);
+        this.Notification.ShowNotification(FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE,
+                                           exp.Message);
+      }
+
+      return null;
     }
     #endregion methods
   }

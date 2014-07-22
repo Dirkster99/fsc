@@ -15,10 +15,10 @@ namespace FileListView.ViewModels
   public class FolderComboBoxViewModel : Base.ViewModelBase
   {
     #region fields
-    private readonly ObservableCollection<FSItemVM> mCurrentItems;
+    private readonly ObservableCollection<FSItemViewModel> mCurrentItems;
 
     private string mCurrentFolder = string.Empty;
-    private FSItemVM mSelectedItem = null;
+    private FSItemViewModel mSelectedItem = null;
 
     private RelayCommand<object> mSelectionChanged = null;
     private string mSelectedRecentLocation = string.Empty;
@@ -32,7 +32,7 @@ namespace FileListView.ViewModels
     /// </summary>
     public FolderComboBoxViewModel()
     {
-      this.mCurrentItems = new ObservableCollection<FSItemVM>();
+      this.mCurrentItems = new ObservableCollection<FSItemViewModel>();
     }
     #endregion constructor
 
@@ -48,7 +48,7 @@ namespace FileListView.ViewModels
     /// Expose a collection of file system items (folders and hard disks and ...) that
     /// can be selected and navigated to in this viewmodel.
     /// </summary>
-    public ObservableCollection<FSItemVM> CurrentItems
+    public ObservableCollection<FSItemViewModel> CurrentItems
     {
       get
       {
@@ -59,7 +59,7 @@ namespace FileListView.ViewModels
     /// <summary>
     /// Gets/sets the currently selected file system viewmodel item.
     /// </summary>
-    public FSItemVM SelectedItem
+    public FSItemViewModel SelectedItem
     {
       get
       {
@@ -71,7 +71,7 @@ namespace FileListView.ViewModels
         if (this.mSelectedItem != value)
         {
           this.mSelectedItem = value;
-          this.NotifyPropertyChanged(() => this.SelectedItem);
+          this.RaisePropertyChanged(() => this.SelectedItem);
         }
       }
     }
@@ -92,8 +92,8 @@ namespace FileListView.ViewModels
         if (this.mCurrentFolder != value)
         {
           this.mCurrentFolder = value;
-          this.NotifyPropertyChanged(() => this.CurrentFolder);
-          this.NotifyPropertyChanged(() => this.CurrentFolderToolTip);
+          this.RaisePropertyChanged(() => this.CurrentFolder);
+          this.RaisePropertyChanged(() => this.CurrentFolderToolTip);
         }
       }
     }
@@ -172,7 +172,7 @@ namespace FileListView.ViewModels
 
         foreach (string s in Directory.GetLogicalDrives())
         {
-          FSItemVM info = FSItemVM.CreateLogicalDrive(s);
+          FSItemViewModel info = FSItemViewModel.CreateLogicalDrive(s);
           this.mCurrentItems.Add(info);
 
           // add items under current folder if we currently create the root folder of the current path
@@ -183,7 +183,7 @@ namespace FileListView.ViewModels
             {
               string curdir = string.Join(string.Empty + System.IO.Path.DirectorySeparatorChar, dirs, 0, i + 1);
 
-              info = new FSItemVM(curdir, FSItemType.Folder, dirs[i], i * 10);
+              info = new FSItemViewModel(curdir, FSItemType.Folder, dirs[i], i * 10);
 
               this.mCurrentItems.Add(info);
             }
@@ -217,7 +217,7 @@ namespace FileListView.ViewModels
     /// <summary>
     /// Method executes when the SelectionChanged command is invoked.
     /// The parameter <paramref name="p"/> can be an array of objects
-    /// containing objects of the <seealso cref="FSItemVM"/> type or
+    /// containing objects of the <seealso cref="FSItemViewModel"/> type or
     /// p can also be string.
     /// 
     /// Each parameter item that adheres to the above types results in
@@ -236,7 +236,7 @@ namespace FileListView.ViewModels
       {
         for (int i = 0; i < paramObjects.Length; i++)
         {
-          var item = paramObjects[i] as FSItemVM;
+          var item = paramObjects[i] as FSItemViewModel;
 
           if (item != null)
           {

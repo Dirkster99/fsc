@@ -60,8 +60,8 @@ namespace FileListView.ViewModels
         if (this.mSelectedItem != value)
         {
           this.mSelectedItem = value;
-          this.NotifyPropertyChanged(() => this.SelectedItem);
-          this.NotifyPropertyChanged(() => this.CurrentFilterToolTip);
+          this.RaisePropertyChanged(() => this.SelectedItem);
+          this.RaisePropertyChanged(() => this.CurrentFilterToolTip);
         }
       }
     }
@@ -83,8 +83,8 @@ namespace FileListView.ViewModels
         {
           this.mCurrentFilter = value;
           this.SelectionChanged_Executed(value);
-          this.NotifyPropertyChanged(() => this.CurrentFilter);
-          this.NotifyPropertyChanged(() => this.CurrentFilterToolTip);
+          this.RaisePropertyChanged(() => this.CurrentFilter);
+          this.RaisePropertyChanged(() => this.CurrentFilterToolTip);
         }
       }
     }
@@ -257,7 +257,7 @@ namespace FileListView.ViewModels
     /// <summary>
     /// Method executes when the SelectionChanged command is invoked.
     /// The parameter <paramref name="p"/> can be an array of objects
-    /// containing objects of the <seealso cref="FSItemVM"/> type or
+    /// containing objects of the <seealso cref="FSItemViewModel"/> type or
     /// p can also be string.
     /// 
     /// Each parameter item that adheres to the above types results in

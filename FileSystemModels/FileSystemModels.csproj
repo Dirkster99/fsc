@@ -123,6 +123,10 @@
     <Compile Include="Models\ExplorerSettingsModel.cs" />
     <Compile Include="Models\ExplorerUserProfile.cs" />
     <Compile Include="Models\FilterItemModel.cs" />
+    <Compile Include="Models\FSItems\DriveModel.cs" />
+    <Compile Include="Models\FSItems\Base\FileSystemModel.cs" />
+    <Compile Include="Models\FSItems\FileModel.cs" />
+    <Compile Include="Models\FSItems\FolderModel.cs" />
     <Compile Include="Utils\LinqExtensions.cs" />
     <Compile Include="Utils\DirectoryInfoExtension.cs" />
     <Compile Include="Models\PathModel.cs" />

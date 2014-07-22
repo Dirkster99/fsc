@@ -1,6 +1,7 @@
 namespace FileSystemModels.Models
 {
   using System;
+  using System.IO;
   using System.Xml.Serialization;
 
   /// <summary>
@@ -18,7 +19,7 @@ namespace FileSystemModels.Models
     private PathModel pathModel;
     #endregion fields
 
-    #region constructor
+    #region constructors
     /// <summary>
     /// Class constructor
     /// </summary>
@@ -67,7 +68,7 @@ namespace FileSystemModels.Models
       this.mPath = string.Empty;
       this.mItemType = FSItemType.Unknown;
     }
-    #endregion constructor
+    #endregion constructors
 
     #region properties
     /// <summary>
@@ -96,6 +97,44 @@ namespace FileSystemModels.Models
       get
       {
         return this.mItemType;
+      }
+    }
+
+    /// <summary>
+    /// Gets the name of this item. For folders this is the folder
+    /// name without its path;
+    /// </summary>
+    [XmlIgnore]
+    public string Name
+    {
+      get
+      {
+        try
+        {
+          switch (this.PathType)
+          {
+            case FSItemType.LogicalDrive:
+            case FSItemType.Folder:
+              DirectoryInfo di = new DirectoryInfo(this.Path);
+
+              return di.Name;
+
+            case FSItemType.File:
+              FileInfo fi = new FileInfo(this.Path);
+
+              return fi.Name;
+
+            case FSItemType.Unknown:
+            default:
+              break;
+          }
+
+        }
+        catch
+        {
+        }
+
+        return null;
       }
     }
     #endregion properties
@@ -341,6 +380,126 @@ namespace FileSystemModels.Models
     public bool DirectoryPathExists()
     {
       return PathModel.DirectoryPathExists(this.mPath);
+    }
+
+    /// <summary>
+    /// Rename an existing directory into the <paramref name="newFolderName"/>.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="newFolderName"></param>
+    /// <param name="newFolderPathName"></param>
+    /// <returns></returns>
+    public static bool RenameDirectory(string source,
+                                     string newFolderName,
+                                     out string newFolderPathName)
+    {
+      newFolderPathName = null;
+
+      if (System.IO.Directory.Exists(source))
+      {
+        string parent = System.IO.Directory.GetParent(source).FullName;
+
+        newFolderPathName = System.IO.Path.Combine(parent, newFolderName);
+
+        System.IO.Directory.Move(source, newFolderPathName);
+
+        return true;
+      }
+
+      return false;
+    }
+
+    /// <summary>
+    /// Rename an existing directory into the <paramref name="newFolderName"/>.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="newFolderName"></param>
+    /// <param name="newFolderPathName"></param>
+    /// <returns>false Item to be renamed does not exist or something else is not as expected, otherwise true</returns>
+    public static bool RenameFileOrDirectory(PathModel source,
+                                       string newFolderName,
+                                       out PathModel newFolderPathName)
+    {
+      newFolderPathName = null;
+
+      switch (source.PathType)
+      {
+        case FSItemType.Folder:
+          if (System.IO.Directory.Exists(source.Path))
+          {
+            DirectoryInfo di = new DirectoryInfo(source.Path);
+
+            string parent = di.Parent.FullName;
+
+            string newFolderPath = System.IO.Path.Combine(parent, newFolderName);
+
+            newFolderPathName = new PathModel(newFolderPath, source.PathType);
+
+            System.IO.Directory.Move(source.Path, newFolderPathName.Path);
+
+            return true;
+          }
+          break;
+
+        case FSItemType.File:
+          if (System.IO.File.Exists(source.Path))
+          {
+            string parent = System.IO.Directory.GetParent(source.Path).FullName;
+
+            newFolderPathName = new PathModel(System.IO.Path.Combine(parent, newFolderName), source.PathType);
+
+            System.IO.Directory.Move(source.Path, newFolderPathName.Path);
+
+            return true;
+          }
+          break;
+
+        case FSItemType.LogicalDrive:
+        case FSItemType.Unknown:
+        default:
+          break;
+      }
+
+      // Item to be renamed does not exist or something else is not as expected
+      return false;
+    }
+
+    /// <summary>
+    /// Create a new folder new standard sub folder in <paramref name="folderPath"/>.
+    /// The new folder has a standard name like 'New folder n'.
+    /// </summary>
+    /// <param name="folderPath"></param>
+    /// <returns>PathModel object to new folder or null</returns>
+    public static PathModel CreateDir(PathModel folderPath)
+    {
+        // Compute default name for new folder
+        var newDefaultFolderName = FileSystemModels.Local.Strings.STR_NEW_DEFAULT_FOLDER_NAME;
+        var newFolderName = newDefaultFolderName;
+        var newFolderPath = newFolderName;
+
+        try
+        {
+          if (System.IO.Directory.Exists(folderPath.Path) == false)
+          return null;
+
+        // Compute default name for new folder
+        newFolderPath = System.IO.Path.Combine(folderPath.Path, newDefaultFolderName);
+
+        for (int i = 1; System.IO.Directory.Exists(newFolderPath) == true; i++)
+        {
+          newFolderName = string.Format("{0} {1}", newDefaultFolderName, i);
+          newFolderPath = System.IO.Path.Combine(folderPath.Path, newFolderName);
+        }
+
+        // Create that new folder
+        System.IO.Directory.CreateDirectory(newFolderPath);
+
+        return new PathModel(newFolderPath, FSItemType.Folder);
+      }
+      catch (Exception exp)
+      {
+        throw new Exception(string.Format("'{0}'", newFolderPath), exp);
+      }
     }
     #endregion methods
   }

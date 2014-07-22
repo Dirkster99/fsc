@@ -94,7 +94,7 @@
     </Setter>
     <Setter Property="ItemTemplate">
       <Setter.Value>
-        <DataTemplate DataType="{x:Type vm:FSItemVM}">
+        <DataTemplate DataType="{x:Type vm:FSItemViewModel}">
           <Grid ToolTip="{Binding FullPath}" ToolTipService.IsEnabled="{Binding ShowToolTip}">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="{Binding Indentation}"/>

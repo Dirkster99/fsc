@@ -17,7 +17,7 @@ namespace FolderBrowser.ViewModels
   /// <summary>
   /// Implment the viewmodel for one folder entry for a collection of folders.
   /// </summary>
-  public class FolderViewModel : EditInPlaceViewModel, IFolderViewModel, IEditBox
+  public class FolderViewModel : EditInPlaceViewModel, IFolderViewModel
   {
     #region fields
     /// <summary>
@@ -360,16 +360,12 @@ namespace FolderBrowser.ViewModels
       {
         if (newFolderName != null)
         {
-          if (System.IO.Directory.Exists(this.FolderPath))
+          string newFolderPath;
+
+          if (PathModel.RenameDirectory(this.FolderPath, newFolderName, out newFolderPath) == true)
           {
-            string parent = System.IO.Directory.GetParent(this.FolderPath).FullName;
-
-            string newFolderPathName = System.IO.Path.Combine(parent, newFolderName);
-
-            System.IO.Directory.Move(this.FolderPath, newFolderPathName);
-
-            this.FolderPath = newFolderPathName;
-            this.FolderName = Path.GetFileName(this.FolderPath);
+            this.FolderPath = newFolderPath;
+            this.FolderName = Path.GetFileName(newFolderPath);
           }
         }
       }
@@ -392,35 +388,18 @@ namespace FolderBrowser.ViewModels
     /// 'New folder n' underneath this folder.
     /// </summary>
     /// <returns>a viewmodel of the newly created directory or null</returns>
-    public IFolderViewModel CreateNewDirector()
+    public IFolderViewModel CreateNewDirectory()
     {
-      // Compute default name for new folder
-      var newDefaultFolderName = FileSystemModels.Local.Strings.STR_NEW_DEFAULT_FOLDER_NAME;
-      var newFolderName = newDefaultFolderName;
-      var newFolderPath = newFolderName;
-
       try
       {
-        if (System.IO.Directory.Exists(this.FolderPath) == false)
-          return null;
+        var newSubFolder = PathModel.CreateDir(new PathModel(this.FolderPath, FSItemType.Folder));
 
-        // Compute default name for new folder
-        newFolderPath = System.IO.Path.Combine(this.FolderPath, newDefaultFolderName);
-
-        for (int i = 1; System.IO.Directory.Exists(newFolderPath) == true; i++)
-        {
-          newFolderName = string.Format("{0} {1}", newDefaultFolderName, i);
-          newFolderPath = System.IO.Path.Combine(this.FolderPath, newFolderName);
-        }
-
-        // Create that new folder
-        System.IO.Directory.CreateDirectory(newFolderPath);
-
-        return this.AddFolder(newFolderPath);
+        if (newSubFolder != null)
+          return this.AddFolder(newSubFolder.Path);
       }
       catch (Exception exp)
       {
-        Logger.Error(string.Format("Creating new folder '{0}' was not succesful.", newFolderPath), exp);
+        Logger.Error(string.Format("Creating new folder underneath '{0}' was not succesful.", this.FolderPath), exp);
 
         base.ShowNotification(FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE, exp.Message);
       }
