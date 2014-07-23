@@ -296,4 +296,20 @@
     <value>Error while renaming folder</value>
     <comment>This title is shown in the pop-up of a generic  error notification when renaming did not result in success.</comment>
   </data>
+  <data name="STR_Rename_Command" xml:space="preserve">
+    <value>Rename</value>
+    <comment>Caption of the rename command for renaming files and folder in the sile system.</comment>
+  </data>
+  <data name="STR_Rename_Command_TT" xml:space="preserve">
+    <value>Rename an item in the Windows file system</value>
+    <comment>Toot tip type text for the rename command for renaming files and folder in the sile system.</comment>
+  </data>
+  <data name="STR_NewFolder_Command" xml:space="preserve">
+    <value>New Folder</value>
+    <comment>Caption of the new folder command for renaming files and folder in the file system.</comment>
+  </data>
+  <data name="STR_NewFolder_Command_TT" xml:space="preserve">
+    <value>Create a new folder in the Windows file system</value>
+    <comment>Toot tip type text for the new folder command for creating folders in the file system.</comment>
+  </data>
 </root>

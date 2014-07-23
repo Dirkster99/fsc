@@ -1,14 +1,13 @@
 # WPF File System Controls #
 
-This project contains the source code for an implementation of controls that are related
-to browsing files within an existing application. Go to: edi.codeplex.com to see the controls
-in full action (see Explorer tool window).
+This project contains the source code for an implementation of controls that are related to browsing files within an existing application. Go to: edi.codeplex.com to see the controls in full action (see Explorer tool window).
 
 This project contains:
 
 
   - A folder browser control to browse folders with a treeview in your file system
     - see: FolderBrowser/FolderBrowser/ViewModels/FolderViewModel.cs and FolderBrowser/FolderBrowser/Views/FolderBrowserView.xaml
+    - see /FolderBrowser/FolderBrowser/Readme.txt for more details
 
   - A path combobox control that lets you:
     - enter a path (with copy and paste) or
@@ -29,6 +28,11 @@ Other features include:
   - A set of folder short-cut buttons to navigate directly to a folder.
 
 ## Limitations ##
+
+  - The New Folder command may not work when being executed in the treeview folder browser with the synchronized display of the folder/file listview.
+
+  Analysis: The problem is that the folderbrowser updates the listview too early (in-directly through folder selection) which means that the listbox gets data from the 'New folder', which in turn blocks the rename process from implementing the Rename command in the folder browser.
+    - Workaround: Use the New Folder command in the ListView when it is available
 
   - Universal Control (UNC) network share paths are not supported
 

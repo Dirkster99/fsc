@@ -10,7 +10,6 @@ namespace FolderBrowser.ViewModels
   using FileSystemModels.Models;
   using FolderBrowser.Command;
   using FolderBrowser.ViewModels.Interfaces;
-  using InplaceEditBoxLib.Interfaces;
   using InplaceEditBoxLib.ViewModels;
   using MsgBox;
 
@@ -37,9 +36,25 @@ namespace FolderBrowser.ViewModels
     private RelayCommand<object> mCopyPathCommand;
 
     private string mVolumeLabel;
+
+    private object mLockObject = new object();
     #endregion fields
 
     #region constructor
+    /// <summary>
+    /// Construct a folder viewmodel item from a path.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
+    public FolderViewModel(PathModel path)
+    {
+      Logger.Debug("Detail: Construct FolderViewModel");
+
+      this.ItemType = path.PathType;
+      this.FolderName = path.Name;
+      this.FolderPath = path.Path;
+    }
+
     /// <summary>
     /// Parameterized <seealso cref="FolderViewModel"/> constructor
     /// </summary>
@@ -83,6 +98,7 @@ namespace FolderBrowser.ViewModels
       {
         if (this.mFolderName != value)
         {
+          Logger.Debug("Detail: set Folder Name");
           this.mFolderName = value;
           this.RaisePropertyChanged(() => this.FolderName);
           this.RaisePropertyChanged(() => this.DisplayItemString);
@@ -99,6 +115,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.Debug("Detail: get DisplayItemString");
+
         switch (this.ItemType)
         {
           case FSItemType.LogicalDrive:
@@ -148,6 +166,8 @@ namespace FolderBrowser.ViewModels
       {
         if (this.mFolderPath != value)
         {
+          Logger.Debug("Detail: set FolderPath");
+
           this.mFolderPath = value;
           this.RaisePropertyChanged(() => this.FolderPath);
           this.RaisePropertyChanged(() => this.DisplayItemString);
@@ -162,6 +182,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.Debug("Detail: get Folders collection");
+
         if (this.mFolders == null)
           this.mFolders = new ObservableCollection<IFolderViewModel>();
 
@@ -183,6 +205,8 @@ namespace FolderBrowser.ViewModels
       {
         if (this.mIsSelected != value)
         {
+          Logger.Debug("Detail: set Folder IsSelected");
+
           this.mIsSelected = value;
 
           this.RaisePropertyChanged(() => this.IsSelected);
@@ -207,6 +231,8 @@ namespace FolderBrowser.ViewModels
       {
         if (this.mIsExpanded != value)
         {
+          Logger.Debug("Detail: set Folder IsExpanded");
+
           this.mIsExpanded = value;
 
           this.RaisePropertyChanged(() => this.IsExpanded);
@@ -231,6 +257,8 @@ namespace FolderBrowser.ViewModels
       {
         if (this.mItemType != value)
         {
+          Logger.Debug("Detail: set ItemType");
+
           this.mItemType = value;
 
           this.RaisePropertyChanged(() => this.ItemType);
@@ -248,6 +276,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.Debug("Detail: get OpenInWindowsCommand");
+
         if (this.mOpenInWindowsCommand == null)
           this.mOpenInWindowsCommand = new RelayCommand<object>(
             (p) =>
@@ -275,6 +305,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.Debug("Detail: get CopyPathCommand");
+
         if (this.mCopyPathCommand == null)
           this.mCopyPathCommand = new RelayCommand<object>(
             (p) =>
@@ -304,6 +336,8 @@ namespace FolderBrowser.ViewModels
     /// <returns></returns>
     public static FolderViewModel ConstructDriveFolderViewModel(string driveLetter)
     {
+      Logger.Debug("Detail: Query Drives");
+
       try
       {
         FolderViewModel f = new FolderViewModel(FSItemType.LogicalDrive)
@@ -330,6 +364,8 @@ namespace FolderBrowser.ViewModels
     /// <returns></returns>
     public static FolderViewModel ConstructFolderFolderViewModel(string dir)
     {
+      Logger.Debug("Detail: get FolderViewModel");
+
       try
       {
         string folderName = Path.GetFileName(dir);
@@ -356,30 +392,35 @@ namespace FolderBrowser.ViewModels
     /// <param name="newFolderName"></param>
     public void RenameFolder(string newFolderName)
     {
-      try
-      {
-        if (newFolderName != null)
-        {
-          string newFolderPath;
+      Logger.DebugFormat("Detail: Rename into new folder {0}:", newFolderName);
 
-          if (PathModel.RenameDirectory(this.FolderPath, newFolderName, out newFolderPath) == true)
+      lock (this.mLockObject)
+      {
+        try
+        {
+          if (newFolderName != null)
           {
-            this.FolderPath = newFolderPath;
-            this.FolderName = Path.GetFileName(newFolderPath);
+            string newFolderPath;
+
+            if (PathModel.RenameDirectory(this.FolderPath, newFolderName, out newFolderPath) == true)
+            {
+              this.FolderPath = newFolderPath;
+              this.FolderName = Path.GetFileName(newFolderPath);
+            }
           }
         }
-      }
-      catch (Exception exp)
-      {
-        Logger.Error(string.Format("RenameFolder into '{0}' was not succesful.", newFolderName) , exp);
+        catch (Exception exp)
+        {
+          Logger.Error(string.Format("RenameFolder into '{0}' was not succesful.", newFolderName), exp);
 
-        base.ShowNotification(FileSystemModels.Local.Strings.STR_RenameFolderErrorTitle, exp.Message);
-      }
-      finally
-      {
-        this.RaisePropertyChanged(() => this.FolderName);
-        this.RaisePropertyChanged(() => this.FolderPath);
-        this.RaisePropertyChanged(() => this.DisplayItemString);
+          base.ShowNotification(FileSystemModels.Local.Strings.STR_RenameFolderErrorTitle, exp.Message);
+        }
+        finally
+        {
+          this.RaisePropertyChanged(() => this.FolderName);
+          this.RaisePropertyChanged(() => this.FolderPath);
+          this.RaisePropertyChanged(() => this.DisplayItemString);
+        } 
       }
     }
 
@@ -390,18 +431,28 @@ namespace FolderBrowser.ViewModels
     /// <returns>a viewmodel of the newly created directory or null</returns>
     public IFolderViewModel CreateNewDirectory()
     {
-      try
-      {
-        var newSubFolder = PathModel.CreateDir(new PathModel(this.FolderPath, FSItemType.Folder));
+      Logger.DebugFormat("Detail: Create new directory with standard name.");
 
-        if (newSubFolder != null)
-          return this.AddFolder(newSubFolder.Path);
-      }
-      catch (Exception exp)
+      lock (this.mLockObject)
       {
-        Logger.Error(string.Format("Creating new folder underneath '{0}' was not succesful.", this.FolderPath), exp);
+        try
+        {
+          var newSubFolder = PathModel.CreateDir(new PathModel(this.FolderPath, FSItemType.Folder));
 
-        base.ShowNotification(FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE, exp.Message);
+          if (newSubFolder != null)
+          {
+            var newFolder = new FolderViewModel(newSubFolder);
+            this.Folders.Add(newFolder);
+            return newFolder;
+            //// return this.AddFolder(newSubFolder.Path);
+          }
+        }
+        catch (Exception exp)
+        {
+          Logger.Error(string.Format("Creating new folder underneath '{0}' was not succesful.", this.FolderPath), exp);
+
+          base.ShowNotification(FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE, exp.Message);
+        }
       }
 
       return null;
@@ -512,6 +563,8 @@ namespace FolderBrowser.ViewModels
     /// </summary>
     private void LoadFolders()
     {
+      Logger.DebugFormat("Detail: Load sub-folders of this folder.");
+
       try
       {
         if (this.Folders.Count > 0)
@@ -560,6 +613,8 @@ namespace FolderBrowser.ViewModels
     /// <returns></returns>
     private FolderViewModel AddFolder(string dir)
     {
+      Logger.DebugFormat("Detail: AddFolder '{0}' into sub-folder collection of this folder.", dir);
+
       try
       {
         DirectoryInfo di = new DirectoryInfo(dir);

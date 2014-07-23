@@ -19,6 +19,11 @@ namespace FolderBrowser.ViewModels
   public class BrowserViewModel : Base.ViewModelBase, IBrowserViewModel
   {
     #region fields
+    /// <summary>
+    /// Log4net logger facility for this class.
+    /// </summary>
+    protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
     private string mSelectedFolder;
     private bool mExpanding = false;
 
@@ -99,6 +104,8 @@ namespace FolderBrowser.ViewModels
       
       set
       {
+        Logger.DebugFormat("set SelectedFolder property");
+
         lock (this.mLockObject)
         {
           if (this.mSelectedFolder != value)
@@ -125,6 +132,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.DebugFormat("get FolderSelectedCommand property");
+
         if (this.mFolderSelectedCommand == null)
         {
           this.mFolderSelectedCommand = new RelayCommand<object>(p =>
@@ -167,6 +176,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.DebugFormat("get FinalSelectDirectoryCommand property");
+
         if (this.mFinalSelectDirectoryCommand == null)
           this.mFinalSelectDirectoryCommand = new RelayCommand<object>(it =>
           {
@@ -194,6 +205,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.DebugFormat("get RenameCommand property");
+
         if (this.mRenameCommand == null)
           this.mRenameCommand = new RelayCommand<object>(it =>
           {
@@ -223,6 +236,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.DebugFormat("get StartRenameCommand property");
+
         if (this.mStartRenameCommand == null)
           this.mStartRenameCommand = new RelayCommand<object>(it =>
           {
@@ -251,6 +266,8 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
+        Logger.DebugFormat("get CreateFolderCommand property");
+
         if (this.mCreateFolderCommand == null)
           this.mCreateFolderCommand = new RelayCommand<object>(it =>
           {
@@ -370,6 +387,8 @@ namespace FolderBrowser.ViewModels
     /// <returns></returns>
     private static IFolderViewModel Expand(ObservableCollection<IFolderViewModel> childFolders, string path)
     {
+      Logger.DebugFormat("static Expand folder method for {0}", path);
+
       if (string.IsNullOrEmpty(path) || childFolders.Count == 0)
       {
         return null;
@@ -415,6 +434,8 @@ namespace FolderBrowser.ViewModels
     /// <param name="updateViews"></param>
     private void SetSelectedFolder(string selectedFolder, bool updateViews)
     {
+      Logger.DebugFormat("SetSelectedFolder folder method for {0}", selectedFolder);
+
       this.SelectedFolder = PathModel.NormalizePath(selectedFolder);
       this.OnSelectedFolderChanged();
 
@@ -428,6 +449,8 @@ namespace FolderBrowser.ViewModels
 
     private void OnSelectedFolderChanged()
     {
+      Logger.DebugFormat("OnSelectedFolderChanged method");
+
       if (this.mExpanding == false)
       {
         try
@@ -442,6 +465,35 @@ namespace FolderBrowser.ViewModels
         {
           this.mExpanding = false;
         }
+      }
+    }
+
+    /// <summary>
+    /// Create a new folder underneath the given parent folder. This method creates
+    /// the folder with a standard name (eg 'New folder n') on disk and selects it
+    /// in editing mode to give users a chance for renaming it right away.
+    /// </summary>
+    /// <param name="parentFolder"></param>
+    private void CreateFolderCommandNewFolder(IFolderViewModel parentFolder)
+    {
+      Logger.DebugFormat("CreateFolderCommandNewFolder method for '{0}'", parentFolder);
+
+      if (parentFolder == null)
+        return;
+
+      IFolderViewModel newSubFolder = parentFolder.CreateNewDirectory();
+
+      ////this.SelectedFolder = newSubFolder.FolderPath;
+      ////this.SetSelectedFolder(newSubFolder.FolderPath, true);
+
+      if (newSubFolder != null)
+      {
+        // Do this with low priority (thanks for that tip to Joseph Leung)
+        Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
+        {
+          newSubFolder.IsSelected = true;
+          newSubFolder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
+        });
       }
     }
 
@@ -483,30 +535,6 @@ namespace FolderBrowser.ViewModels
                                                                    RecentFolderEvent.RecentFolderAction.Add));
     }
     #endregion Add Remove Recent Folder commands
-
-    /// <summary>
-    /// Create a new folder underneath the given parent folder. This method creates
-    /// the folder with a standard name (eg 'New folder n') on disk and selects it
-    /// in editing mode to give users a chance for renaming it right away.
-    /// </summary>
-    /// <param name="parentFolder"></param>
-    private void CreateFolderCommandNewFolder(IFolderViewModel parentFolder)
-    {
-      if (parentFolder == null)
-        return;
-
-      IFolderViewModel newSubFolder = parentFolder.CreateNewDirectory();
-
-      if (newSubFolder != null)
-      {
-        // Do this with low priority (thanks for that tip to Joseph Leung)
-        Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background, (Action)delegate
-        {
-          this.SetSelectedFolder(newSubFolder.FolderPath, true);
-          newSubFolder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
-        });
-      }
-    }
     #endregion methods
   }
 }

@@ -30,6 +30,11 @@ namespace FolderBrowser.Views.Behaviours
     #region IsBroughtIntoViewWhenSelected
     #region IsBroughtIntoViewWhenSelectedDependencyProperty
     /// <summary>
+    /// Log4net logger facility for this class.
+    /// </summary>
+    private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+    /// <summary>
     /// Backing storage of the IsBroughtIntoViewWhenSelected dependency property.
     /// </summary>
     public static readonly DependencyProperty IsBroughtIntoViewWhenSelectedProperty =
@@ -82,8 +87,9 @@ namespace FolderBrowser.Views.Behaviours
 
       if (item != null)
       {
+        Logger.Debug("Behaviour BringItem Into View");
         item.BringIntoView();
-        item.Focus();
+        ////item.Focus();
       }
     }
     #endregion methods

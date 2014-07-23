@@ -124,6 +124,8 @@ namespace FileListView.ViewModels
 
       set
       {
+        Logger.DebugFormat("Set SelectedItem '{0}' property", value);
+
         if (this.mSelectedItem != value)
         {
           this.mSelectedItem = value;
@@ -144,6 +146,8 @@ namespace FileListView.ViewModels
 
       set
       {
+        Logger.DebugFormat("Set ShowFolders '{0}' property", value);
+
         if (this.mShowFolders != value)
         {
           this.mShowFolders = value;
@@ -164,6 +168,8 @@ namespace FileListView.ViewModels
 
       set
       {
+        Logger.DebugFormat("Set ShowHidden '{0}' property", value);
+
         if (this.mShowHidden != value)
         {
           this.mShowHidden = value;
@@ -184,6 +190,8 @@ namespace FileListView.ViewModels
 
       set
       {
+        Logger.DebugFormat("Set ShowIcons '{0}' property", value);
+
         if (this.mShowIcons != value)
         {
           this.mShowIcons = value;
@@ -204,6 +212,8 @@ namespace FileListView.ViewModels
 
       private set
       {
+        Logger.DebugFormat("Set IsFiltered '{0}' property", value);
+
         if (this.mIsFiltered != value)
         {
           this.mIsFiltered = value;
@@ -221,6 +231,8 @@ namespace FileListView.ViewModels
     {
       get
       {
+        Logger.DebugFormat("get CurrentFolder property");
+
         if (this.mBrowseNavigation != null)
         {
           if (this.mBrowseNavigation.CurrentFolder != null)
@@ -635,6 +647,8 @@ namespace FileListView.ViewModels
 
       set
       {
+        Logger.DebugFormat("Set Notification '{0}' property", value);
+
         if (this.mNotification != value)
         {
           this.mNotification = value;
@@ -651,6 +665,8 @@ namespace FileListView.ViewModels
     /// <param name="p"></param>
     public void UpdateView(string p)
     {
+      Logger.DebugFormat("UpdateView method with '{0}' property", p);
+
       if (string.IsNullOrEmpty(p) == true)
         return;
 
@@ -663,6 +679,8 @@ namespace FileListView.ViewModels
     /// </summary>
     public void NavigateToThisFolder(string sFolder)
     {
+      Logger.DebugFormat("NavigateToThisFolder method with '{0}'", sFolder);
+
       this.mBrowseNavigation.BrowseDown(FSItemType.Folder, sFolder);
 
       ////this.RecentFolders.Push(this.CurrentFolder);
@@ -678,6 +696,8 @@ namespace FileListView.ViewModels
     /// <param name="filterText"></param>
     public void ApplyFilter(string filterText)
     {
+      Logger.DebugFormat("ApplyFilter method with '{0}'", filterText);
+
       this.mFilterString = filterText;
 
       string[] tempParsedFilter = BrowseNavigation.GetParsedFilters(this.mFilterString);
@@ -697,6 +717,8 @@ namespace FileListView.ViewModels
     /// <param name="isFolderVisible"></param>
     public void SetIsFolderVisible(bool isFolderVisible)
     {
+      Logger.DebugFormat("SetIsFolderVisible method with '{0}'", isFolderVisible);
+
       this.ShowFolders = isFolderVisible;
       this.PopulateView();
     }
@@ -708,6 +730,8 @@ namespace FileListView.ViewModels
     /// <param name="isFiltered"></param>
     public void SetIsFiltered(bool isFiltered)
     {
+      Logger.DebugFormat("SetIsFiltered method with '{0}'", isFiltered);
+
       this.IsFiltered = isFiltered;
       this.PopulateView();
     }
@@ -721,6 +745,8 @@ namespace FileListView.ViewModels
     /// </summary>
     protected void PopulateView()
     {
+      Logger.DebugFormat("PopulateView method");
+
       this.PopulateView(this.mParsedFilter);
       this.RaisePropertyChanged(() => this.CurrentFolder);
     }
@@ -838,6 +864,8 @@ namespace FileListView.ViewModels
     /// </summary>
     private void PopulateView(string[] filterString)
     {
+      Logger.DebugFormat("PopulateView method with filterString parameter");
+
       this.CurrentItems.Clear();
 
       if (this.mBrowseNavigation.IsCurrentPathDirectory() == false)
@@ -960,6 +988,8 @@ namespace FileListView.ViewModels
     /// <param name="parentFolder"></param>
     private void CreateFolderCommandNewFolder(string parentFolder)
     {
+      Logger.DebugFormat("CreateFolderCommandNewFolder method with '{0}'", parentFolder);
+
       if (parentFolder == null)
         return;
 
@@ -983,6 +1013,8 @@ namespace FileListView.ViewModels
     /// <returns></returns>
     private FSItemViewModel CreateNewDirectory(string parentFolder)
     {
+      Logger.DebugFormat("CreateNewDirectory method with '{0}'", parentFolder);
+
       try
       {
         var newSubFolder = PathModel.CreateDir(new PathModel(parentFolder, FSItemType.Folder));

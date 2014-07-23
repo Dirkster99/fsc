@@ -467,6 +467,42 @@ namespace FileSystemModels.Local {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New Folder.
+        /// </summary>
+        public static string STR_NewFolder_Command {
+            get {
+                return ResourceManager.GetString("STR_NewFolder_Command", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create a new folder in the Windows file system.
+        /// </summary>
+        public static string STR_NewFolder_Command_TT {
+            get {
+                return ResourceManager.GetString("STR_NewFolder_Command_TT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string STR_Rename_Command {
+            get {
+                return ResourceManager.GetString("STR_Rename_Command", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename an item in the Windows file system.
+        /// </summary>
+        public static string STR_Rename_Command_TT {
+            get {
+                return ResourceManager.GetString("STR_Rename_Command_TT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error while renaming folder.
         /// </summary>
         public static string STR_RenameFolderErrorTitle {

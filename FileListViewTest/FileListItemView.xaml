@@ -302,14 +302,14 @@
 
             <MenuItem Command="{Binding Path=Data.CreateFolderCommand, Source={StaticResource DataContextProxy}}"
                     CommandParameter="{Binding Path=Data.CurrentFolder, Source={StaticResource DataContextProxy}}"
-                    Header="New Folder"
-                    ToolTip="Create a new folder"
+                    Header="{x:Static fvloc:Strings.STR_NewFolder_Command}"
+                    ToolTip="{x:Static fvloc:Strings.STR_NewFolder_Command_TT}"
                     />
 
             <MenuItem Command="{Binding Path=Data.StartRenameCommand, Source={StaticResource DataContextProxy}}"
                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}"
-                    Header="Rename"
-                    ToolTip="Rename a folder"
+                    Header="{x:Static fvloc:Strings.STR_Rename_Command}"
+                    ToolTip="{x:Static fvloc:Strings.STR_Rename_Command_TT}"
                  />
           </ContextMenu>
         </ListBox.ContextMenu>
