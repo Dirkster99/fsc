@@ -85,7 +85,7 @@ The control implements a pop-up message element to show hints to the user if he 
 
 # Credits #
 
-- Thanks to LYCJ@quickzip.org for coaching my along the way
+- Thanks to Joseph Leung for coaching my along the way
 
 - This code uses part of ATC Avalon Team's work:
 http://blogs.msdn.com/atc_avalon_team/archive/2006/03/14/550934.aspx
