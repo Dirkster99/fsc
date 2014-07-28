@@ -83,8 +83,11 @@ namespace InplaceEditBoxLib.Views
     /// 2> String changed
     /// 3> Control left Edit Mode (with Enter or F2)
     /// </summary>
-    public static readonly DependencyProperty CommandProperty =
-        DependencyProperty.Register("Command", typeof(ICommand), typeof(EditBox), new UIPropertyMetadata(null));
+    public static readonly DependencyProperty RenameCommandProperty =
+        DependencyProperty.Register("RenameCommand",
+      	                            typeof(ICommand),
+      	                            typeof(EditBox),
+      	                            new UIPropertyMetadata(null));
 
     #region InvalidCharacters dependency properties
     /// <summary>
@@ -168,9 +171,9 @@ namespace InplaceEditBoxLib.Views
     private SimpleNotificationWindow mTip;
 
     /// <summary>
-    /// Is a viewmodel which keeps the command binding and event triggering to base the notifications on
-    /// Using this setup tests the real world scenario where notifications are triggered through
-    /// complex conditions in the viewmodel. These worklflows are not necessarily triggered by a button in a view.
+    /// This field points to a viewmodel that keeps the command binding and event triggering
+    /// to base the notifications on. This enables the viewmodel to send events (notifications)
+    /// for processing to the view.
     /// </summary>
     private IEditBox mViewModel;
 
@@ -275,10 +278,10 @@ namespace InplaceEditBoxLib.Views
     /// of this control (as object). The CommandParameter is
     /// created by the control itself an needs no extra binding statement.
     /// </summary>
-    public ICommand Command
+    public ICommand RenameCommand
     {
-      get { return (ICommand)GetValue(CommandProperty); }
-      set { SetValue(CommandProperty, value); }
+      get { return (ICommand)GetValue(RenameCommandProperty); }
+      set { SetValue(RenameCommandProperty, value); }
     }
 
     #region InvalidCharacters dependency properties
@@ -645,10 +648,10 @@ namespace InplaceEditBoxLib.Views
               if (this.mTextBox != null)
               {
                   // Tell the ViewModel (if any) that we'd like to rename this item
-                  if (this.Command != null)
+                  if (this.RenameCommand != null)
                   {
                       var tuple = new Tuple<string, object>(sNewName, this.DataContext);
-                      this.Command.Execute(tuple);
+                      this.RenameCommand.Execute(tuple);
                   }
               }
           }

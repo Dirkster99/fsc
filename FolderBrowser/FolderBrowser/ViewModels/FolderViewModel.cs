@@ -26,9 +26,8 @@ namespace FolderBrowser.ViewModels
 
     private bool mIsSelected;
     private bool mIsExpanded;
-    private FSItemType mItemType;
-    private string mFolderName;
-    private string mFolderPath;
+
+    private PathModel mModel;
 
     private ObservableCollection<IFolderViewModel> mFolders;
 
@@ -44,24 +43,13 @@ namespace FolderBrowser.ViewModels
     /// <summary>
     /// Construct a folder viewmodel item from a path.
     /// </summary>
-    /// <param name="path"></param>
+    /// <param name="model"></param>
     /// <returns></returns>
-    public FolderViewModel(PathModel path)
+    public FolderViewModel(PathModel model)
     {
       Logger.Debug("Detail: Construct FolderViewModel");
 
-      this.ItemType = path.PathType;
-      this.FolderName = path.Name;
-      this.FolderPath = path.Path;
-    }
-
-    /// <summary>
-    /// Parameterized <seealso cref="FolderViewModel"/> constructor
-    /// </summary>
-    public FolderViewModel(FSItemType itemType)
-    : this()
-    {
-      this.mItemType = itemType;
+      this.mModel = new PathModel(model);
     }
 
     /// <summary>
@@ -71,8 +59,8 @@ namespace FolderBrowser.ViewModels
       : base()
     {
       this.mIsExpanded = this.mIsSelected = false;
-      this.mItemType = FSItemType.Unknown;
-      this.mFolderName = this.mFolderPath = string.Empty;
+
+      this.mModel = null;
 
       this.mFolders = null;
 
@@ -91,18 +79,25 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
-        return this.mFolderName;
-      }
+        if (this.mModel != null)
+          return this.mModel.Name;
 
-      private set
+        return string.Empty;
+      }
+    }
+
+
+    /// <summary>
+    /// Get/set file system Path for this folder.
+    /// </summary>
+    public string FolderPath
+    {
+      get
       {
-        if (this.mFolderName != value)
-        {
-          Logger.Debug("Detail: set Folder Name");
-          this.mFolderName = value;
-          this.RaisePropertyChanged(() => this.FolderName);
-          this.RaisePropertyChanged(() => this.DisplayItemString);
-        }
+        if (this.mModel != null)
+          return this.mModel.Path;
+
+        return string.Empty;
       }
     }
 
@@ -148,29 +143,6 @@ namespace FolderBrowser.ViewModels
           case FSItemType.Unknown:
           default:
             return this.FolderName;
-        }
-      }
-    }
-
-    /// <summary>
-    /// Get/set file system Path for this folder.
-    /// </summary>
-    public string FolderPath
-    {
-      get
-      {
-        return this.mFolderPath;
-      }
-
-      private set
-      {
-        if (this.mFolderPath != value)
-        {
-          Logger.Debug("Detail: set FolderPath");
-
-          this.mFolderPath = value;
-          this.RaisePropertyChanged(() => this.FolderPath);
-          this.RaisePropertyChanged(() => this.DisplayItemString);
         }
       }
     }
@@ -250,19 +222,10 @@ namespace FolderBrowser.ViewModels
     {
       get
       {
-        return this.mItemType;
-      }
+        if (this.mModel != null)
+          return this.mModel.PathType;
 
-      private set
-      {
-        if (this.mItemType != value)
-        {
-          Logger.Debug("Detail: set ItemType");
-
-          this.mItemType = value;
-
-          this.RaisePropertyChanged(() => this.ItemType);
-        }
+        return FSItemType.Unknown;
       }
     }
 
@@ -340,12 +303,7 @@ namespace FolderBrowser.ViewModels
 
       try
       {
-        FolderViewModel f = new FolderViewModel(FSItemType.LogicalDrive)
-        {
-          FolderPath = driveLetter.TrimEnd('\\'),  // Assign drive letter 'C:\' to both elements
-          FolderName = driveLetter.TrimEnd('\\'),
-          IsReadOnly = true
-        };
+        FolderViewModel f = new FolderViewModel(new PathModel(driveLetter, FSItemType.LogicalDrive));
 
         return f;
       }
@@ -368,16 +326,7 @@ namespace FolderBrowser.ViewModels
 
       try
       {
-        string folderName = Path.GetFileName(dir);
-        string folderPath = Path.GetFullPath(dir);
-
-        FolderViewModel f = new FolderViewModel(FSItemType.Folder)
-        {
-          FolderName = folderName,
-          FolderPath = folderPath
-        };
-
-        return f;
+        return new FolderViewModel(new PathModel(dir, FSItemType.Folder));
       }
       catch
       {
@@ -400,12 +349,12 @@ namespace FolderBrowser.ViewModels
         {
           if (newFolderName != null)
           {
-            string newFolderPath;
+            PathModel sourceDir = new PathModel(this.FolderPath, FSItemType.Folder);
+            PathModel newFolderPath;
 
-            if (PathModel.RenameDirectory(this.FolderPath, newFolderName, out newFolderPath) == true)
+            if (PathModel.RenameFileOrDirectory(sourceDir, newFolderName, out newFolderPath) == true)
             {
-              this.FolderPath = newFolderPath;
-              this.FolderName = Path.GetFileName(newFolderPath);
+              this.ResetModel(newFolderPath);
             }
           }
         }
@@ -443,8 +392,8 @@ namespace FolderBrowser.ViewModels
           {
             var newFolder = new FolderViewModel(newSubFolder);
             this.Folders.Add(newFolder);
+
             return newFolder;
-            //// return this.AddFolder(newSubFolder.Path);
           }
         }
         catch (Exception exp)
@@ -529,7 +478,6 @@ namespace FolderBrowser.ViewModels
       try
       {
         Process.Start(new ProcessStartInfo(sFileName));
-        ////OpenFileLocationInWindowsExplorer(whLink.NavigateUri.OriginalString);
       }
       catch (System.Exception ex)
       {
@@ -638,6 +586,34 @@ namespace FolderBrowser.ViewModels
       }
 
       return null;
+    }
+
+    private void ResetModel(PathModel model)
+    {
+      var oldModel = this.mModel;
+
+      this.mModel = new PathModel(model);
+
+      if (oldModel == null && model == null)
+        return;
+
+      if (oldModel == null && model != null || oldModel != null && model == null)
+      {
+        this.RaisePropertyChanged(() => this.ItemType);
+        this.RaisePropertyChanged(() => this.FolderName);
+        this.RaisePropertyChanged(() => this.FolderPath);
+
+        return;
+      }
+
+      if (oldModel.PathType != this.mModel.PathType)
+        this.RaisePropertyChanged(() => this.ItemType);
+
+      if (string.Compare( oldModel.Name, this.mModel.Name, true) != 0)
+        this.RaisePropertyChanged(() => this.FolderName);
+
+      if (string.Compare(oldModel.Path, this.mModel.Path, true) != 0)
+        this.RaisePropertyChanged(() => this.FolderPath);
     }
     #endregion methods
   }

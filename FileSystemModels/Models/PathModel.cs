@@ -114,6 +114,8 @@ namespace FileSystemModels.Models
           switch (this.PathType)
           {
             case FSItemType.LogicalDrive:
+              return this.Path;
+
             case FSItemType.Folder:
               DirectoryInfo di = new DirectoryInfo(this.Path);
 
@@ -142,8 +144,8 @@ namespace FileSystemModels.Models
     #region methods
     #region static helper methods
     /// <summary>
-    /// Compare 2 <see cref="PathModel"/> objects and returns false
-    /// if they are equal.
+    /// Compare the paths for 2 <see cref="PathModel"/> objects
+    /// and return false if they are not equal, otherwise true.
     /// </summary>
     /// <param name="m"></param>
     /// <param name="m1"></param>
@@ -244,9 +246,9 @@ namespace FileSystemModels.Models
       if (dirPath.Length < 2)
         return null;
 
-      // This will normalize directory and drive references into 'C:\' or 'C:\Temp\'
-      if (dirPath[dirPath.Length - 1] != System.IO.Path.DirectorySeparatorChar)
-        dirPath += System.IO.Path.DirectorySeparatorChar;
+      // This will normalize directory and drive references into 'C:' or 'C:\Temp'
+      if (dirPath[dirPath.Length - 1] == System.IO.Path.DirectorySeparatorChar)
+        dirPath = dirPath.Trim(System.IO.Path.DirectorySeparatorChar);
 
       return dirPath;
     }
@@ -388,37 +390,10 @@ namespace FileSystemModels.Models
     /// <param name="source"></param>
     /// <param name="newFolderName"></param>
     /// <param name="newFolderPathName"></param>
-    /// <returns></returns>
-    public static bool RenameDirectory(string source,
-                                     string newFolderName,
-                                     out string newFolderPathName)
-    {
-      newFolderPathName = null;
-
-      if (System.IO.Directory.Exists(source))
-      {
-        string parent = System.IO.Directory.GetParent(source).FullName;
-
-        newFolderPathName = System.IO.Path.Combine(parent, newFolderName);
-
-        System.IO.Directory.Move(source, newFolderPathName);
-
-        return true;
-      }
-
-      return false;
-    }
-
-    /// <summary>
-    /// Rename an existing directory into the <paramref name="newFolderName"/>.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="newFolderName"></param>
-    /// <param name="newFolderPathName"></param>
     /// <returns>false Item to be renamed does not exist or something else is not as expected, otherwise true</returns>
     public static bool RenameFileOrDirectory(PathModel source,
-                                       string newFolderName,
-                                       out PathModel newFolderPathName)
+                                             string newFolderName,
+                                             out PathModel newFolderPathName)
     {
       newFolderPathName = null;
 

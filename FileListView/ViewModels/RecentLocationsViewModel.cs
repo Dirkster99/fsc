@@ -223,7 +223,7 @@ namespace FileListView.ViewModels
 
     private FSItemViewModel CreateFSItemVMFromString(string folderPath)
     {
-      folderPath = System.IO.Path.GetDirectoryName(folderPath);
+      ////folderPath = System.IO.Path.GetDirectoryName(folderPath);
 
       string displayName = string.Empty;
 

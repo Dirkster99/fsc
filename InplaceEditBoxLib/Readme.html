@@ -11,12 +11,12 @@
 <h3>Editing text with Text and DisplayText properties</h3>
 <p>The edit-in-place control has 2 string properties, one is for display (<strong>DisplayText</strong>) and the other (<strong>Text</strong>) string represents the value that should be edited.</p>
 <p>This setup enables application developers to show more than just a name in each item. Each item can, for example, display a name and a number by using the <strong>DisplayText</strong> property, while the <strong>Text</strong> property should contain the string that is to be edit.</p>
-<p>The confirmation of editing does not change either of the above dependency properties. The edit-in-place control executes instead the command that is bound to the <strong>Command</strong> dependency property to let the viewmodel adjust all relevant strings.</p>
+<p>The confirmation of editing does not change either of the above dependency properties. The edit-in-place control executes instead the command that is bound to the <strong>RenameCommand</strong> dependency property to let the viewmodel adjust all relevant strings.</p>
 <p>The view generates a command parameter of this command (cannot be configured). The parameter is a <strong>Tuple</strong> of the new string and the viewmodel instance that is available at the <strong>DataContext</strong> of the edit-in-place control.</p>
 <h3>Initiate Editing Text from the ViewModel</h3>
 <p>The edit-in-place control expects the viewmodel to implement the <strong>InplaceEditBoxLib.Interfaces.IEditBox</strong> interface which contains a <strong>RequestEdit</strong> event. This event can be fired by the viewmodel to start editing of a given item.</p>
 <h3>Initiate Editing Text from the View</h3>
-<p>The user can 'double click' and item or use a context menu entry that is linked to a corresponding viewmodel command, which fires the <strong>RequestEdit</strong> event.</p>
+<p>The user can 'double click' a (treeview or listbox) item, -or he can use a context menu entry that is linked to a corresponding viewmodel command (see StartRenameCommand), which fires the <strong>RequestEdit</strong> event.</p>
 <h3>Usage of Limited Space</h3>
 <p>The EditBox in-place overlay control should not exceed the view port area of the parent scrollviewer of the items control. That is, the EditBox should not exceed the visible area of a treeview if it was used within a treeview. This rule ensure that users do not end up typing in an invisible area (off-screen) when typing long string in small areas.</p>
 <p>The following sequence of images shows the application behavior when the user enters the string 'The quick fox jumps over the river' in a limited space scenario:</p>
@@ -62,7 +62,7 @@ This double click can be configured to occur in a certain time frame. There are 
 <h1>Credits</h1>
 <ul>
 <li>
-<p>Thanks to Joseph Leung for coaching my along the way</p>
+<p>Thanks to Joseph Leung for coaching me along the way</p>
 </li>
 <li>
 <p>This code uses part of ATC Avalon Team's work:

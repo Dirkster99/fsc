@@ -217,7 +217,10 @@ namespace FolderBrowser.ViewModels
               var folderVM = tuple.Item2 as IFolderViewModel;
 
               if (tuple.Item1 != null && folderVM != null)
+              {
                 folderVM.RenameFolder(tuple.Item1);
+                this.SelectedFolder = folderVM.FolderPath;
+              }
             }
           });
 

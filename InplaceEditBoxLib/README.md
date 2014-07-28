@@ -16,7 +16,7 @@ The edit-in-place control has 2 string properties, one is for display (**Display
 
 This setup enables application developers to show more than just a name in each item. Each item can, for example, display a name and a number by using the **DisplayText** property, while the **Text** property should contain the string that is to be edit.
 
-The confirmation of editing does not change either of the above dependency properties. The edit-in-place control executes instead the command that is bound to the **Command** dependency property to let the viewmodel adjust all relevant strings.
+The confirmation of editing does not change either of the above dependency properties. The edit-in-place control executes instead the command that is bound to the **RenameCommand** dependency property to let the viewmodel adjust all relevant strings.
 
 The view generates a command parameter of this command (cannot be configured). The parameter is a **Tuple** of the new string and the viewmodel instance that is available at the **DataContext** of the edit-in-place control.
 
@@ -26,7 +26,7 @@ The edit-in-place control expects the viewmodel to implement the **InplaceEditBo
 
 ### Initiate Editing Text from the View ###
 
-The user can 'double click' and item or use a context menu entry that is linked to a corresponding viewmodel command, which fires the **RequestEdit** event.
+The user can 'double click' a (treeview or listbox) item, -or he can use a context menu entry that is linked to a corresponding viewmodel command (see StartRenameCommand), which fires the **RequestEdit** event.
 
 ### Usage of Limited Space ###
 
@@ -85,7 +85,7 @@ The control implements a pop-up message element to show hints to the user if he 
 
 # Credits #
 
-- Thanks to Joseph Leung for coaching my along the way
+- Thanks to Joseph Leung for coaching me along the way
 
 - This code uses part of ATC Avalon Team's work:
 http://blogs.msdn.com/atc_avalon_team/archive/2006/03/14/550934.aspx

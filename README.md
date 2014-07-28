@@ -29,11 +29,6 @@ Other features include:
 
 ## Limitations ##
 
-  - The New Folder command may not work when being executed in the treeview folder browser with the synchronized display of the folder/file listview.
-
-  Analysis: The problem is that the folderbrowser updates the listview too early (in-directly through folder selection) which means that the listbox gets data from the 'New folder', which in turn blocks the rename process from implementing the Rename command in the folder browser.
-    - Workaround: Use the New Folder command in the ListView when it is available
-
   - Universal Control (UNC) network share paths are not supported
 
   - Support for drives with exchangeable media (CD-ROM, USB Drive) is limited. Everything should work as expected but exchanging the media will not lead to updating displayed folder and file entries.
