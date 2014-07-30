@@ -441,12 +441,12 @@ namespace InplaceEditBoxLib.Views
 
       if (timeBetweenClicks > MinimumClickTime && timeBetweenClicks < MaximumClickTime)
       {
+        this.OnSwitchToEditingMode();
+
         var t = this.mTextBox as TextBox;
 
         if (t != null)
           t.SelectAll();
-
-        this.OnSwitchToEditingMode();
       }
 
       e.Handled = false;
@@ -462,12 +462,12 @@ namespace InplaceEditBoxLib.Views
     {
       if (this.IsEditing == false)
       {
+        this.OnSwitchToEditingMode();
+
         var t = this.mTextBox as TextBox;
 
         if (t != null)
           t.SelectAll();
-
-        this.OnSwitchToEditingMode();
       }
     }
 

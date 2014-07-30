@@ -33,8 +33,8 @@
 This double click can be configured to occur in a certain time frame. There are 2 double dependency properties that can be setup to consume only those double clicks with a time frame that is larger than <strong>MinimumClickTime</strong> but smaller than <strong>MaximumClickTime</strong>.</p>
 <p>Default values for <strong>MinimumClickTime</strong> and <strong>MaximumClickTime</strong> are 300 ms and 700 ms, respectively.</p>
 <p>The <strong>IsEditableOnDoubleClick</strong> boolean dependency property can be setup to dermine whether double clicks are evaluated for editing or not. Default is true.</p>
-<h3>IsEditable property</h3>
-<p>The edit-in-place control supports a <strong>one way</strong> Boolean <strong>IsEditable</strong> dependency property to enable viewmodels to determine whether an item is currently edited or not. This property cannot be used by the viewmodel to force the view into editable mode (since it is a get only property in the view). Use the <strong>RequestEdit</strong> event defined in <strong>InplaceEditBoxLib.Interfaces.IEditBox</strong> to request an edit mode that is initialized by the viewmodel.</p>
+<h3>IsEditing property</h3>
+<p>The edit-in-place control supports a <strong>one way</strong> Boolean <strong>IsEditing</strong> dependency property to enable viewmodels to determine whether an item is currently edited or not. This property cannot be used by the viewmodel to force the view into editable mode (since it is a get only property in the view). Use the <strong>RequestEdit</strong> event defined in <strong>InplaceEditBoxLib.Interfaces.IEditBox</strong> to request an edit mode that is initialized by the viewmodel.</p>
 <h3>Key Filter and Error Handling</h3>
 <p>The EditBox control contains properties that can be used to define a blacklist of characters that should not be input by the user. See properties:</p>
 <ul>

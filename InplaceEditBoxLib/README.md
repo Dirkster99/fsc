@@ -57,9 +57,9 @@ Default values for **MinimumClickTime** and **MaximumClickTime** are 300 ms and 
 
 The **IsEditableOnDoubleClick** boolean dependency property can be setup to dermine whether double clicks are evaluated for editing or not. Default is true.
 
-### IsEditable property ###
+### IsEditing property ###
 
-The edit-in-place control supports a **one way** Boolean **IsEditable** dependency property to enable viewmodels to determine whether an item is currently edited or not. This property cannot be used by the viewmodel to force the view into editable mode (since it is a get only property in the view). Use the **RequestEdit** event defined in **InplaceEditBoxLib.Interfaces.IEditBox** to request an edit mode that is initialized by the viewmodel.
+The edit-in-place control supports a **one way** Boolean **IsEditing** dependency property to enable viewmodels to determine whether an item is currently edited or not. This property cannot be used by the viewmodel to force the view into editable mode (since it is a get only property in the view). Use the **RequestEdit** event defined in **InplaceEditBoxLib.Interfaces.IEditBox** to request an edit mode that is initialized by the viewmodel.
 
 ### Key Filter and Error Handling ###
 
