@@ -46,53 +46,6 @@
             Eventhandler to re-evaluate whether this command can execute or not
             </summary>
         </member>
-        <member name="T:MsgBox.Commands.RelayCommand">
-            <summary>
-            A command whose sole purpose is to 
-            relay its functionality to other
-            objects by invoking delegates. The
-            default return value for the CanExecute
-            method is 'true'.
-            </summary>
-        </member>
-        <member name="M:MsgBox.Commands.RelayCommand.#ctor(System.Action)">
-            <summary>
-            Creates a new command that can always execute.
-            </summary>
-            <param name="execute">The execution logic.</param>
-        </member>
-        <member name="M:MsgBox.Commands.RelayCommand.#ctor(MsgBox.Commands.RelayCommand)">
-            <summary>
-            Copy constructor
-            </summary>
-            <param name="inputRC"></param>
-        </member>
-        <member name="M:MsgBox.Commands.RelayCommand.#ctor(System.Action,System.Func{System.Boolean})">
-            <summary>
-            Creates a new command.
-            </summary>
-            <param name="execute">The execution logic.</param>
-            <param name="canExecute">The execution status logic.</param>
-        </member>
-        <member name="M:MsgBox.Commands.RelayCommand.CanExecute(System.Object)">
-            <summary>
-            Execute the attached CanExecute methode delegate (or always return true)
-            to determine whether the command managed in this object can execute or not.
-            </summary>
-            <param name="parameter"></param>
-            <returns></returns>
-        </member>
-        <member name="M:MsgBox.Commands.RelayCommand.Execute(System.Object)">
-            <summary>
-            Return the attached delegate method.
-            </summary>
-            <param name="parameter"></param>
-        </member>
-        <member name="E:MsgBox.Commands.RelayCommand.CanExecuteChanged">
-            <summary>
-            Eventhandler to re-evaluate whether this command can execute or not
-            </summary>
-        </member>
         <member name="T:MsgBox.Converter.ImageEnumToVisibilityConverter">
             <summary>
             XAML mark up extension to convert an image enum value into a visibility value.
@@ -225,6 +178,381 @@
         <member name="F:MsgBox.MsgBoxStyle.WPFThemed">
             <summary>
             Use a custom WPF look &amp; feel to show message box dialogs (custom window chrome).
+            </summary>
+        </member>
+        <member name="T:MsgBox.IMessage">
+            <summary>
+            Interface to non-static message box class methods and properties.
+            </summary>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String)">
+            <summary>
+            Displays a message box that has a message and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String)">
+            <summary>
+            Displays a message box that has a message and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Windows.Window,System.String)">
+            <summary>
+            Displays a message box that has a message and that returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxButtons)">
+            <summary>
+            Displays a message box that has a message, title bar caption, and button; and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Windows.Window,System.String,System.String)">
+            <summary>
+            Displays a message box in front of the specified window.
+            The message box displays a message and title bar caption; and it returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon; and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MsgBoxImage value that specifies the icon to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxButtons)">
+            <summary>
+            Displays a message box in front of the specified window. The message box displays a message,
+            title bar caption, and button; and it also returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MsgBoxButtons value that specifies which button or buttons to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage)">
+            <summary>
+            Displays a message box in front of the specified window. The message box displays
+            a message, title bar caption, button, and icon; and it also returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult)">
+            <summary>
+            Displays a message box in front of the specified window. The message box displays a message,
+            title bar caption, button, and icon; and accepts a default message box result and returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Display a message box. The message box displays a message, title bar caption, button, and icon.
+            Further options, such as, link to background information + naviagtion function, and copy button
+            can be displayed.
+            
+            The mothod accepts a default message box <seealso cref="T:MsgBox.MsgBoxResult"/> result and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="buttonOption"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="details">Displays a details section (e.g. expander) where a long message, such as, a stacktrace can be displayed within a scrollviewer.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Exception,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="ex">Exception object (details: stacktrace and messages are displayed in details section)</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="btnDefault">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Exception,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="ex">Exception object (details: stacktrace and messages are displayed in details section)</param>
+            <param name="messageBoxText">A System.String that specifies the details to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the specified window.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box displays a message,
+            title bar caption, button, and icon; and accepts a default message box result and returns a result.
+            </summary>
+            <param name="owner"></param>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="buttonOption"></param>
+            <param name="image"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLinkLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption, custom buttons (yes, no etc...),
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="buttonOption"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption, custom buttons (yes, no etc...), an image,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="buttonOption"></param>
+            <param name="image"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.IMessage.Show(System.String,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption, additional details, custom buttons (yes, no etc...), an image,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="details"></param>
+            <param name="buttonOption"></param>
+            <param name="image"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MsgBox.IMessage.Style">
+            <summary>
+            Get/set property to determine whether message box can be styled in WPF or not.
             </summary>
         </member>
         <member name="P:MsgBox.IMsgBoxService.Style">
@@ -398,6 +726,380 @@
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
+        </member>
+        <member name="T:MsgBox.Message">
+            <summary>
+            Class implements a message box service based on the <seealso cref="T:MsgBox.IMessage"/>
+            interface which can be used to reduce implementation specific dependencies
+            in complex applications.
+            </summary>
+        </member>
+        <member name="M:MsgBox.Message.#ctor">
+            <summary>
+            Class constructor
+            </summary>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String)">
+            <summary>
+            Displays a message box that has a message and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Windows.Window,System.String)">
+            <summary>
+            Displays a message box that has a message and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxButtons)">
+            <summary>
+            Displays a message box that has a message, title bar caption, and button; and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Windows.Window,System.String,System.String)">
+            <summary>
+            Displays a message box in front of the specified window.
+            The message box displays a message and title bar caption; and it returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon; and that returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MsgBoxImage value that specifies the icon to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxButtons)">
+            <summary>
+            Displays a message box in front of the specified window. The message box displays a message,
+            title bar caption, and button; and it also returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MsgBoxButtons value that specifies which button or buttons to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage)">
+            <summary>
+            Displays a message box in front of the specified window. The message box displays
+            a message, title bar caption, button, and icon; and it also returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult)">
+            <summary>
+            Displays a message box in front of the specified window. The message box displays a message,
+            title bar caption, button, and icon; and accepts a default message box result and returns a result.
+            </summary>
+            <param name="owner">A System.Windows.Window that represents the owner window of the message box.</param>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Display a message box. The message box displays a message, title bar caption, button, and icon.
+            Further options, such as, link to background information + naviagtion function, and copy button
+            can be displayed.
+            
+            The mothod accepts a default message box <seealso cref="T:MsgBox.MsgBoxResult"/> result and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="buttonOption"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="details">Displays a details section (e.g. expander) where a long message, such as, a stacktrace can be displayed within a scrollviewer.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Exception,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="ex">Exception object (details: stacktrace and messages are displayed in details section)</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="messageBoxText">A System.String that specifies the text to display.</param>
+            <param name="btnDefault">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Exception,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box that has a message, title bar caption, button, and icon;
+            and that accepts a default message box result and returns a result.
+            </summary>
+            <param name="ex">Exception object (details: stacktrace and messages are displayed in details section)</param>
+            <param name="messageBoxText">A System.String that specifies the details to display.</param>
+            <param name="caption">A System.String that specifies the title bar caption to display.</param>
+            <param name="button">A Msg.MessageBoxButton value that specifies which button or buttons to display.</param>
+            <param name="icon">A Msg.MessageBoxImage value that specifies the icon to display.</param>
+            <param name="defaultResult">A MsgBox.MsgBoxResult value that specifies the default result of the message box.</param>
+            <param name="helpLink">Determines the address to browsed to when displaying a help link. This parameter can be a URI or string object.</param>
+            <param name="helpLinkTitle">Determines the text for displaying a help link.
+            By default the text is the toString() content of the <paramref name="helpLink"/>
+            but it can also be a different text set here.</param>
+            <param name="helpLinkLabel">Text label of the displayed hyperlink (if any)</param>
+            <param name="navigateHelplinkMethod">Method to execute when the user clicked the hyperlink</param>
+            <param name="showCopyMessage">Show a UI element (e.g. button) that lets the user copy the displayed message into the Windows clipboard</param>
+            <returns>A MsgBox.MsgBoxResult value that specifies which message box button is clicked by the user.</returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.Windows.Window,System.String,System.String,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the specified window.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box displays a message,
+            title bar caption, button, and icon; and accepts a default message box result and returns a result.
+            </summary>
+            <param name="owner"></param>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="buttonOption"></param>
+            <param name="image"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLinkLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption, custom buttons (yes, no etc...),
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="buttonOption"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption, custom buttons (yes, no etc...), an image,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="buttonOption"></param>
+            <param name="image"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MsgBox.Message.Show(System.String,System.String,System.String,MsgBox.MsgBoxButtons,MsgBox.MsgBoxImage,MsgBox.MsgBoxResult,System.Boolean,MsgBox.MsgBoxResult,System.Object,System.String,System.String,System.Func{System.Object,System.Boolean},System.Boolean)">
+            <summary>
+            Displays a message box in front of the current window being shown.
+            
+            The caller can specify with <paramref name="dialogCanCloseViaChrome"/> whether users can close the
+            message box dialog view via F4 key, esc key or window close (x) button. Use the <paramref name="defaultCloseResult"/>
+            parameter to define the results being returned if the user is allowed to close the message box via
+            F4 key, esc key or window close (x) [Window chrome accessibility].
+            
+            The message box can display a message, caption, additional details, custom buttons (yes, no etc...), an image,
+            a hyperlink, and copy bitton; and accepts a default message box botton and returns a result.
+            </summary>
+            <param name="messageBoxText"></param>
+            <param name="caption"></param>
+            <param name="details"></param>
+            <param name="buttonOption"></param>
+            <param name="image"></param>
+            <param name="defaultCloseResult"></param>
+            <param name="dialogCanCloseViaChrome"></param>
+            <param name="btnDefault"></param>
+            <param name="helpLink"></param>
+            <param name="helpLinkTitle"></param>
+            <param name="helpLabel"></param>
+            <param name="navigateHelplinkMethod"></param>
+            <param name="showCopyMessage"></param>
+            <returns></returns>
+        </member>
+        <member name="P:MsgBox.Message.Style">
+            <summary>
+            Get/set property to determine whether message box can be styled in WPF or not.
+            </summary>
         </member>
         <member name="T:MsgBox.Msg">
             <summary>
@@ -1283,6 +1985,36 @@
         <member name="F:MsgBox.MsgBoxButtons.Close">
             <summary>
             Display Close GUI element
+            </summary>
+        </member>
+        <member name="F:MsgBox.MsgBoxButtons.YesNoCopy">
+            <summary>
+            Display Yes, No, and Copy GUI elements
+            </summary>
+        </member>
+        <member name="F:MsgBox.MsgBoxButtons.YesNoCancelCopy">
+            <summary>
+            Display Yes, No, Cancel, and Copy GUI elements
+            </summary>
+        </member>
+        <member name="F:MsgBox.MsgBoxButtons.OKCancelCopy">
+            <summary>
+            Display OK, Cancel, and Copy GUI elements
+            </summary>
+        </member>
+        <member name="F:MsgBox.MsgBoxButtons.OKCloseCopy">
+            <summary>
+            Display OK, Close, and Copy GUI elements
+            </summary>
+        </member>
+        <member name="F:MsgBox.MsgBoxButtons.OKCopy">
+            <summary>
+            Display OK, Copy GUI element
+            </summary>
+        </member>
+        <member name="F:MsgBox.MsgBoxButtons.CloseCopy">
+            <summary>
+            Display Close and Copy GUI element
             </summary>
         </member>
         <member name="T:MsgBox.MsgBoxImage">

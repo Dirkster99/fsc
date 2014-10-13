@@ -197,6 +197,12 @@ namespace FileListView.ViewModels
       if (settings == null)
         return false;
 
+			if (settings.UserProfile == null)
+				return false;
+
+			if (settings.UserProfile.CurrentPath == null)
+				return false;
+
       try
       {
         // Set currently viewed folder in Explorer Tool Window
