@@ -9,7 +9,7 @@
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
 
-        <ResourceDictionary Source="/UserNotification;component/Themes/LightBrush.xaml" />
+        <ResourceDictionary Source="/UserNotification;component/Themes/LightBrushs.xaml" />
 
         <!-- ResourceDictionary Source="/FileListView;component/Themes/Generic.xaml" / -->
 

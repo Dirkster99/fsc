@@ -6,6 +6,8 @@ obj/
 cache/
 log/
 tmp/
+packages/
+.vs/
 
 *~
 *.lock

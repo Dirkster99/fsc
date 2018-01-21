@@ -33,3 +33,10 @@ Other features include:
   - Universal Control (UNC) network share paths are not supported
 
   - Support for drives with exchangeable media (CD-ROM, USB Drive) is limited. Everything should work as expected but exchanging the media will not lead to updating displayed folder and file entries.
+
+## Removed Local Dependencies to NuGet instead:
+
+- Log4Net
+- InPlaceEditbox (and UserNotification)
+- DropDownButtonLib
+- MsgBox (and UserNotification)

@@ -2,7 +2,6 @@ namespace FolderBrowser.Views.Behaviours
 {
   using System.Windows;
   using System.Windows.Controls;
-  using InplaceEditBoxLib.Views;
 
   /// <summary>
   /// Class implements an attached behaviour to bring a selected TreeViewItem

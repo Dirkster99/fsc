@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FolderBrowser</RootNamespace>
     <AssemblyName>FolderBrowser</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>
     </SccProjectName>
@@ -65,11 +65,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net">
-      <HintPath>..\..\00_Libs\log4net.dll</HintPath>
+    <Reference Include="InplaceEditBoxLib, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.0.0.3\lib\net4\InplaceEditBoxLib.dll</HintPath>
     </Reference>
-    <Reference Include="MsgBox">
-      <HintPath>..\..\00_Libs\MsgBox\MsgBox.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MsgBox, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.MsgBox.1.4.2\lib\net451\MsgBox.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -80,9 +83,8 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="UserNotification, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\00_Libs\MsgBox\UserNotification.dll</HintPath>
+    <Reference Include="UserNotification, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.UserNotifications.1.4.0\lib\net451\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -157,6 +159,7 @@
     <Resource Include="Images\Generic\ProgramFiles.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <Resource Include="Images\Generic\Folder.png" />
     <Resource Include="Images\Generic\Favourites.png" />
     <Resource Include="Images\Generic\MyMusic.png" />
@@ -190,13 +193,13 @@
     <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Components\ServiceLocator\ServiceLocator.csproj">
+      <Project>{1d2b2142-67d7-48ea-91f9-5e77e29b5ab9}</Project>
+      <Name>ServiceLocator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\FileSystemModels\FileSystemModels.csproj">
       <Project>{c3eb23fd-78e7-4298-922c-48c254551cc9}</Project>
       <Name>FileSystemModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\InplaceEditBoxLib\InplaceEditBoxLib.csproj">
-      <Project>{b1f5cf22-f192-4dae-bdf3-c0c604a29c88}</Project>
-      <Name>InplaceEditBoxLib</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -10,7 +10,7 @@
 
              xmlns:ctrls="clr-namespace:DropDownButtonLib.Controls;assembly=DropDownButtonLib"
              xmlns:bindLocal="clr-namespace:FolderBrowser.Views;assembly=FolderBrowser"
-             xmlns:dbthemes="clr-namespace:DropDownButtonLib.Core.Themes;assembly=DropDownButtonLib"
+             xmlns:dbthemes="clr-namespace:DropDownButtonLib.Themes;assembly=DropDownButtonLib"
 
              xmlns:EditInPlace="clr-namespace:InplaceEditBoxLib.Views;assembly=InplaceEditBoxLib"
              xmlns:view ="clr-namespace:UserNotification.View;assembly=UserNotification"
@@ -24,7 +24,7 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
-    <fview:FolderComboBox DataContext="{Binding FolderTextPath}"
+    <!-- fview:FolderComboBox DataContext="{Binding FolderTextPath}"
                           ItemsSource="{Binding CurrentItems}"
                           SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
 
@@ -41,7 +41,7 @@
       <fview:FolderComboBox.Style>
         <Style TargetType="{x:Type fview:FolderComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}" />
       </fview:FolderComboBox.Style>
-    </fview:FolderComboBox>
+    </fview:FolderComboBox -->
 
     <Grid Grid.Row="1" HorizontalAlignment="Stretch">
       <Grid.ColumnDefinitions>
@@ -102,7 +102,7 @@
             </ctrls:SplitItemsButton.Content>
             <ctrls:DropDownItemsButton.Resources>
               <!-- Use a proxy to bind items to root object of this collection -->
-              <bindLocal:BindingProxy  x:Key="DropDownItemsButtonProxy" Data="{Binding}" />
+              <bindLocal:BindingProxy x:Key="DropDownItemsButtonProxy" Data="{Binding}" />
             </ctrls:DropDownItemsButton.Resources>
             <ctrls:DropDownItemsButton.ItemTemplate>
               <DataTemplate>

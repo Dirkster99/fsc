@@ -12,6 +12,7 @@ ECHO FileSystemModels
 ECHO.
 ECHO FolderBrowser\FolderBrowser
 ECHO FolderBrowser\TestFolderBrowser
+ECHO Components\ServiceLocator
 ECHO.
 REM Ask the user if hes really sure to continue beyond this point XXXXXXXX
 set /p choice=Are you sure to continue (Y/N)?
@@ -47,10 +48,10 @@ ECHO.
 RMDIR /S /Q .\FileSystemModels\bin
 RMDIR /S /Q .\FileSystemModels\obj
 ECHO.
-ECHO Deleting BIN and OBJ Folders in FileSystemModels
+ECHO Deleting BIN and OBJ Folders in Components\ServiceLocator
 ECHO.
-RMDIR /S /Q .\InplaceEditBoxLib\bin
-RMDIR /S /Q .\InplaceEditBoxLib\obj
+RMDIR /S /Q .\Components\ServiceLocator\bin
+RMDIR /S /Q .\Components\ServiceLocator\obj
 ECHO.
 
 PAUSE

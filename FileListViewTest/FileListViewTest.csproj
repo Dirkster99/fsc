@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FileListViewTest</RootNamespace>
     <AssemblyName>FileListViewTest</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -58,11 +58,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DropDownButtonLib">
-      <HintPath>..\00_Libs\DropDownButtonLib.dll</HintPath>
+    <Reference Include="DropDownButtonLib, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.DropDownButtonLib.1.0.2.1\lib\net4\DropDownButtonLib.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>..\00_Libs\log4net.dll</HintPath>
+    <Reference Include="InplaceEditBoxLib, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.InplaceEditBoxLib.1.0.0.3\lib\net4\InplaceEditBoxLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -74,9 +77,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="UserNotification, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\00_Libs\MsgBox\UserNotification.dll</HintPath>
+    <Reference Include="UserNotification, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.InplaceEditBoxLib.1.0.0.3\lib\net4\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -144,6 +146,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -156,6 +159,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Components\ServiceLocator\ServiceLocator.csproj">
+      <Project>{1d2b2142-67d7-48ea-91f9-5e77e29b5ab9}</Project>
+      <Name>ServiceLocator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\FileListView\FileListView.csproj">
       <Project>{735cf8ec-a4ef-49a2-bc72-ec360a0185a4}</Project>
       <Name>FileListView</Name>
@@ -167,10 +174,6 @@
     <ProjectReference Include="..\FolderBrowser\FolderBrowser\FolderBrowser.csproj">
       <Project>{0b8c3b19-940d-408d-9f6b-4afee7246642}</Project>
       <Name>FolderBrowser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\InplaceEditBoxLib\InplaceEditBoxLib.csproj">
-      <Project>{b1f5cf22-f192-4dae-bdf3-c0c604a29c88}</Project>
-      <Name>InplaceEditBoxLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
