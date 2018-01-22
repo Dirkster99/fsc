@@ -19,10 +19,10 @@ This project contains:
     - see FileListView/ViewModels/FileListViewModel.cs and FileListView/Views/FListView.xaml
 
   - A folder bookmark drop down list control to bookmark and quick access recently visited folders
-    - see also: http://dropdownbuttonlib.codeplex.com/
+    - see also: https://github.com/Dirkster99/DropDownButtonLib
 
   - A text overlay edit-in-place textbox that is shown when a user renames or creates a new folder:
-    - see: InplaceEditBoxLib/README.md
+    - see: https://github.com/Dirkster99/InplaceEditBoxLib
 
 Other features include:
   - A forward and backward history control to navigated back and forth between recently visited folders
