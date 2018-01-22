@@ -1,7 +1,7 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/qapqvtyip5e8pis5?svg=true)](https://ci.appveyor.com/project/Dirkster99/fsc)
 # WPF File System Controls #
 
-This project contains the source code for an implementation of controls that are related to browsing files within an existing application. Go to: edi.codeplex.com to see the controls in full action (see Explorer tool window).
+This project contains the source code for an implementation of controls that are related to browsing files within an existing application. Go to: https://github.com/Dirkster99/Edi to see the controls in full action (see Explorer tool window).
 
 This project contains:
 
