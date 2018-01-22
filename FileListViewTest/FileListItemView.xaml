@@ -24,7 +24,7 @@
       <RowDefinition Height="*"/>
     </Grid.RowDefinitions>
 
-    <!-- fview:FolderComboBox DataContext="{Binding FolderTextPath}"
+    <fview:FolderComboBox DataContext="{Binding FolderTextPath}"
                           ItemsSource="{Binding CurrentItems}"
                           SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
 
@@ -41,7 +41,7 @@
       <fview:FolderComboBox.Style>
         <Style TargetType="{x:Type fview:FolderComboBox}" BasedOn="{StaticResource {x:Type ComboBox}}" />
       </fview:FolderComboBox.Style>
-    </fview:FolderComboBox -->
+    </fview:FolderComboBox>
 
     <Grid Grid.Row="1" HorizontalAlignment="Stretch">
       <Grid.ColumnDefinitions>
