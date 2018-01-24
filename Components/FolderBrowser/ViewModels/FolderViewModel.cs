@@ -1,39 +1,28 @@
-namespace FolderBrowser.ViewModels
+﻿namespace FolderBrowser.ViewModels
 {
+    using FileSystemModels.Models;
+    using FileSystemModels.Models.FSItems;
+    using FolderBrowser.Interfaces;
+    using FsCore.Collections;
+    using InplaceEditBoxLib.ViewModels;
     using System;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Windows.Input;
-    using FileSystemModels.Models;
-    using FolderBrowser.Command;
-    using FolderBrowser.ViewModels.Interfaces;
-    using InplaceEditBoxLib.ViewModels;
-    using MsgBox;
+    using System.Windows;
+    using System.Windows.Media.Imaging;
 
     /// <summary>
     /// Implment the viewmodel for one folder entry for a collection of folders.
     /// </summary>
-    public class FolderViewModel : EditInPlaceViewModel, IFolderViewModel
+    internal class FolderViewModel : EditInPlaceViewModel, IFolderViewModel
     {
         #region fields
-        /// <summary>
-        /// Log4net logger facility for this class.
-        /// </summary>
-        protected new static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private bool mIsSelected;
         private bool mIsExpanded;
 
         private PathModel mModel;
 
-        private ObservableCollection<IFolderViewModel> mFolders;
-
-        private RelayCommand<object> mOpenInWindowsCommand;
-        private RelayCommand<object> mCopyPathCommand;
-
+        private ObservableSortedDictionary<string, IFolderViewModel> mFolders;
         private string mVolumeLabel;
 
         private object mLockObject = new object();
@@ -46,28 +35,51 @@ namespace FolderBrowser.ViewModels
         /// <param name="model"></param>
         /// <returns></returns>
         public FolderViewModel(PathModel model)
+            : this()
         {
-            Logger.Debug("Detail: Construct FolderViewModel");
+            mModel = new PathModel(model);
 
-            this.mModel = new PathModel(model);
+            // Names of Logical drives cannot be changed with this
+            if (mModel.PathType == FSItemType.LogicalDrive)
+                this.IsReadOnly = true;
         }
 
         /// <summary>
         /// Standard <seealso cref="FolderViewModel"/> constructor
         /// </summary>
-        public FolderViewModel()
+        protected FolderViewModel()
           : base()
         {
-            this.mIsExpanded = this.mIsSelected = false;
+            mIsExpanded = mIsSelected = false;
 
-            this.mModel = null;
+            mModel = null;
 
-            this.mFolders = null;
+            // Add dummy folder by default to make tree view show expander by default
+            mFolders = new ObservableSortedDictionary<string, IFolderViewModel>();
+            mFolders.Add(string.Empty, new FolderViewModel(string.Empty, FSItemType.DummyEntry));
 
-            this.mOpenInWindowsCommand = null;
-            this.mCopyPathCommand = null;
+            mVolumeLabel = null;
+        }
 
-            this.mVolumeLabel = null;
+        /// <summary>
+        /// Construct dummy folder
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="type"></param>
+        protected FolderViewModel(string path, FSItemType type)
+        {
+            // Names of Logical drives cannot be changed with this
+            if (type == FSItemType.LogicalDrive)
+                this.IsReadOnly = true;
+
+            mIsExpanded = mIsSelected = false;
+
+            mModel = new PathModel(path, type);
+
+            // Add dummy folder by default to make tree view show expander by default
+            mFolders = new ObservableSortedDictionary<string, IFolderViewModel>();
+
+            mVolumeLabel = null;
         }
         #endregion constructor
 
@@ -79,13 +91,12 @@ namespace FolderBrowser.ViewModels
         {
             get
             {
-                if (this.mModel != null)
-                    return this.mModel.Name;
+                if (mModel != null)
+                    return mModel.Name;
 
                 return string.Empty;
             }
         }
-
 
         /// <summary>
         /// Get/set file system Path for this folder.
@@ -94,8 +105,8 @@ namespace FolderBrowser.ViewModels
         {
             get
             {
-                if (this.mModel != null)
-                    return this.mModel.Path;
+                if (mModel != null)
+                    return mModel.Path;
 
                 return string.Empty;
             }
@@ -110,39 +121,37 @@ namespace FolderBrowser.ViewModels
         {
             get
             {
-                Logger.Debug("Detail: get DisplayItemString");
-
-                switch (this.ItemType)
+                switch (ItemType)
                 {
                     case FSItemType.LogicalDrive:
                         try
                         {
-                            if (this.mVolumeLabel == null)
+                            if (mVolumeLabel == null)
                             {
-                                DriveInfo di = new System.IO.DriveInfo(this.FolderName);
+                                DriveInfo di = new System.IO.DriveInfo(FolderName);
 
                                 if (di.IsReady == true)
-                                    this.mVolumeLabel = di.VolumeLabel;
+                                    mVolumeLabel = di.VolumeLabel;
                                 else
-                                    return string.Format("{0} ({1})", this.FolderName, FileSystemModels.Local.Strings.STR_MSG_DEVICE_NOT_READY);
+                                    return string.Format("{0} ({1})", FolderName, "device is not ready");
                             }
 
-                            return string.Format("{0} {1}", this.FolderName, (string.IsNullOrEmpty(this.mVolumeLabel)
+                            return string.Format("{0} {1}", FolderName, (string.IsNullOrEmpty(mVolumeLabel)
                                                                                 ? string.Empty
-                                                                                : string.Format("({0})", this.mVolumeLabel)));
+                                                                                : string.Format("({0})", mVolumeLabel)));
                         }
                         catch (Exception exp)
                         {
-                            Logger.Error("DriveInfo cannot be optained for:" + this.FolderName, exp);
+                            ////base.ShowNotification("DriveInfo cannot be optained for:" + FolderName, FileSystemModels.Local.Strings.STR_MSG_UnknownError);
 
                             // Just return a folder name if everything else fails (drive may not be ready etc).
-                            return string.Format("{0} ({1})", this.FolderName, exp.Message.Trim());
+                            return string.Format("{0} ({1})", FolderName, exp.Message.Trim());
                         }
 
                     case FSItemType.Folder:
                     case FSItemType.Unknown:
                     default:
-                        return this.FolderName;
+                        return FolderName;
                 }
             }
         }
@@ -150,16 +159,11 @@ namespace FolderBrowser.ViewModels
         /// <summary>
         /// Get/set observable collection of sub-folders of this folder.
         /// </summary>
-        public ObservableCollection<IFolderViewModel> Folders
+        public ObservableSortedDictionary<string, IFolderViewModel> Folders
         {
             get
             {
-                Logger.Debug("Detail: get Folders collection");
-
-                if (this.mFolders == null)
-                    this.mFolders = new ObservableCollection<IFolderViewModel>();
-
-                return this.mFolders;
+                return mFolders;
             }
         }
 
@@ -170,21 +174,21 @@ namespace FolderBrowser.ViewModels
         {
             get
             {
-                return this.mIsSelected;
+                return mIsSelected;
             }
 
             set
             {
-                if (this.mIsSelected != value)
+                if (mIsSelected != value)
                 {
                     Logger.Debug("Detail: set Folder IsSelected");
 
-                    this.mIsSelected = value;
+                    mIsSelected = value;
 
-                    this.RaisePropertyChanged(() => this.IsSelected);
+                    RaisePropertyChanged(() => IsSelected);
 
-                    if (value == true)
-                        this.IsExpanded = true;                 // Default windows behaviour of expanding the selected folder
+                    //// if (value == true)
+                    ////    IsExpanded = true;                 // Default windows behaviour of expanding the selected folder
                 }
             }
         }
@@ -196,21 +200,16 @@ namespace FolderBrowser.ViewModels
         {
             get
             {
-                return this.mIsExpanded;
+                return mIsExpanded;
             }
 
             set
             {
-                if (this.mIsExpanded != value)
+                if (mIsExpanded != value)
                 {
-                    Logger.Debug("Detail: set Folder IsExpanded");
+                    mIsExpanded = value;
 
-                    this.mIsExpanded = value;
-
-                    this.RaisePropertyChanged(() => this.IsExpanded);
-
-                    // Load all sub-folders into the Folders collection.
-                    this.LoadFolders();
+                    RaisePropertyChanged(() => IsExpanded);
                 }
             }
         }
@@ -222,117 +221,44 @@ namespace FolderBrowser.ViewModels
         {
             get
             {
-                if (this.mModel != null)
-                    return this.mModel.PathType;
+                if (mModel != null)
+                    return mModel.PathType;
 
                 return FSItemType.Unknown;
             }
         }
 
         /// <summary>
-        /// Gets a command that will open the selected item with the current default application
-        /// in Windows. The selected item (path to a file) is expected as FSItemVM parameter.
-        /// (eg: Item is HTML file -> Open in Windows starts the web browser for viewing the HTML
-        /// file if thats the currently associated Windows default application.
+        /// Determine whether child is a dummy (must be evaluated and replaced
+        /// with real data) or not.
         /// </summary>
-        public ICommand OpenInWindowsCommand
+        public bool ChildFolderIsDummy
         {
             get
             {
-                Logger.Debug("Detail: get OpenInWindowsCommand");
+                if (Folders.Count == 1)
+                {
+                    var item = Folders.Values.First<IFolderViewModel>();
+                    if (item.ItemType == FSItemType.DummyEntry)
+                        return true;
+                }
 
-                if (this.mOpenInWindowsCommand == null)
-                    this.mOpenInWindowsCommand = new RelayCommand<object>(
-                      (p) =>
-                      {
-                          var path = p as FolderViewModel;
-
-                          if (path == null)
-                              return;
-
-                          if (string.IsNullOrEmpty(path.FolderPath) == true)
-                              return;
-
-                          FolderViewModel.OpenInWindowsCommand_Executed(path.FolderPath);
-                      });
-
-                return this.mOpenInWindowsCommand;
-            }
-        }
-
-        /// <summary>
-        /// Gets a command that will copy the path of an item into the Windows Clipboard.
-        /// The item (path to a file) is expected as FSItemVM parameter.
-        /// </summary>
-        public ICommand CopyPathCommand
-        {
-            get
-            {
-                Logger.Debug("Detail: get CopyPathCommand");
-
-                if (this.mCopyPathCommand == null)
-                    this.mCopyPathCommand = new RelayCommand<object>(
-                      (p) =>
-                      {
-                          var path = p as FolderViewModel;
-
-                          if (path == null)
-                              return;
-
-                          if (string.IsNullOrEmpty(path.FolderPath) == true)
-                              return;
-
-                          FolderViewModel.CopyPathCommand_Executed(path.FolderPath);
-                      });
-
-                return this.mCopyPathCommand;
+                return false;
             }
         }
         #endregion properties
 
         #region methods
         /// <summary>
-        /// Construct a <seealso cref="FolderViewModel"/> item that represents a Windows
-        /// file system drive object (eg.: 'C:\').
+        /// Adds the folder item into the collection of sub-folders of this folder.
         /// </summary>
-        /// <param name="driveLetter"></param>
-        /// <returns></returns>
-        public static FolderViewModel ConstructDriveFolderViewModel(string driveLetter)
+        /// <param name="item"></param>
+        public void AddFolder(IFolderViewModel item)
         {
-            Logger.Debug("Detail: Query Drives");
-
-            try
+            Application.Current.Dispatcher.Invoke(() =>
             {
-                FolderViewModel f = new FolderViewModel(new PathModel(driveLetter, FSItemType.LogicalDrive));
-
-                return f;
-            }
-            catch
-            {
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Construct a <seealso cref="FolderViewModel"/> item that represents a Windows
-        /// file system folder object (eg.: FolderPath = 'C:\Temp\', FolderName = 'Temp').
-        /// </summary>
-        /// <param name="dir"></param>
-        /// <returns></returns>
-        public static FolderViewModel ConstructFolderFolderViewModel(string dir)
-        {
-            Logger.Debug("Detail: get FolderViewModel");
-
-            try
-            {
-                return new FolderViewModel(new PathModel(dir, FSItemType.Folder));
-            }
-            catch
-            {
-            }
-
-            return null;
+                Folders.Add(item.FolderName.ToLower(), item);
+            });
         }
 
         /// <summary>
@@ -343,32 +269,30 @@ namespace FolderBrowser.ViewModels
         {
             Logger.DebugFormat("Detail: Rename into new folder {0}:", newFolderName);
 
-            lock (this.mLockObject)
+            lock (mLockObject)
             {
                 try
                 {
                     if (newFolderName != null)
                     {
-                        PathModel sourceDir = new PathModel(this.FolderPath, FSItemType.Folder);
+                        PathModel sourceDir = new PathModel(FolderPath, FSItemType.Folder);
                         PathModel newFolderPath;
 
                         if (PathModel.RenameFileOrDirectory(sourceDir, newFolderName, out newFolderPath) == true)
                         {
-                            this.ResetModel(newFolderPath);
+                            ResetModel(newFolderPath);
                         }
                     }
                 }
                 catch (Exception exp)
                 {
-                    Logger.Error(string.Format("RenameFolder into '{0}' was not succesful.", newFolderName), exp);
-
-                    base.ShowNotification(FileSystemModels.Local.Strings.STR_RenameFolderErrorTitle, exp.Message);
+                    this.ShowNotification(FileSystemModels.Local.Strings.STR_RenameFolderErrorTitle, exp.Message);
                 }
                 finally
                 {
-                    this.RaisePropertyChanged(() => this.FolderName);
-                    this.RaisePropertyChanged(() => this.FolderPath);
-                    this.RaisePropertyChanged(() => this.DisplayItemString);
+                    RaisePropertyChanged(() => FolderName);
+                    RaisePropertyChanged(() => FolderPath);
+                    RaisePropertyChanged(() => DisplayItemString);
                 }
             }
         }
@@ -382,177 +306,98 @@ namespace FolderBrowser.ViewModels
         {
             Logger.DebugFormat("Detail: Create new directory with standard name.");
 
-            lock (this.mLockObject)
+            lock (mLockObject)
             {
                 try
                 {
-                    var newSubFolder = PathModel.CreateDir(new PathModel(this.FolderPath, FSItemType.Folder));
+                    string defaultFolderName = FileSystemModels.Local.Strings.STR_NEW_DEFAULT_FOLDER_NAME;
+                    var newSubFolder = PathModel.CreateDir(new PathModel(FolderPath, FSItemType.Folder), defaultFolderName);
 
                     if (newSubFolder != null)
                     {
                         var newFolder = new FolderViewModel(newSubFolder);
-                        this.Folders.Add(newFolder);
+                        Folders.Add(newFolder.FolderName, newFolder);
 
                         return newFolder;
                     }
                 }
                 catch (Exception exp)
                 {
-                    Logger.Error(string.Format("Creating new folder underneath '{0}' was not succesful.", this.FolderPath), exp);
-
-                    base.ShowNotification(FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE, exp.Message);
+                    this.ShowNotification(FileSystemModels.Local.Strings.STR_MSG_UnknownError, exp.Message);
                 }
             }
 
             return null;
         }
 
-        #region FileSystem Commands
+        internal static void AddFolder(FolderViewModel f, FolderViewModel item)
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                f.AddFolder(item);
+            });
+        }
+
         /// <summary>
-        /// Convinience method to open Windows Explorer with a selected file (if it exists).
-        /// Otherwise, Windows Explorer is opened in the location where the file should be at.
+        /// Construct a <seealso cref="FolderViewModel"/> item that represents a Windows
+        /// file system drive object (eg.: 'C:\').
         /// </summary>
-        /// <param name="sFileName"></param>
+        /// <param name="driveLetter"></param>
         /// <returns></returns>
-        private static bool OpenContainingFolderCommand_Executed(string sFileName)
+        internal static FolderViewModel ConstructDriveFolderViewModel(string driveLetter)
         {
-            if (string.IsNullOrEmpty(sFileName) == true)
-                return false;
-
-            var msg = ServiceLocator.ServiceContainer.Instance.GetService<IMessageBoxService>();
-            try
-            {
-                if (System.IO.File.Exists(sFileName) == true)
-                {
-                    // combine the arguments together it doesn't matter if there is a space after ','
-                    string argument = @"/select, " + sFileName;
-
-                    System.Diagnostics.Process.Start("explorer.exe", argument);
-                    return true;
-                }
-                else
-                {
-                    string sParentDir = string.Empty;
-
-                    if (System.IO.Directory.Exists(sFileName) == true)
-                        sParentDir = sFileName;
-                    else
-                        sParentDir = System.IO.Directory.GetParent(sFileName).FullName;
-
-                    if (System.IO.Directory.Exists(sParentDir) == false)
-                    {
-                        msg.Show(string.Format(FileSystemModels.Local.Strings.STR_MSG_DIRECTORY_DOES_NOT_EXIST, sParentDir),
-                                               FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
-                                               MsgBoxButtons.OK, MsgBoxImage.Error);
-
-                        return false;
-                    }
-                    else
-                    {
-                        // combine the arguments together it doesn't matter if there is a space after ','
-                        string argument = @"/select, " + sParentDir;
-                        System.Diagnostics.Process.Start("explorer.exe", argument);
-
-                        return true;
-                    }
-                }
-            }
-            catch (System.Exception ex)
-            {
-                msg.Show(string.Format("{0}\n'{1}'.", ex.Message, (sFileName == null ? string.Empty : sFileName)),
-                         FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
-                         MsgBoxButtons.OK, MsgBoxImage.Error);
-
-                return false;
-            }
+            return new FolderViewModel(new PathModel(driveLetter, FSItemType.LogicalDrive));
         }
 
         /// <summary>
-        /// Opens a file with the current Windows default application.
+        /// Construct a <seealso cref="FolderViewModel"/> item that represents a Windows
+        /// file system folder object (eg.: FolderPath = 'C:\Temp\', FolderName = 'Temp').
         /// </summary>
-        /// <param name="sFileName"></param>
-        private static void OpenInWindowsCommand_Executed(string sFileName)
+        /// <param name="dir"></param>
+        /// <returns></returns>
+        internal static FolderViewModel ConstructFolderFolderViewModel(string dir)
         {
-            if (string.IsNullOrEmpty(sFileName) == true)
-                return;
-
-            var msg = ServiceLocator.ServiceContainer.Instance.GetService<IMessageBoxService>();
-            try
-            {
-                Process.Start(new ProcessStartInfo(sFileName));
-            }
-            catch (System.Exception ex)
-            {
-                msg.Show(string.Format(CultureInfo.CurrentCulture, "{0}", ex.Message),
-                         FileSystemModels.Local.Strings.STR_MSG_ERROR_FINDING_RESOURCE,
-                         MsgBoxButtons.OK, MsgBoxImage.Error);
-            }
+            return new FolderViewModel(new PathModel(dir, FSItemType.Folder));
         }
-
-        /// <summary>
-        /// Copies the given string into the Windows clipboard.
-        /// </summary>
-        /// <param name="sFileName"></param>
-        private static void CopyPathCommand_Executed(string sFileName)
-        {
-            if (string.IsNullOrEmpty(sFileName) == true)
-                return;
-
-            try
-            {
-                System.Windows.Clipboard.SetText(sFileName);
-            }
-            catch
-            {
-            }
-        }
-        #endregion FileSystem Commands
 
         /// <summary>
         /// Load all sub-folders into the Folders collection.
         /// </summary>
-        private void LoadFolders()
+        public void LoadFolders()
         {
-            Logger.DebugFormat("Detail: Load sub-folders of this folder.");
-
             try
             {
-                if (this.Folders.Count > 0)
-                    return;
+                ClearFolders();
 
-                string[] dirs = null;
+                string fullPath = Path.Combine(FolderPath, FolderName);
 
-                string fullPath = Path.Combine(this.FolderPath, this.FolderName);
-
-                if (this.FolderName.Contains(':'))                  // This is a drive
-                    fullPath = string.Concat(this.FolderName, "\\");
+                if (FolderName.Contains(':'))                  // This is a drive
+                    fullPath = string.Concat(FolderName, "\\");
                 else
-                    fullPath = this.FolderPath;
+                    fullPath = FolderPath;
 
-                try
-                {
-                    dirs = Directory.GetDirectories(fullPath);
-                }
-                catch (Exception)
-                {
-                }
-
-                this.Folders.Clear();
-
-                if (dirs != null)
-                {
-                    foreach (string dir in dirs)
-                        AddFolder(dir);
-                }
+                foreach (string dir in Directory.GetDirectories(fullPath))
+                    AddFolder(dir);
             }
             catch (UnauthorizedAccessException ae)
             {
-                Console.WriteLine(ae.Message);
+                this.ShowNotification(FileSystemModels.Local.Strings.STR_MSG_UnknownError, ae.Message);
             }
             catch (IOException ie)
             {
-                Console.WriteLine(ie.Message);
+                this.ShowNotification(FileSystemModels.Local.Strings.STR_MSG_UnknownError, ie.Message);
             }
+        }
+
+        /// <summary>
+        /// Remove all sub-folders from a given folder.
+        /// </summary>
+        public void ClearFolders()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                Folders.Clear();
+            });
         }
 
         /// <summary>
@@ -563,8 +408,6 @@ namespace FolderBrowser.ViewModels
         /// <returns></returns>
         private FolderViewModel AddFolder(string dir)
         {
-            Logger.DebugFormat("Detail: AddFolder '{0}' into sub-folder collection of this folder.", dir);
-
             try
             {
                 DirectoryInfo di = new DirectoryInfo(dir);
@@ -573,18 +416,19 @@ namespace FolderBrowser.ViewModels
                 if ((di.Attributes & FileAttributes.Hidden) != FileAttributes.Hidden)
                 {
                     var newFolder = FolderViewModel.ConstructFolderFolderViewModel(dir);
-                    this.Folders.Add(newFolder);
+
+                    AddFolder(newFolder);
 
                     return newFolder;
                 }
             }
             catch (UnauthorizedAccessException ae)
             {
-                Logger.Warn("Directory Access not authorized", ae);
+                this.ShowNotification(FileSystemModels.Local.Strings.STR_MSG_UnknownError, ae.Message);
             }
             catch (Exception e)
             {
-                Logger.Warn(e);
+                this.ShowNotification(FileSystemModels.Local.Strings.STR_MSG_UnknownError, e.Message);
             }
 
             return null;
@@ -592,30 +436,54 @@ namespace FolderBrowser.ViewModels
 
         private void ResetModel(PathModel model)
         {
-            var oldModel = this.mModel;
+            var oldModel = mModel;
 
-            this.mModel = new PathModel(model);
+            mModel = new PathModel(model);
 
             if (oldModel == null && model == null)
                 return;
 
             if (oldModel == null && model != null || oldModel != null && model == null)
             {
-                this.RaisePropertyChanged(() => this.ItemType);
-                this.RaisePropertyChanged(() => this.FolderName);
-                this.RaisePropertyChanged(() => this.FolderPath);
+                RaisePropertyChanged(() => ItemType);
+                RaisePropertyChanged(() => FolderName);
+                RaisePropertyChanged(() => FolderPath);
 
                 return;
             }
 
-            if (oldModel.PathType != this.mModel.PathType)
-                this.RaisePropertyChanged(() => this.ItemType);
+            if (oldModel.PathType != mModel.PathType)
+                RaisePropertyChanged(() => ItemType);
 
-            if (string.Compare(oldModel.Name, this.mModel.Name, true) != 0)
-                this.RaisePropertyChanged(() => this.FolderName);
+            if (string.Compare(oldModel.Name, mModel.Name, true) != 0)
+                RaisePropertyChanged(() => FolderName);
 
-            if (string.Compare(oldModel.Path, this.mModel.Path, true) != 0)
-                this.RaisePropertyChanged(() => this.FolderPath);
+            if (string.Compare(oldModel.Path, mModel.Path, true) != 0)
+                RaisePropertyChanged(() => FolderPath);
+        }
+
+        /// <summary>
+        /// Shows a pop-notification message with the given title and text.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="message"></param>
+        /// <param name="imageIcon"></param>
+        /// <returns>true if the event was succesfully fired.</returns>
+        public new bool ShowNotification(string title, string message,
+                                         BitmapImage imageIcon = null)
+        {
+            try
+            {
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    return base.ShowNotification(title, message, imageIcon);
+                });
+            }
+            catch
+            {
+            }
+
+            return false;
         }
         #endregion methods
     }

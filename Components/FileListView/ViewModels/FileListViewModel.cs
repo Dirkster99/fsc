@@ -14,8 +14,9 @@ namespace FileListView.ViewModels
     using FileSystemModels.Events;
     using FileSystemModels.Interfaces;
     using FileSystemModels.Models;
+    using FileSystemModels.Models.FSItems;
     using FileSystemModels.Utils;
-    using FolderBrowser.ViewModels.Interfaces;
+    using FolderBrowser.Interfaces;
     using MsgBox;
     using UserNotification.ViewModel;
 

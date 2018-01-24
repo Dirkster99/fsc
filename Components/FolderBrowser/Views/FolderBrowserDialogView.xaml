@@ -1,0 +1,99 @@
+﻿<UserControl x:Class="FolderBrowser.Views.FolderBrowserDialogView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Width="Auto" Height="Auto"
+        xmlns:conv="clr-namespace:FolderBrowser.Converters"
+        xmlns:behav="clr-namespace:FolderBrowser.Views.Behaviours"
+        xmlns:views="clr-namespace:FolderBrowser.Views"
+        xmlns:Local="clr-namespace:FileSystemModels.Local;assembly=FileSystemModels"
+        xmlns:dbthemes="clr-namespace:DropDownButtonLib.Themes;assembly=DropDownButtonLib"
+        >
+        <Grid.Resources>
+            <conv:InverseBooleanConverter x:Key="inverter" />
+            <conv:BoolToVisibilityConverter x:Key="BoolToVis" TrueValue="Visible" FalseValue="Collapsed" />
+            <conv:BoolToVisibilityConverter x:Key="BoolToVis2" TrueValue="Collapsed" FalseValue="Visible" />
+
+            <views:BindingProxy x:Key="MainViewModelProxy" Data="{Binding}"/>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <views:BrowseDirectoriesView DataContext="{Binding TreeBrowser}"
+                                     x:Name="TreeBrowserView"
+                                     IsEnabled="{Binding Path=IsBrowsing, Converter={StaticResource inverter}}"
+                                     Grid.Column="0"
+                                     Margin="3"/>
+
+        <!-- Display an icon and message text when an error meeds communication -->
+        <Grid Grid.Row="1" DataContext="{Binding TreeBrowser}"
+              Margin="3"
+              Visibility="{Binding Path=DisplayMessage.IsErrorMessageAvailable, Converter={StaticResource BoolToVis}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Image Grid.Column="0" Width="24" Margin="3" Source="{DynamicResource Error_Image}" />
+            <TextBlock Grid.Column="1" Text="{Binding DisplayMessage.Message}" Margin="3"
+                       HorizontalAlignment="Left" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- The selected folder path -->
+        <Grid Grid.Row="2" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- Display a progress bar and Cancel button when Machine based translation is executed -->
+            <ProgressBar Grid.Row="0" IsIndeterminate="True" Height="8" Margin="3"
+                     Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis}}"/>
+
+            <Grid Grid.Row="1"
+                  xmlns:ctrls="clr-namespace:DropDownButtonLib.Controls;assembly=DropDownButtonLib">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <views:BookmarkFolderDropDown Grid.Column="0"
+                                              DataContext="{Binding BookmarkedLocations}"
+                                              Margin="3" />
+
+                <TextBox DataContext="{Binding TreeBrowser}" Grid.Column="1"
+                         Text="{Binding Path=SelectedFolder, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         behav:SelectTextOnFocus.Active="True"
+                         behav:TextEnterCommand.Command="{Binding FolderSelectedCommand}"
+                         IsEnabled="{Binding IsBrowsing, Converter={StaticResource inverter}}"
+                         MinHeight="25"
+                         Margin="3"
+                         VerticalContentAlignment="Center" FontSize="16" x:Name="BrowserAddress" />
+
+                <Button Grid.Column="2" Margin="3"
+                        Command="{Binding TreeBrowser.FolderSelectedCommand}"
+                        CommandParameter="{Binding ElementName=BrowserAddress,Path=Text}"
+                        Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis2}}">
+                    <Image Source="{DynamicResource GoButton_Image_Go}" Width="16" />
+                </Button>
+                <Button Grid.Column="2" Margin="3"
+                        Command="{Binding TreeBrowser.CancelBrowsingCommand, FallbackValue={x:Null}}"
+                        Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis}}">
+                    <Image Source="{DynamicResource GoButton_Image_Cancel}" Width="16" />
+                </Button>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

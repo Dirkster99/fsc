@@ -7,12 +7,13 @@ namespace FileListView.ViewModels
   using FileListView.Command;
   using FileSystemModels.Events;
   using FileSystemModels.Models;
+    using FileSystemModels.Models.FSItems;
 
-  /// <summary>
-  /// Class implements a viewmodel that can be used for a
-  /// combobox that can be used to browse to different folder locations.
-  /// </summary>
-  public class FolderComboBoxViewModel : Base.ViewModelBase
+    /// <summary>
+    /// Class implements a viewmodel that can be used for a
+    /// combobox that can be used to browse to different folder locations.
+    /// </summary>
+    public class FolderComboBoxViewModel : Base.ViewModelBase
   {
     #region fields
     private readonly ObservableCollection<FSItemViewModel> mCurrentItems;

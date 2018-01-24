@@ -159,6 +159,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Components\FsCore\FsCore.csproj">
+      <Project>{8391f556-c4cb-4aa9-9874-bf665fb2b072}</Project>
+      <Name>FsCore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Components\ServiceLocator\ServiceLocator.csproj">
       <Project>{1d2b2142-67d7-48ea-91f9-5e77e29b5ab9}</Project>
       <Name>ServiceLocator</Name>
@@ -174,6 +178,10 @@
     <ProjectReference Include="..\Components\FolderBrowser\FolderBrowser.csproj">
       <Project>{0b8c3b19-940d-408d-9f6b-4afee7246642}</Project>
       <Name>FolderBrowser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Components\WPFProcessingLib\WPFProcessingLib.csproj">
+      <Project>{077c358b-9731-4c5e-9ea7-f2cd7487acbe}</Project>
+      <Name>WPFProcessingLib</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

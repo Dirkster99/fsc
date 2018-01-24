@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="The views shown on the left contained in the controls below each other (via XAML inclusion).">
+    <Position X="6.164" Y="0.547" Height="2.935" Width="1.048" />
+  </Comment>
+  <Comment CommentText="The DropDownViewModel binds to the DataContext of the DropDownView.">
+    <Position X="0.5" Y="3.558" Height="0.75" Width="2.479" />
+  </Comment>
+  <Comment CommentText="The DialogviewModel binds to the DataContext of the FolderBrowserDialog.">
+    <Position X="3.75" Y="3.635" Height="0.75" Width="2.26" />
+  </Comment>
+  <Class Name="FolderBrowser.BookmarkFolder.AddFolderBookmark">
+    <Position X="12.5" Y="11.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAEAAIIAgAAQAAAAACAAAAAAAAAAAAgAAEAAAAAAAQA=</HashCode>
+      <FileName>BookmarkFolder\AddFolderBookmark.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FolderBrowser.ViewModels.BrowserViewModel">
+    <Position X="5.5" Y="9.25" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="SpecialFolders" Type="System.Collections.ObjectModel.ObservableCollection&lt;T&gt;">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.167" Y="0.5" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gQgAEINQhIgYEpABABAEIAAEgARGCACAwRLAUQQBgKg=</HashCode>
+      <FileName>ViewModels\BrowserViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Folders" />
+      <Property Name="DisplayMessage" />
+      <Property Name="BookmarkFolder" />
+      <Property Name="SpecialFolders" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FolderBrowser.ViewModels.CustomFolderItemViewModel">
+    <Position X="8" Y="18.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModels\CustomFolderItemViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FolderBrowser.ViewModels.DialogBaseViewModel">
+    <Position X="0.5" Y="9" Width="3.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="BookmarkedLocations" Type="FsCore.Interfaces.IBookmarkedLocationsViewModel" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="3.531" Y="9" />
+        <Point X="3.531" Y="8.75" />
+        <Point X="8.5" Y="8.75" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAhAAABIAAAAAAAAAAAAAAABAAEAAAAAAA=</HashCode>
+      <FileName>ViewModels\DialogBaseViewModel.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="BookmarkedLocations" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="FolderBrowser.ViewModels.DialogViewModel">
+    <Position X="3.75" Y="4.75" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="FolderBrowser.ViewModels.DialogBaseViewModel" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="2.375" Y="9" />
+        <Point X="2.375" Y="8.568" />
+        <Point X="4" Y="8.568" />
+        <Point X="4" Y="6.694" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>ViewModels\DialogViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FolderBrowser.ViewModels.DropDownViewModel">
+    <Position X="0.5" Y="4.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>YAAgCAAQRFAABAACAAAAAEBAAAAAAAAAABQAAAAABAI=</HashCode>
+      <FileName>ViewModels\DropDownViewModel .cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FolderBrowser.ViewModels.FolderViewModel">
+    <Position X="1" Y="14" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAhQIgBIIAsAAEAAAAICAABAAAEACAAAAAAAAWAiA=</HashCode>
+      <FileName>ViewModels\FolderViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FolderBrowser.ViewModels.Messages.DisplayMessageViewModel" BaseTypeListCollapsed="true">
+    <Position X="9" Y="15.25" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AEAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAAAAAA=</HashCode>
+      <FileName>ViewModels\Messages\DisplayMessageViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="FolderBrowser.Views.BookmarkFolderDropDown">
+    <Position X="6.25" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\BookmarkFolderDropDown.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FolderBrowser.Views.BrowseDirectoriesView" Collapsed="true">
+    <Position X="2.25" Y="1.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\BrowseDirectoriesView.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FolderBrowser.Views.DropDownView" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <FileName>Views\DropDownView.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FolderBrowser.Views.FolderBrowserDialog" Collapsed="true">
+    <Position X="3.75" Y="2.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\FolderBrowserDialog.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FolderBrowser.Views.FolderBrowserDialogView" Collapsed="true">
+    <Position X="2.25" Y="2" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\FolderBrowserDialogView.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FolderBrowser.Views.FolderBrowserTreeView" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Views\FolderBrowserTreeView.xaml.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FsCore.Collections.ObservableSortedDictionary&lt;TKey, TValue&gt;">
+    <Position X="1" Y="12" Width="3.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="System.Collections.ObjectModel.ObservableCollection&lt;T&gt;">
+    <Position X="5.5" Y="18.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Events" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="FolderBrowser.ViewModels.Messages.IDisplayMessageViewModel">
+    <Position X="9.75" Y="13.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABIAAAAAA=</HashCode>
+      <FileName>ViewModels\Messages\IDisplayMessageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="FsCore.Interfaces.IBookmarkedLocationsViewModel">
+    <Position X="8.5" Y="8" Width="2.75" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="FolderBrowser.BookmarkFolder.IAddFolderBookmark">
+    <Position X="9.5" Y="11.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>BookmarkFolder\IAddFolderBookmark.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,36 +1,37 @@
 ﻿namespace TestFolderBrowser
 {
-  using System.Windows;
-  using FolderBrowser.ViewModels;
-
-  /// <summary>
-  /// Interaction logic for MainWindow.xaml
-  /// </summary>
-  public partial class MainWindow : Window
-  {
-    public MainWindow()
-    {
-      this.InitializeComponent();
-    }
+    using System.Windows;
+    using FolderBrowser;
 
     /// <summary>
-    /// Use a button click event to demo the folder browser dialog...
+    /// Interaction logic for MainWindow.xaml
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void Button_Click(object sender, RoutedEventArgs e)
+    public partial class MainWindow : Window
     {
-      var dlg = new FolderBrowser.Views.FolderBrowserDialog();
+        public MainWindow()
+        {
+            this.InitializeComponent();
+        }
 
-      var dlgViewModel = new DialogViewModel(new BrowserViewModel());
-      dlgViewModel.TreeBrowser.SetSelectedFolder(@"C:\");
+        /// <summary>
+        /// Use a button click event to demo the folder browser dialog...
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var dlg = new FolderBrowser.Views.FolderBrowserDialog();
 
-      dlg.DataContext = dlgViewModel;
+            var browserVM = FolderBrowserFactory.CreateBrowserViewModel();
+            var dlgViewModel = FolderBrowserFactory.CreateDialogViewModel(browserVM);
+            dlgViewModel.TreeBrowser.SetSelectedFolder(@"C:\");
 
-      bool? bResult = dlg.ShowDialog();
+            dlg.DataContext = dlgViewModel;
 
-      if (dlgViewModel.DialogCloseResult == true || bResult == true)
-        System.Windows.MessageBox.Show("OPening path:" + dlgViewModel.TreeBrowser.SelectedFolder);
+            bool? bResult = dlg.ShowDialog();
+
+            if (dlgViewModel.DialogCloseResult == true || bResult == true)
+                System.Windows.MessageBox.Show("OPening path:" + dlgViewModel.TreeBrowser.SelectedFolder);
+        }
     }
-  }
 }

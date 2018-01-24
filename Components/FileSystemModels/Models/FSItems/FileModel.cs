@@ -1,9 +1,10 @@
 ﻿namespace FileSystemModels.Models.FSItems
 {
-  using System.IO;
-  using System.Security;
+    using Models;
+    using System.IO;
+    using System.Security;
 
-  public class FileModel : Base.FileSystemModel
+    public class FileModel : Base.FileSystemModel
   {
     #region fields
     FileInfo mFile;
@@ -18,7 +19,7 @@
     public FileModel(PathModel model)
       : base(model)
     {
-      this.mFile = new FileInfo(model.Path);
+            mFile = new FileInfo(model.Path);
     }
     #endregion constructors
 
@@ -27,7 +28,7 @@
     {
       get
       {
-        return this.mFile.Directory;
+        return mFile.Directory;
       }
     }
 
@@ -35,7 +36,7 @@
     {
       get
       {
-        return this.mFile.DirectoryName;
+        return mFile.DirectoryName;
       }
     }
 
@@ -43,7 +44,7 @@
     {
       get
       {
-        return this.mFile.Exists;
+        return mFile.Exists;
       }
     }
 
@@ -51,7 +52,7 @@
     {
       get
       {
-        return this.mFile.IsReadOnly;
+        return mFile.IsReadOnly;
       }
     }
 
@@ -59,7 +60,7 @@
     {
       get
       {
-        return this.mFile.Length;
+        return mFile.Length;
       }
     }
     #endregion properties
