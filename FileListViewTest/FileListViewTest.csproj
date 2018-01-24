@@ -163,15 +163,15 @@
       <Project>{1d2b2142-67d7-48ea-91f9-5e77e29b5ab9}</Project>
       <Name>ServiceLocator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileListView\FileListView.csproj">
+    <ProjectReference Include="..\Components\FileListView\FileListView.csproj">
       <Project>{735cf8ec-a4ef-49a2-bc72-ec360a0185a4}</Project>
       <Name>FileListView</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileSystemModels\FileSystemModels.csproj">
+    <ProjectReference Include="..\Components\FileSystemModels\FileSystemModels.csproj">
       <Project>{c3eb23fd-78e7-4298-922c-48c254551cc9}</Project>
       <Name>FileSystemModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FolderBrowser\FolderBrowser\FolderBrowser.csproj">
+    <ProjectReference Include="..\Components\FolderBrowser\FolderBrowser.csproj">
       <Project>{0b8c3b19-940d-408d-9f6b-4afee7246642}</Project>
       <Name>FolderBrowser</Name>
     </ProjectReference>

@@ -197,7 +197,7 @@
       <Project>{1d2b2142-67d7-48ea-91f9-5e77e29b5ab9}</Project>
       <Name>ServiceLocator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\FileSystemModels\FileSystemModels.csproj">
+    <ProjectReference Include="..\FileSystemModels\FileSystemModels.csproj">
       <Project>{c3eb23fd-78e7-4298-922c-48c254551cc9}</Project>
       <Name>FileSystemModels</Name>
     </ProjectReference>

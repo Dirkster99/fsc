@@ -57,13 +57,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="InplaceEditBoxLib, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dirkster.InplaceEditBoxLib.1.0.0.3\lib\net4\InplaceEditBoxLib.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.0.0.3\lib\net4\InplaceEditBoxLib.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MsgBox, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dirkster.MsgBox.1.4.2\lib\net451\MsgBox.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.MsgBox.1.4.2\lib\net451\MsgBox.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -77,7 +77,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UserNotification, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dirkster.UserNotifications.1.4.0\lib\net451\UserNotification.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.UserNotifications.1.4.0\lib\net451\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -213,7 +213,7 @@
     <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Components\ServiceLocator\ServiceLocator.csproj">
+    <ProjectReference Include="..\ServiceLocator\ServiceLocator.csproj">
       <Project>{1d2b2142-67d7-48ea-91f9-5e77e29b5ab9}</Project>
       <Name>ServiceLocator</Name>
     </ProjectReference>
@@ -221,7 +221,7 @@
       <Project>{c3eb23fd-78e7-4298-922c-48c254551cc9}</Project>
       <Name>FileSystemModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FolderBrowser\FolderBrowser\FolderBrowser.csproj">
+    <ProjectReference Include="..\FolderBrowser\FolderBrowser.csproj">
       <Project>{0b8c3b19-940d-408d-9f6b-4afee7246642}</Project>
       <Name>FolderBrowser</Name>
     </ProjectReference>

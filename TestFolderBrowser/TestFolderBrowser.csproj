@@ -128,11 +128,11 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Components\ServiceLocator\ServiceLocator.csproj">
+    <ProjectReference Include="..\Components\ServiceLocator\ServiceLocator.csproj">
       <Project>{1d2b2142-67d7-48ea-91f9-5e77e29b5ab9}</Project>
       <Name>ServiceLocator</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FolderBrowser\FolderBrowser.csproj">
+    <ProjectReference Include="..\Components\FolderBrowser\FolderBrowser.csproj">
       <Project>{0B8C3B19-940D-408D-9F6B-4AFEE7246642}</Project>
       <Name>FolderBrowser</Name>
     </ProjectReference>

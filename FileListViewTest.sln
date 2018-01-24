@@ -2,17 +2,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Folder Browser", "Folder Browser", "{C7A9E1F8-38FD-4268-BFC5-473CF16471D9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileListViewTest", "FileListViewTest\FileListViewTest.csproj", "{4670B970-4B36-42B3-BC50-A196C6A07A51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileListView", "FileListView\FileListView.csproj", "{735CF8EC-A4EF-49A2-BC72-EC360A0185A4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileListView", "Components\FileListView\FileListView.csproj", "{735CF8EC-A4EF-49A2-BC72-EC360A0185A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderBrowser", "FolderBrowser\FolderBrowser\FolderBrowser.csproj", "{0B8C3B19-940D-408D-9F6B-4AFEE7246642}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FolderBrowser", "Components\FolderBrowser\FolderBrowser.csproj", "{0B8C3B19-940D-408D-9F6B-4AFEE7246642}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFolderBrowser", "FolderBrowser\TestFolderBrowser\TestFolderBrowser.csproj", "{64E41F31-9C24-4274-93F1-86DF41EB4D83}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFolderBrowser", "TestFolderBrowser\TestFolderBrowser.csproj", "{64E41F31-9C24-4274-93F1-86DF41EB4D83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystemModels", "FileSystemModels\FileSystemModels.csproj", "{C3EB23FD-78E7-4298-922C-48C254551CC9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileSystemModels", "Components\FileSystemModels\FileSystemModels.csproj", "{C3EB23FD-78E7-4298-922C-48C254551CC9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{7640CA68-5593-4D5B-894C-950A5127124A}"
 EndProject
@@ -127,8 +125,9 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{0B8C3B19-940D-408D-9F6B-4AFEE7246642} = {C7A9E1F8-38FD-4268-BFC5-473CF16471D9}
-		{64E41F31-9C24-4274-93F1-86DF41EB4D83} = {C7A9E1F8-38FD-4268-BFC5-473CF16471D9}
+		{735CF8EC-A4EF-49A2-BC72-EC360A0185A4} = {7640CA68-5593-4D5B-894C-950A5127124A}
+		{0B8C3B19-940D-408D-9F6B-4AFEE7246642} = {7640CA68-5593-4D5B-894C-950A5127124A}
+		{C3EB23FD-78E7-4298-922C-48C254551CC9} = {7640CA68-5593-4D5B-894C-950A5127124A}
 		{1D2B2142-67D7-48EA-91F9-5E77E29B5AB9} = {7640CA68-5593-4D5B-894C-950A5127124A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
