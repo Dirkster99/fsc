@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ABD0C546-0168-49B9-9C27-C7211293D461}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ExplorerTestLib</RootNamespace>
+    <AssemblyName>ExplorerTestLib</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DropDownButtonLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.DropDownButtonLib.1.0.4\lib\net4\DropDownButtonLib.dll</HintPath>
+    </Reference>
+    <Reference Include="HistoryControlLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.HistoryControlLib.1.0.0\lib\net4\HistoryControlLib.dll</HintPath>
+    </Reference>
+    <Reference Include="InplaceEditBoxLib, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.0.0.3\lib\net4\InplaceEditBoxLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="UserNotification, Version=1.3.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.0.0.3\lib\net4\UserNotification.dll</HintPath>
+    </Reference>
+    <Reference Include="WatermarkControlsLib, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.WatermarkControlsLib.1.0.1\lib\net4\WatermarkControlsLib.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Behaviors\BringIntoViewListBoxItem.cs" />
+    <Compile Include="Behaviors\DoubleClickSelectorItem.cs" />
+    <Compile Include="Behaviors\SelectionChangedCommand.cs" />
+    <Compile Include="Converter\MultiBindingToObjectListConverter.cs" />
+    <Compile Include="ExplorerTestFactory.cs" />
+    <Compile Include="FileListItemOptionsView.xaml.cs">
+      <DependentUpon>FileListItemOptionsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FileListItemView.xaml.cs">
+      <DependentUpon>FileListItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Interfaces\IListControllerViewModel.cs" />
+    <Compile Include="Interfaces\ITreeListControllerViewModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TreeListItemView.xaml.cs">
+      <DependentUpon>TreeListItemView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\ApplicationViewModel.cs" />
+    <Compile Include="ViewModels\Base\RelayCommand.cs" />
+    <Compile Include="ViewModels\Base\ViewModelBase.cs" />
+    <Compile Include="ViewModels\ControllerBaseViewModel.cs" />
+    <Compile Include="ViewModels\ListControllerViewModel.cs" />
+    <Compile Include="ViewModels\TreeListControllerViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FSC_Components\FileListView\FileListView.csproj">
+      <Project>{735cf8ec-a4ef-49a2-bc72-ec360a0185a4}</Project>
+      <Name>FileListView</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FSC_Components\FileSystemModels\FileSystemModels.csproj">
+      <Project>{391639c4-5c43-4391-9465-27686e82c33f}</Project>
+      <Name>FileSystemModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FSC_Components\FilterControlsLib\FilterControlsLib.csproj">
+      <Project>{52f61815-3ec5-461b-bce0-ab80b1c5b229}</Project>
+      <Name>FilterControlsLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FSC_Components\FolderBrowser\FolderBrowser.csproj">
+      <Project>{7d4bd5f8-a98e-4966-abbd-cbe202dfbef7}</Project>
+      <Name>FolderBrowser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FSC_Components\FolderControlsLib\FolderControlsLib.csproj">
+      <Project>{511fa2d6-2022-4de1-9a3e-731e04e8f10c}</Project>
+      <Name>FolderControlsLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="FileListItemOptionsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="FileListItemView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="TreeListItemView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

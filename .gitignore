@@ -1,17 +1,5 @@
-debug/
-release/
-build/
-bin/
-obj/
-cache/
-log/
-tmp/
-packages/
-.vs/
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
 
-*~
-*.lock
-*.DS_Store
-*.swp
-*.out
-*.sou
+/source/.vs/FSC/v15/Server/sqlite3
