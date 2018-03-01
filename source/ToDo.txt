@@ -1,6 +1,0 @@
-
-Find Resoolution for these missing methods:
-
-- IBrowserViewModel.FolderSelectionChangedEvent  (Event)
-- IBrowserViewModel.RequestEditBookmarkedFolders (Event)
-- IBrowserViewModel.SetSelectedFolder()

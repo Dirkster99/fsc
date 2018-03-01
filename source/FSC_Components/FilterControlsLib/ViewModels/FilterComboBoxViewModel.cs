@@ -9,6 +9,7 @@ namespace FilterControlsLib.ViewModels
     using FileSystemModels.Events;
     using FilterControlsLib.Collections;
     using FileSystemModels.ViewModels.Base;
+    using FileListView.Interfaces;
 
     /// <summary>
     /// Class implements a viewmodel for a combo box like control that
@@ -259,7 +260,7 @@ namespace FilterControlsLib.ViewModels
         /// <summary>
         /// Method executes when the SelectionChanged command is invoked.
         /// The parameter <paramref name="p"/> can be an array of objects
-        /// containing objects of the <seealso cref="FSItemViewModel"/> type or
+        /// containing objects of the <seealso cref="ILVItemViewModel"/> type or
         /// p can also be string.
         /// 
         /// Each parameter item that adheres to the above types results in

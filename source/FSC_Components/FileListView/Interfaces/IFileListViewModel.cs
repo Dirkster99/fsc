@@ -94,7 +94,8 @@ namespace FileListView.Interfaces
 
         /// <summary>
         /// Gets a command that will open the folder in which an item is stored.
-        /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
+        /// The item (path to a file) is expected as
+        /// <seealso cref="ILVItemViewModel"/> parameter.
         /// </summary>
         ICommand OpenContainingFolderCommand
         {
@@ -103,7 +104,7 @@ namespace FileListView.Interfaces
 
         /// <summary>
         /// Gets a command that will open the selected item with the current default application
-        /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
+        /// in Windows. The selected item (path to a file) is expected as <seealso cref="ILVItemViewModel"/> parameter.
         /// (eg: Item is HTML file -> Open in Windows starts the web browser for viewing the HTML
         /// file if thats the currently associated Windows default application.
         /// </summary>
@@ -114,7 +115,7 @@ namespace FileListView.Interfaces
 
         /// <summary>
         /// Gets a command that will copy the path of an item into the Windows Clipboard.
-        /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
+        /// The item (path to a file) is expected as <seealso cref="ILVItemViewModel"/> parameter.
         /// </summary>
         ICommand CopyPathCommand
         {

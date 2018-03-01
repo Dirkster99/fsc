@@ -2,9 +2,17 @@
 {
     using FileSystemModels.Interfaces.Bookmark;
     using FolderBrowser.Interfaces;
+    using System.ComponentModel;
 
-    public interface IDialogViewModel
+    /// <summary>
+    /// Defines an interface to a viewmodel that can be used to drive a dialog.
+    /// </summary>
+    public interface IDialogViewModel : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Gets a property that can be set by the viewmodel to indicate for the
+        /// view that the dialog should now be closed.
+        /// </summary>
         bool? DialogCloseResult { get; }
 
         /// <summary>

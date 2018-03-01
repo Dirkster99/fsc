@@ -398,7 +398,7 @@ namespace FileListView.ViewModels
 
         /// <summary>
         /// Gets a command that will open the folder in which an item is stored.
-        /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
+        /// The item (path to a file) is expected as <seealso cref="ILVItemViewModel"/> parameter.
         /// </summary>
         public ICommand OpenContainingFolderCommand
         {
@@ -408,7 +408,7 @@ namespace FileListView.ViewModels
                     this._OpenContainingFolderCommand = new RelayCommand<object>(
                       (p) =>
                       {
-                          var path = p as LVItemViewModel;
+                          var path = p as ILVItemViewModel;
 
                           if (path == null)
                               return;
@@ -425,7 +425,8 @@ namespace FileListView.ViewModels
 
         /// <summary>
         /// Gets a command that will open the selected item with the current default application
-        /// in Windows. The selected item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
+        /// in Windows. The selected item (path to a file) is expected as
+        /// <seealso cref="ILVItemViewModel"/> parameter.
         /// (eg: Item is HTML file -> Open in Windows starts the web browser for viewing the HTML
         /// file if thats the currently associated Windows default application.
         /// </summary>
@@ -437,7 +438,7 @@ namespace FileListView.ViewModels
                     this._OpenInWindowsCommand = new RelayCommand<object>(
                       (p) =>
                       {
-                          var path = p as LVItemViewModel;
+                          var path = p as ILVItemViewModel;
 
                           if (path == null)
                               return;
@@ -454,7 +455,7 @@ namespace FileListView.ViewModels
 
         /// <summary>
         /// Gets a command that will copy the path of an item into the Windows Clipboard.
-        /// The item (path to a file) is expected as <seealso cref="FSItemViewModel"/> parameter.
+        /// The item (path to a file) is expected as <seealso cref="ILVItemViewModel"/> parameter.
         /// </summary>
         public ICommand CopyPathCommand
         {
@@ -464,7 +465,7 @@ namespace FileListView.ViewModels
                     this._CopyPathCommand = new RelayCommand<object>(
                       (p) =>
                       {
-                          var path = p as LVItemViewModel;
+                          var path = p as ILVItemViewModel;
 
                           if (path == null)
                               return;
@@ -500,9 +501,9 @@ namespace FileListView.ViewModels
         #endregion Windows Integration FileSystem Commands
 
         /// <summary>
-        /// Renames the folder that is represented by this viewmodel.
-        /// This command should be called directly by the implementing view
-        /// since the new name of the folder is delivered as string.
+        /// Renames the folder that is delivered in a Tuple parameter
+        /// containing the new string and the <see cref="ILVItemViewModel"/> item
+        /// who's rename method is to be called in this command.
         /// </summary>
         public ICommand RenameCommand
         {
@@ -515,7 +516,7 @@ namespace FileListView.ViewModels
 
                         if (tuple != null)
                         {
-                            var folderVM = tuple.Item2 as LVItemViewModel;
+                            var folderVM = tuple.Item2 as ILVItemViewModel;
 
                             if (tuple.Item1 != null && folderVM != null)
                                 folderVM.RenameFileOrFolder(tuple.Item1);
@@ -532,6 +533,9 @@ namespace FileListView.ViewModels
         /// 
         /// This command implements an event that triggers the actual rename
         /// process in the connected view.
+        /// 
+        /// The expected parameter is a <see cref="LVItemViewModel"/>
+        /// that can be supplied as <see cref="ILVItemViewModel"/>.
         /// </summary>
         public ICommand StartRenameCommand
         {
@@ -552,9 +556,10 @@ namespace FileListView.ViewModels
 
         /// <summary>
         /// Starts the create folder process by creating a new folder
-        /// in the given location. The location is supplied as <seealso cref="System.Windows.Input.ICommandSource.CommandParameter"/>
-        /// which is a <seealso cref="IFolderViewModel"/> item. So, the <seealso cref="IFolderViewModel"/> item
-        /// is the parent of the new folder and the new folder is created with a standard name:
+        /// in the given location. The location is supplied as string
+        /// 
+        /// So, the string is the name of the new folder that is created underneath this folder.
+        /// The new folder is created with a standard name:
         /// 'New Folder n'. The new folder n is selected and in rename mode such that users can edit
         /// the name of the new folder right away.
         /// 

@@ -14,7 +14,7 @@
         private Factory(){ }
 
         /// <summary>
-        /// Public construction method to create a <see cref="ILVItemViewModel"/>
+        /// Public construction method to create a <see cref="IFolderItemViewModel"/>
         /// object that represents a logical drive (eg 'C:\')
         /// </summary>
         /// <param name="curdir"></param>

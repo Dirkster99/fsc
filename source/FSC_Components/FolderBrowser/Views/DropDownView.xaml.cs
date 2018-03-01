@@ -8,6 +8,9 @@
     /// </summary>
     public partial class DropDownView : UserControl
     {
+        /// <summary>
+        /// Class constructor.
+        /// </summary>
         public DropDownView()
         {
             InitializeComponent();

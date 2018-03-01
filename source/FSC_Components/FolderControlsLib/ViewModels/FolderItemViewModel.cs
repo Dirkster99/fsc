@@ -32,7 +32,6 @@ namespace FolderControlsLib.ViewModels
         /// <param name="displayName"></param>
         /// <param name="itemType"></param>
         /// <param name="showIcon"></param>
-        /// <param name="indentation"></param>
         public FolderItemViewModel(string curdir,
                         FSItemType itemType,
                         string displayName,
@@ -48,7 +47,6 @@ namespace FolderControlsLib.ViewModels
         /// <param name="curdir"></param>
         /// <param name="itemType"></param>
         /// <param name="itemName"></param>
-        /// <param name="indentation"></param>
         public FolderItemViewModel(string curdir,
                         FSItemType itemType,
                         string itemName)
@@ -63,7 +61,7 @@ namespace FolderControlsLib.ViewModels
         /// </summary>
         /// <param name="model"></param>
         /// <param name="itemName"></param>
-        /// <param name="indentation"></param>
+        /// <param name="isReadOnly"></param>
         public FolderItemViewModel(IPathModel model,
                         string itemName,
                         bool isReadOnly = false)

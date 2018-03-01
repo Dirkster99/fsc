@@ -1,9 +1,5 @@
 namespace FolderBrowser.Views.Behaviours
 {
-    using FolderBrowser.Interfaces;
-    using FolderBrowser.ViewModels;
-    using System;
-    using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -14,21 +10,38 @@ namespace FolderBrowser.Views.Behaviours
     /// </summary>
     public static class TreeViewItemExpanded
     {
-        public static ICommand GetCommand(DependencyObject obj)
-        {
-            return (ICommand)obj.GetValue(CommandProperty);
-        }
-
-        public static void SetCommand(DependencyObject obj, ICommand value)
-        {
-            obj.SetValue(CommandProperty, value);
-        }
-
+        /// <summary>
+        /// Implements a command dependency property that can be used to invoke
+        /// a bound command when the associated event in the control is raised.
+        /// </summary>
         public static readonly DependencyProperty CommandProperty =
             DependencyProperty.RegisterAttached("Command",
                                                 typeof(ICommand),
                                                 typeof(TreeViewItemExpanded),
                                                 new PropertyMetadata(null, OnPropertyChanged));
+
+        /// <summary>
+        /// Implements a command property gettter that can be used to invoke
+        /// a bound command when the associated event in the control is raised.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static ICommand GetCommand(DependencyObject obj)
+        {
+            return (ICommand)obj.GetValue(CommandProperty);
+        }
+
+        /// <summary>
+        /// Implements a command property settter that can be used to invoke
+        /// a bound command when the associated event in the control is raised.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="value"></param>
+        public static void SetCommand(DependencyObject obj, ICommand value)
+        {
+            obj.SetValue(CommandProperty, value);
+        }
+
         #region methods
         private static void OnPropertyChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs e)
         {

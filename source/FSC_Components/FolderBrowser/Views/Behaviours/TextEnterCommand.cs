@@ -37,7 +37,7 @@ namespace FolderBrowser.Views.Behaviours
         }
 
         /// <summary>
-        /// This method is hooked in the definition of the <seealso cref="ChangedCommandProperty"/>.
+        /// This method is hooked in the definition of the <see cref="TextChangedCommand"/>.
         /// It is called whenever the attached property changes - in our case the event of binding
         /// and unbinding the property to a sink is what we are looking for.
         /// </summary>

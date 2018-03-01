@@ -116,6 +116,9 @@
             }
         }
 
+        /// <summary>
+        /// Gets/sets whether the associated view is currently enabled or not.
+        /// </summary>
         public bool IsBrowseViewEnabled
         {
             get
@@ -733,7 +736,7 @@
         /// starts up via Loading. The control attempts to change the
         /// current directory to the indicated directory if the
         /// ... method is called in the Loaded event of the
-        /// <seealso cref="FolderBrowserDialog"/>.
+        /// <seealso cref="FolderBrowser.Views.FolderBrowserDialog"/>.
         /// </summary>
         public string InitialPath
         {
@@ -758,7 +761,7 @@
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="newPath"></param>
+        /// <param name="location"></param>
         /// <returns></returns>
         bool INavigateable.NavigateTo(IPathModel location)
         {
@@ -768,7 +771,7 @@
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="newPath"></param>
+        /// <param name="location"></param>
         /// <returns></returns>
         async Task<bool> INavigateable.NavigateToAsync(IPathModel location)
         {
@@ -801,7 +804,8 @@
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="newPath"></param>
+        /// <param name="location"></param>
+        /// <param name="ResetBrowserStatus"></param>
         /// <returns></returns>
         private bool NavigateTo(IPathModel location,
                                 bool ResetBrowserStatus = true)

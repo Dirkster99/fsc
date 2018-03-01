@@ -32,7 +32,6 @@ namespace FileListView.ViewModels
         /// <param name="displayName"></param>
         /// <param name="itemType"></param>
         /// <param name="showIcon"></param>
-        /// <param name="indentation"></param>
         public LVItemViewModel(string curdir,
                         FSItemType itemType,
                         string displayName,
@@ -73,7 +72,7 @@ namespace FileListView.ViewModels
         /// </summary>
         /// <param name="model"></param>
         /// <param name="itemName"></param>
-        /// <param name="indentation"></param>
+        /// <param name="isReadOnly"></param>
         public LVItemViewModel(IPathModel model,
                         string itemName,
                         bool isReadOnly = false)

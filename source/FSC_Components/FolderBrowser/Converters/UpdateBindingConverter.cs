@@ -61,6 +61,14 @@
             return inputValues[2];       // Return the ItemSource binding for updates since processing is done
         }
 
+        /// <summary>
+        /// Method is not implemented and will throw <see cref="NotImplementedException"/>.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="targetTypes"></param>
+        /// <param name="parameter"></param>
+        /// <param name="culture"></param>
+        /// <returns></returns>
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
             throw new NotImplementedException();

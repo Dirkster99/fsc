@@ -7,6 +7,9 @@
     /// </summary>
     public partial class FolderBrowserDialogView : UserControl
     {
+        /// <summary>
+        /// Class constructor
+        /// </summary>
         public FolderBrowserDialogView()
         {
             InitializeComponent();

@@ -29,21 +29,10 @@
     /// Allows two-way binding of a TreeView's selected item.
     /// Sources:
     /// http://stackoverflow.com/q/183636/46635
-    /// http://code.msdn.microsoft.com/Changing-selection-in-a-6a6242c8/sourcecode?fileId=18862&pathId=753647475
+    /// http://code.msdn.microsoft.com/Changing-selection-in-a-6a6242c8/sourcecode?fileId=18862&amp;pathId=753647475
     /// </summary>
     internal class TreeViewVirtualItemBehaviour
     {
-        public static IParent GetSelectedItem(DependencyObject obj)
-        {
-            return (IParent)obj.GetValue(SelectedItemProperty);
-        }
-
-        public static void SetSelectedItem(DependencyObject obj, IParent value)
-        {
-            obj.SetValue(SelectedItemProperty, value);
-        }
-
-
         private static readonly DependencyProperty SelectedItemProperty =
             DependencyProperty.RegisterAttached("SelectedItem"
                 , typeof(IParent)
@@ -53,8 +42,28 @@
                     OnSelectedItemChanged));
 
         /// <summary>
+        /// Implements the get method for a dependency property.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static IParent GetSelectedItem(DependencyObject obj)
+        {
+            return (IParent)obj.GetValue(SelectedItemProperty);
+        }
+
+        /// <summary>
+        /// Implements the set method for a dependency property.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="value"></param>
+        public static void SetSelectedItem(DependencyObject obj, IParent value)
+        {
+            obj.SetValue(SelectedItemProperty, value);
+        }
+
+        /// <summary>
         /// This method is invoked when the value bound at the dependency
-        /// property <see cref="SelectedItem"/> has changed.
+        /// property <see cref="SelectedItemProperty"/> has changed.
         /// </summary>
         /// <param name="d"></param>
         /// <param name="e"></param>

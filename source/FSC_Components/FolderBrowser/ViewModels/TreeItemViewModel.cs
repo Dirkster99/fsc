@@ -37,6 +37,7 @@
         /// Construct an item viewmodel from a path.
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="parent"></param>
         /// <returns></returns>
         public TreeItemViewModel(IPathModel model, ITreeItemViewModel parent)
             : this()

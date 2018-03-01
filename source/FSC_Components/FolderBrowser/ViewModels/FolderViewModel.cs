@@ -22,6 +22,7 @@
         /// Construct a folder viewmodel item from a path.
         /// </summary>
         /// <param name="model"></param>
+        /// <param name="parent"></param>
         /// <returns></returns>
         public FolderViewModel(IPathModel model, ITreeItemViewModel parent)
             : base(model, parent)
@@ -33,6 +34,7 @@
         /// file system folder object (eg.: FolderPath = 'C:\Temp\', FolderName = 'Temp').
         /// </summary>
         /// <param name="dir"></param>
+        /// <param name="parent"></param>
         /// <returns></returns>
         internal FolderViewModel(string dir, ITreeItemViewModel parent)
            : this(PathFactory.Create(dir, FSItemType.Folder), parent)
@@ -106,6 +108,7 @@
         /// into the sub-folder viewmodel collection of this folder item.
         /// </summary>
         /// <param name="dir"></param>
+        /// <param name="parentItem"></param>
         /// <returns></returns>
         internal static TreeItemViewModel AddFolder(string dir,
                                                     ITreeItemViewModel parentItem)

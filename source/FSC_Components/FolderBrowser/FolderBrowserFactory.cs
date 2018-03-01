@@ -36,8 +36,8 @@
         /// Create a browser viewmodel object that can be used to manage a
         /// browser naviagtion (directory picker) control.
         /// </summary>
-        /// <param name="msgBox">Reference to a mssage box service for
-        /// displaying messages to the user</param>
+        /// <param name="initialPath"></param>
+        /// <param name="specialFolderVisibility"></param>
         /// <returns></returns>
         public static IBrowserViewModel CreateBrowserViewModel(
              bool specialFolderVisibility = true
@@ -69,6 +69,12 @@
             return new DialogViewModel(treeBrowser, recentLocations);
         }
 
+        /// <summary>
+        /// Creates an object that can be used to drive an item of list
+        /// of custom folders (Music, Desktop, etc...).
+        /// </summary>
+        /// <param name="specialFolder"></param>
+        /// <returns></returns>
         public static ICustomFolderItemViewModel CreateCustomFolderItemViewModel(
             System.Environment.SpecialFolder specialFolder)
         {

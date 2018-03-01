@@ -81,7 +81,7 @@ namespace FolderBrowser.Dialogs.ViewModels
         #region methods
         /// <summary>
         /// (Re-)Connects the Bookmark ViewModel with the
-        /// <seealso cref="IBrowserViewModel.BrowsePath(string, bool)"/> method via private method.
+        /// <seealso cref="IBrowserViewModel"/>.BrowsePath(string, bool) method via private method.
         /// to enable user's path selection being input to folder browser.
         /// </summary>
         /// <param name="recentLocations"></param>

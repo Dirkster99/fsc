@@ -6,12 +6,15 @@
     using System.Windows.Media;
 
     /// <summary>
-    /// Implements an attached behavior that select all text in a textbox upon gain of focus.
+    /// Implements an attached behavior that selects all the text in a textbox upon gain of focus.
     /// 
     /// Source: http://stackoverflow.com/questions/660554/how-to-automatically-select-all-text-on-focus-in-wpf-textbox
     /// </summary>
     public class SelectTextOnFocus : DependencyObject
     {
+        /// <summary>
+        /// Implements an attached property that can be attached to a textbox control.
+        /// </summary>
         public static readonly DependencyProperty ActiveProperty = DependencyProperty.RegisterAttached(
             "Active",
             typeof(bool),
@@ -75,6 +78,11 @@
             }
         }
 
+        /// <summary>
+        /// Implements the getter an attached property vakue that can be attached to a textbox control.
+        /// </summary>
+        /// <param name="object"></param>
+        /// <returns></returns>
         [AttachedPropertyBrowsableForChildrenAttribute(IncludeDescendants = false)]
         [AttachedPropertyBrowsableForType(typeof(TextBox))]
         public static bool GetActive(DependencyObject @object)
@@ -82,6 +90,11 @@
             return (bool)@object.GetValue(ActiveProperty);
         }
 
+        /// <summary>
+        /// Implements the setter an attached property vakue that can be attached to a textbox control.
+        /// </summary>
+        /// <param name="object"></param>
+        /// <param name="value"></param>
         public static void SetActive(DependencyObject @object, bool value)
         {
             @object.SetValue(ActiveProperty, value);

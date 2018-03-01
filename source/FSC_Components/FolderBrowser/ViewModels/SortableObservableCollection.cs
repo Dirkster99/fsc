@@ -11,9 +11,21 @@
     /// <typeparam name="T"></typeparam>
     public class SortableObservableCollection<T> : ObservableCollection<T>
     {
-        // Constructors
+        /// <summary>
+        /// Class constructor.
+        /// </summary>
         public SortableObservableCollection() : base() { }
+
+        /// <summary>
+        /// Class constructor.
+        /// </summary>
+        /// <param name="l"></param>
         public SortableObservableCollection(List<T> l) : base(l) { }
+
+        /// <summary>
+        /// Class constructor.
+        /// </summary>
+        /// <param name="l"></param>
         public SortableObservableCollection(IEnumerable<T> l) : base(l) { }
 
         #region Sorting

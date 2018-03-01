@@ -7,6 +7,9 @@
     /// </summary>
     public partial class BrowseDirectoriesView : UserControl
     {
+        /// <summary>
+        /// Class constructor
+        /// </summary>
         public BrowseDirectoriesView()
         {
             InitializeComponent();

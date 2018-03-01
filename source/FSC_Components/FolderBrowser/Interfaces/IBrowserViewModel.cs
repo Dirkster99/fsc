@@ -27,6 +27,9 @@
         /// </summary>
         bool UpdateView { get; set; }
 
+        /// <summary>
+        /// Gets/sets whether the associated view is currently enabled or not.
+        /// </summary>
         bool IsBrowseViewEnabled { get; set; }
 
         /// <summary>
@@ -44,7 +47,7 @@
         /// starts up via Loading. The control attempts to change the
         /// current directory to the indicated directory if the
         /// ... method is called in the Loaded event of the
-        /// <seealso cref="FolderBrowserDialog"/>.
+        /// <seealso cref="FolderBrowser.Views.FolderBrowserDialog"/>.
         /// </summary>
         string InitialPath { get; set; }
 

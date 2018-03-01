@@ -2,6 +2,10 @@
 {
     using System.Windows;
 
+    /// <summary>
+    /// Defines the resource key that are available for styling, colors, and brushes
+    /// in this application.
+    /// </summary>
     public static class ResourceKeys
     {
         /// <summary>

@@ -57,7 +57,7 @@
         /// <summary>
         /// Resets the current message with the given string.
         /// </summary>
-        /// <param name="Message"></param>
+        /// <param name="message"></param>
         public void SetMessage(string message)
         {
             this.Message = message;

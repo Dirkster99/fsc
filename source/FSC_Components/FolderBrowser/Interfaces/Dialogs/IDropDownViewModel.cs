@@ -3,7 +3,20 @@
     using FileSystemModels.Interfaces.Bookmark;
     using System.Windows.Input;
 
+    /// <summary>
+    /// Defines a delegate that is called when the view is closed.
+    /// This delegate can be used to update the selected path
+    /// in calling client app.
+    /// </summary>
+    /// <returns></returns>
     public delegate string UpdateCurrentPath();
+
+    /// <summary>
+    /// Defines a delegate that is called when the view is closed.
+    /// This delegate can be used to update the corresponding bookmarks
+    /// in the client app.
+    /// </summary>
+    /// <returns></returns>
     public delegate IBookmarksViewModel UpdateBookmarks();
 
     /// <summary>
@@ -79,10 +92,22 @@
         /// </summary>
         ICommand OKCommand { get; }
 
+        /// <summary>
+        /// Gets a property that can be used to specify a delegete method that is called upon
+        /// close of the drop down button element.
+        /// </summary>
         DropDownClosedResult ResultCallback { get; }
 
+        /// <summary>
+        /// Gets/sets the initial path that is displayed when the view is loaded
+        /// for the very first time.
+        /// </summary>
         UpdateCurrentPath UpdateInitialPath { get; set; }
 
+        /// <summary>
+        /// Gets/sets the bookmarks (if any) for display when the view is loaded
+        /// for the very first time.
+        /// </summary>
         UpdateBookmarks UpdateInitialBookmarks { get; set; }
     }
 }
