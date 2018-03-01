@@ -4,7 +4,7 @@
 
 This project contains the source code for an implementation of controls that are related to browsing files within an existing application. Go to: https://github.com/Dirkster99/Edi to see the controls in full action (see Explorer tool window).
 
-A closely related project is the <a href="https://github.com/Dirkster99/HistoryControlLib">HistoryControlLib</a>
+A closely related project is the <img src="https://github.com/Dirkster99/Docu/blob/master/HistoryControlLib/Branch_32x.png?raw=true" width="24"/> <a href="https://github.com/Dirkster99/HistoryControlLib">HistoryControlLib</a>
 project which is also (via NuGet) part of the test applications in this repository.
 
 This project contains:
