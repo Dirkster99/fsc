@@ -23,7 +23,7 @@
         {
             var model = PathFactory.Create(curdir, FSItemType.LogicalDrive);
 
-            var item = new FolderItemViewModel(model, model.Name, true);
+            var item = new FolderItemViewModel(model, model.Name);
 
             item.SetDisplayName(item.ItemDisplayString);
 

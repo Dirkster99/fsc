@@ -1,24 +1,21 @@
 namespace FolderControlsLib.ViewModels
 {
-    using System;
-    using System.IO;
     using FileSystemModels;
     using FileSystemModels.Interfaces;
     using FileSystemModels.Models.FSItems.Base;
     using FileSystemModels.Utils;
     using FolderControlsLib.Interfaces;
-    using InplaceEditBoxLib.ViewModels;
 
     /// <summary>
     /// The Viewmodel for file system items
     /// </summary>
-    internal class FolderItemViewModel : EditInPlaceViewModel, IFolderItemViewModel
+    internal class FolderItemViewModel : Base.ViewModelBase, IFolderItemViewModel
     {
         #region fields
         /// <summary>
         /// Logger facility
         /// </summary>
-        protected new static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string _ItemName;
         private IPathModel _PathObject;
@@ -61,15 +58,12 @@ namespace FolderControlsLib.ViewModels
         /// </summary>
         /// <param name="model"></param>
         /// <param name="itemName"></param>
-        /// <param name="isReadOnly"></param>
         public FolderItemViewModel(IPathModel model,
-                        string itemName,
-                        bool isReadOnly = false)
+                        string itemName)
             : this()
         {
             _PathObject = model.Clone() as IPathModel;
             ItemName = itemName;
-            IsReadOnly = isReadOnly;
         }
 
         /// <summary>
