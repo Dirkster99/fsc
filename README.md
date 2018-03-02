@@ -26,7 +26,7 @@ project which is also (via NuGet) part of the test applications in this reposito
 - [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FolderBrowser.svg)](http://nuget.org/packages/Dirkster.FolderBrowser) FolderBrowser
 - [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FolderControlsLib.svg)](http://nuget.org/packages/Dirkster.FolderControlsLib) FolderControlsLib
 
-This project contains:
+The project spurce code in this repository contains the above control projects and also demos these details:
 
   - A folder browser control to browse folders with a treeview in your file system
     - see: FolderBrowser/FolderBrowser/ViewModels/FolderViewModel.cs and FolderBrowser/FolderBrowser/Views/FolderBrowserView.xaml
