@@ -8,7 +8,7 @@
 <td align="left">
 <img alt="FSC Logo" src="https://github.com/Dirkster99/Docu/blob/master/FS/icons/Open_32x.png?raw=true"/>
 </td>
-<td align="right">
+<td align="left">
 A collection of themeable WPF/MVVM <b>F</b>ile <b>S</b>ystem <b>C</b>ontrols similar to some parts (folder tree view, folder and file list view with filter) of Windows (7-10) Explorer.</a>.
 </td>
 </tr>
