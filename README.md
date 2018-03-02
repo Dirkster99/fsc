@@ -2,6 +2,19 @@
 [![Release](https://img.shields.io/github/release/Dirkster99/fsc.svg)](https://github.com/Dirkster99/fsc/releases/latest)
 # WPF File System Controls
 
+<dl>
+<table border="0" padding="0" cellspacing="0" cellpadding="0">
+<tr>
+<td align="left">
+<img alt="FSC Logo" src="https://github.com/Dirkster99/Docu/blob/master/FS/icons/Open_32x.png?raw=true"/>
+</td>
+<td align="right">
+A collection of themeable WPF <b>F</b>ile <b>S</b>ystem <b>C</b>ontrols similar to some parts of Windows (7-10) Explorer.</a>.
+</td>
+</tr>
+<table>
+</dl>
+
 This project contains the source code for an implementation of controls that are related to browsing files within an existing application. Go to: https://github.com/Dirkster99/Edi to see the controls in full action (see Explorer tool window).
 
 A closely related project is the <img src="https://github.com/Dirkster99/Docu/blob/master/HistoryControlLib/Branch_32x.png?raw=true" width="24"/> <a href="https://github.com/Dirkster99/HistoryControlLib">HistoryControlLib</a>
