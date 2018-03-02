@@ -20,6 +20,9 @@ This project contains the source code for an implementation of controls that are
 A closely related project is the <img src="https://github.com/Dirkster99/Docu/blob/master/HistoryControlLib/Branch_32x.png?raw=true" width="24"/> <a href="https://github.com/Dirkster99/HistoryControlLib">HistoryControlLib</a>
 project which is also (via NuGet) part of the test applications in this repository.
 
+FileSystemModels: [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FileSystemModels.svg)](http://nuget.org/packages/Dirkster.FileSystemModels)
+FileListView: [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FileListView.svg)](http://nuget.org/packages/Dirkster.FileListView)
+
 This project contains:
 
   - A folder browser control to browse folders with a treeview in your file system
