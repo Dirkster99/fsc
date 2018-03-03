@@ -9,7 +9,9 @@
              xmlns:fvbehav="clr-namespace:FileListView.Views.Behavior;assembly=FileListView"
              xmlns:fvloc="clr-namespace:FileSystemModels.Local;assembly=FileSystemModels"
              xmlns:fbviews="clr-namespace:FolderBrowser.Views;assembly=FolderBrowser"
-
+             xmlns:ctrls="clr-namespace:DropDownButtonLib.Controls;assembly=DropDownButtonLib"
+             xmlns:bindLocal="clr-namespace:FileListView.Views;assembly=FileListView"
+             xmlns:dbthemes="clr-namespace:DropDownButtonLib.Themes;assembly=DropDownButtonLib"
              xmlns:EditInPlace="clr-namespace:InplaceEditBoxLib.Views;assembly=InplaceEditBoxLib"
              xmlns:view ="clr-namespace:UserNotification.View;assembly=UserNotification"
              xmlns:conv="clr-namespace:FolderBrowser.Converters;assembly=FolderBrowser"
@@ -160,48 +162,139 @@
             <!-- End of Navigation History -->
 
             <!-- Folder Select/View ComboBox -->
-            <combobox:WatermarkComboBox
-                DataContext="{Binding FolderTextPath}" Name="PathTextInput"
-                ItemsSource="{Binding CurrentItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                SelectedItem="{Binding SelectedItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                
-                IsEditable="True"
-                Text="{Binding CurrentFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                ToolTip="{Binding CurrentFolderToolTip, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                ToolTipService.IsEnabled="True"
-                                
-                fvbehav:SelectionChangedCommand.ChangedCommand="{Binding SelectionChanged}"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Stretch"
-                Grid.Column="1" Margin="3"
-            >
-                <combobox:WatermarkComboBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-                            <Image Margin="2,0"
-                                   VerticalAlignment="Center"
-                                   Width="16"
-                                   Height="16"
-                                   Focusable="False"
-                                   Source="{Binding Path=.,Converter={StaticResource FolderBrowseItemTypeToShellImageConverter}}"
-                                   />
+                <combobox:WatermarkComboBox
+                    DataContext="{Binding FolderTextPath}" Name="PathTextInput"
+                    ItemsSource="{Binding CurrentItems, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    SelectedItem="{Binding SelectedItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                
+                    IsEditable="True"
+                    Text="{Binding CurrentFolder, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTip="{Binding CurrentFolderToolTip, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                    ToolTipService.IsEnabled="True"
+                                
+                    fvbehav:SelectionChangedCommand.ChangedCommand="{Binding SelectionChanged}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Stretch"
+                    Grid.Column="0" Margin="3"
+                >
+                    <combobox:WatermarkComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.Column="1" Text="{Binding ItemPath}" />
-                        </Grid>
-                    </DataTemplate>
-                </combobox:WatermarkComboBox.ItemTemplate>
-            </combobox:WatermarkComboBox>
+                                <Image Margin="2,0"
+                                       VerticalAlignment="Center"
+                                       Width="16"
+                                       Height="16"
+                                       Focusable="False"
+                                       Source="{Binding Path=.,Converter={StaticResource FolderBrowseItemTypeToShellImageConverter}}"
+                                       />
+
+                                <TextBlock Grid.Column="1" Text="{Binding ItemPath}" />
+                            </Grid>
+                        </DataTemplate>
+                    </combobox:WatermarkComboBox.ItemTemplate>
+                </combobox:WatermarkComboBox>
+
+                <ctrls:SplitItemsButton ToolTip="{x:Static fvloc:Strings.RefreshCommand_TT}"
+                                        ItemsSource="{Binding RecentFolders.DropDownItems}"
+                                        Command="{Binding RefreshCommand}"
+                                        CommandParameter="{Binding ElementName=PathTextInput, Path=Text}"
+                                        IsOpen="{Binding RecentFolders.IsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        DropDownMaxHeight="300"
+                                        HorizontalAlignment="Left"
+                                        Grid.Column="1" Margin="3"
+                                    >
+                    <ctrls:SplitItemsButton.Content>
+                        <Image Source="{DynamicResource FLV_Image_Refresh}" Width="16" Margin="3,0"/>
+                    </ctrls:SplitItemsButton.Content>
+                    <ctrls:DropDownItemsButton.Resources>
+                        <!-- Use a proxy to bind items to root object of this collection -->
+                        <bindLocal:BindingProxy x:Key="DropDownItemsButtonProxy" Data="{Binding RecentFolders}" />
+                    </ctrls:DropDownItemsButton.Resources>
+                    <ctrls:DropDownItemsButton.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Name="MyBorder" Margin="0" Background="Transparent">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Content="-" Grid.Column="0"
+                                                ToolTip="Remove Folder Bookmark"
+                                                Command="{Binding Path=Data.RemoveFolderBookmark, Source={StaticResource DropDownItemsButtonProxy}}"
+                                                CommandParameter="{Binding}"
+                                                HorizontalAlignment="Stretch"
+                                                VerticalAlignment="Stretch" Margin="0" Padding="3,0"
+                                                MinWidth="16" MinHeight="16"
+                                                x:Name="RemoveFolderBookmarkButton"
+                                                />
+
+                                <Button Content="{Binding ItemName}"
+                                        Command="{Binding Path=Data.ChangeOfDirectoryCommand, Source={StaticResource DropDownItemsButtonProxy}}"
+                                        CommandParameter="{Binding}"
+                                        Grid.Column="1"
+                                        HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        BorderBrush="Transparent"
+                                        ToolTip="{Binding Path=ItemPath}"
+                                        Margin="3,0,0,0"
+                                   >
+                                    <Button.Style>
+                                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                                            <Setter Property="Background" Value="Transparent"/>
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type Button}">
+                                                        <Border Background="{TemplateBinding Background}"
+                                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                                            Padding="3,0"
+                                                            >
+                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                                          />
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="true">
+                                                    <Setter Property="Background" Value="{DynamicResource {x:Static dbthemes:ResourceKeys.ButtonMouseOverBackgroundKey}}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </Grid>
+
+                            <DataTemplate.Triggers>
+                                <DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="True" >
+                                    <Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Visible" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="False" >
+                                    <Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Hidden" />
+                                </DataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ctrls:DropDownItemsButton.ItemTemplate>
+                </ctrls:SplitItemsButton>
+            </Grid>
 
             <GridSplitter Grid.Column="2" HorizontalAlignment="Stretch" Width="3" />
 
             <Grid Grid.Column="3"> <!-- Filter Selection -->
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" MinWidth="50" />
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 

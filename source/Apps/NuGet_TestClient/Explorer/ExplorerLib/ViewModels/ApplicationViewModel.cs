@@ -40,6 +40,11 @@ namespace ExplorerLib.ViewModels
             FolderTreeView = ExplorerTestFactory.CreateTreeList();
             FolderTreeView.AddRecentFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments));
             FolderTreeView.AddRecentFolder(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), true);
+            FolderTreeView.AddRecentFolder(Environment.GetFolderPath(Environment.SpecialFolder.History), true);
+            FolderTreeView.AddRecentFolder(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), true);
+            FolderTreeView.AddRecentFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic), true);
+            FolderTreeView.AddRecentFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures), true);
+            FolderTreeView.AddRecentFolder(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos), true);
 
             FolderTreeView.AddFilter("Executeable files", "*.exe;*.bat");
             FolderTreeView.AddFilter("Image files", "*.png;*.jpg;*.jpeg");
