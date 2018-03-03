@@ -3,6 +3,7 @@ namespace ExplorerLib.ViewModels
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Windows;
     using System.Windows.Input;
     using System.Xml.Serialization;
     using ExplorerLib.Interfaces;

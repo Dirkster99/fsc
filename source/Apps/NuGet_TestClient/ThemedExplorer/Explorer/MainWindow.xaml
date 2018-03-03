@@ -1,12 +1,14 @@
-﻿<Window x:Class="Explorer.MainWindow"
+﻿<MWindow:SimpleMetroWindow x:Class="Explorer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-
         mc:Ignorable="d"
+
+        xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
+
         Title="Explorer" Height="350" Width="525">
     <Grid xmlns:views="clr-namespace:ExplorerLib.Views;assembly=ExplorerLib">
         <views:TreeListItemView DataContext="{Binding FolderTreeView}" />
     </Grid>
-</Window>
+</MWindow:SimpleMetroWindow>

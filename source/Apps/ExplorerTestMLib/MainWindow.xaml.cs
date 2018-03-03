@@ -2,7 +2,6 @@
 {
     using ExplorerTestMLib.ViewModels;
     using FileSystemModels;
-    using FileSystemModels.Models.FSItems.Base;
     using Settings.UserProfile;
     using System;
     using System.Windows;

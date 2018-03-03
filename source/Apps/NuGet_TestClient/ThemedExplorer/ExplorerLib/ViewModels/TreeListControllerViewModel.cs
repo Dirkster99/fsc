@@ -1,5 +1,8 @@
 namespace ExplorerLib.ViewModels
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+    using System.Windows;
     using ExplorerLib.Interfaces;
     using FileListView.Interfaces;
     using FileSystemModels.Browse;
@@ -8,39 +11,39 @@ namespace ExplorerLib.ViewModels
     using FileSystemModels.Interfaces.Bookmark;
     using FileSystemModels.Models;
     using FilterControlsLib.Interfaces;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using System.Windows;
+    using FolderBrowser.Interfaces;
 
     /// <summary>
-    /// Class implements a folder/file view model class
-    /// that can be used to dispaly filesystem related content in an ItemsControl.
+    /// Class implements a tree/folder/file view model class
+    /// that can be used to dispaly filesystem related content in a view or dialog.
+    /// 
+    /// Common Sample dialogs are file pickers for load/save etc.
     /// </summary>
-    internal class ListControllerViewModel : ControllerBaseViewModel, IListControllerViewModel
+    internal class TreeListControllerViewModel : ControllerBaseViewModel, ITreeListControllerViewModel
     {
         #region fields
         protected readonly object _LockObject;
 
         private readonly SemaphoreSlim _SlowStuffSemaphore;
-        #endregion
+        #endregion fields
 
         #region constructor
         /// <summary>
         /// Custom class constructor
         /// </summary>
         /// <param name="onFileOpenMethod"></param>
-        public ListControllerViewModel(System.EventHandler<FileOpenEventArgs> onFileOpenMethod)
+        public TreeListControllerViewModel(System.EventHandler<FileOpenEventArgs> onFileOpenMethod)
           : this()
         {
             // Remove the standard constructor event that is fired when a user opens a file
-            //FolderItemsView.OnFileOpen -= this.FolderItemsView_OnFileOpen;
+            //this.FolderItemsView.OnFileOpen -= this.FolderItemsView_OnFileOpen;
             WeakEventManager<IFileOpenEventSource, FileOpenEventArgs>
                 .RemoveHandler(FolderItemsView, "OnFileOpen", FolderItemsView_OnFileOpen);
 
             // ...and establish a new link (if any)
             if (onFileOpenMethod != null)
             {
-                //FolderItemsView.OnFileOpen += onFileOpenMethod;
+                //this.FolderItemsView.OnFileOpen += onFileOpenMethod;
                 WeakEventManager<IFileOpenEventSource, FileOpenEventArgs>
                     .AddHandler(FolderItemsView, "OnFileOpen", onFileOpenMethod);
             }
@@ -49,7 +52,7 @@ namespace ExplorerLib.ViewModels
         /// <summary>
         /// Class constructor
         /// </summary>
-        public ListControllerViewModel()
+        public TreeListControllerViewModel()
         {
             _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
             _LockObject = new object();
@@ -57,6 +60,7 @@ namespace ExplorerLib.ViewModels
             FolderItemsView = FileListView.Factory.CreateFileListViewModel(new BrowseNavigation());
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
             RecentFolders = FileSystemModels.Factory.CreateBookmarksViewModel();
+            TreeBrowser = FolderBrowser.FolderBrowserFactory.CreateBrowserViewModel(false);
 
             // This is fired when the user selects a new folder bookmark from the drop down button
             //RecentFolders.BrowseEvent += FolderTextPath_BrowseEvent;
@@ -69,26 +73,42 @@ namespace ExplorerLib.ViewModels
                 .AddHandler(FolderTextPath, "BrowseEvent", FolderTextPath_BrowseEvent);
 
             Filters = FilterControlsLib.Factory.CreateFilterComboBoxViewModel();
-            //Filters.OnFilterChanged += FileViewFilter_Changed;
+            //Filters.OnFilterChanged += this.FileViewFilter_Changed;
             WeakEventManager<IFilterComboBoxViewModel, FilterChangedEventArgs>
                 .AddHandler(Filters, "OnFilterChanged", FileViewFilter_Changed);
 
             // This is fired when the current folder in the listview changes to another existing folder
-            //FolderItemsView.BrowseEvent += FolderTextPath_BrowseEvent;
+            //this.FolderItemsView.BrowseEvent += FolderTextPath_BrowseEvent;
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
                 .AddHandler(FolderItemsView, "BrowseEvent", FolderTextPath_BrowseEvent);
 
-            // This is fired when the user requests to add a folder into the list of recently visited folders
+            // Event fires when the user requests to add a folder into the list of recently visited folders
             //FolderItemsView.BookmarkFolder.RequestEditBookmarkedFolders += this.FolderItemsView_RequestEditBookmarkedFolders;
             WeakEventManager<IEditBookmarks, EditBookmarkEvent>
                 .AddHandler(FolderItemsView.BookmarkFolder, "RequestEditBookmarkedFolders", FolderItemsView_RequestEditBookmarkedFolders);
 
             // This event is fired when a user opens a file
-            //FolderItemsView.OnFileOpen += this.FolderItemsView_OnFileOpen;
+            //this.FolderItemsView.OnFileOpen += this.FolderItemsView_OnFileOpen;
             WeakEventManager<IFileOpenEventSource, FileOpenEventArgs>
                 .AddHandler(FolderItemsView, "OnFileOpen", FolderItemsView_OnFileOpen);
+
+            //TreeBrowser.BrowseEvent += FolderTextPath_BrowseEvent;
+            WeakEventManager<ICanNavigate, BrowsingEventArgs>
+                .AddHandler(TreeBrowser, "BrowseEvent", FolderTextPath_BrowseEvent);
+
+            // Event fires when the user requests to add a folder into the list of recently visited folders
+            //TreeBrowser.BookmarkFolder.RequestEditBookmarkedFolders += FolderItemsView_RequestEditBookmarkedFolders;
+            WeakEventManager<IEditBookmarks, EditBookmarkEvent>
+                .AddHandler(TreeBrowser.BookmarkFolder, "RequestEditBookmarkedFolders", FolderItemsView_RequestEditBookmarkedFolders);
         }
         #endregion constructor
+
+        #region properties
+        /// <summary>
+        /// Gets the viewmodel that drives the folder picker control.
+        /// </summary>
+        public IBrowserViewModel TreeBrowser { get; }
+        #endregion properties
 
         #region methods
         /// <summary>
@@ -119,31 +139,37 @@ namespace ExplorerLib.ViewModels
             {
                 lock (_LockObject)
                 {
+                    TreeBrowser.SetExternalBrowsingState(true);
                     FolderItemsView.SetExternalBrowsingState(true);
                     FolderTextPath.SetExternalBrowsingState(true);
-                    SelectedFolder = itemPath.Path;
                 }
 
                 bool? browseResult = null;
 
-                if (FolderTextPath != sender)
-                {
-                    // Navigate Folder ComboBox to this folder
+                // Navigate TreeView to this file system location
+                if (TreeBrowser != sender)
+                    browseResult = await TreeBrowser.NavigateToAsync(itemPath);
+
+                // Navigate Folder ComboBox to this folder
+                if (FolderTextPath != sender && browseResult != false)
                     browseResult = await FolderTextPath.NavigateToAsync(itemPath);
-                }
 
+                // Navigate Folder/File ListView to this folder
                 if (FolderItemsView != sender && browseResult != false)
-                {
-                    // Navigate Folder/File ListView to this folder
                     browseResult = await FolderItemsView.NavigateToAsync(itemPath);
-                }
 
-                if (browseResult == true)    // Log location into history of recent locations
+                if (browseResult == true)
+                {
+                    SelectedFolder = itemPath.Path;
+
+                    // Log location into history of recent locations
                     NaviHistory.Forward(itemPath);
+                }
             }
             catch { }
             finally
             {
+                TreeBrowser.SetExternalBrowsingState(true);
                 FolderItemsView.SetExternalBrowsingState(false);
                 FolderTextPath.SetExternalBrowsingState(false);
 
@@ -163,50 +189,39 @@ namespace ExplorerLib.ViewModels
         }
 
         /// <summary>
-        /// A control has send an event that it has (been) browsing to a new location.
-        /// Lets sync this with all other controls.
+        /// One of the controls has changed its location in the filesystem.
+        /// This method is invoked to synchronize this change with all other controls.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void FolderTextPath_BrowseEvent(object sender,
                                                 FileSystemModels.Browse.BrowsingEventArgs e)
         {
-            var itemPath = e.Location;
+            var location = e.Location;
 
-            SelectedFolder = itemPath.Path;
+            SelectedFolder = location.Path;
 
             if (e.IsBrowsing == false && e.Result == BrowseResult.Complete)
             {
-                if (FolderTextPath != sender)
-                {
-                    // Navigate Folder ComboBox to this folder
-                    FolderTextPath.NavigateTo(itemPath);
-                }
-
-                if (FolderItemsView != sender)
-                {
-                    // Navigate Folder/File ListView to this folder
-                    FolderItemsView.NavigateTo(itemPath);
-                }
-
-                // Log location into history of recent locations
-                NaviHistory.Forward(itemPath);
+                // XXX Todo Keep task reference, support cancel, and remove on end?
+                var t = NavigateToFolderAsync(location, sender);
             }
             else
             {
                 if (e.IsBrowsing == true)
                 {
+                    // The sender has messaged: "I am chnaging location..."
+                    // So, we set this property to tell the others:
+                    // 1) Don't change your location now (eg.: Disable UI)
+                    // 2) We'll be back to tell you the location when we know it
+                    if (TreeBrowser != sender)
+                        TreeBrowser.SetExternalBrowsingState(true);
+
                     if (FolderTextPath != sender)
-                    {
-                        // Navigate Folder ComboBox to this folder
                         FolderTextPath.SetExternalBrowsingState(true);
-                    }
 
                     if (FolderItemsView != sender)
-                    {
-                        // Navigate Folder/File ListView to this folder
                         FolderItemsView.SetExternalBrowsingState(true);
-                    }
                 }
             }
         }
