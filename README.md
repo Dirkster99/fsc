@@ -9,7 +9,7 @@
 <img alt="FSC Logo" src="https://github.com/Dirkster99/Docu/blob/master/FS/icons/Open_32x.png?raw=true"/>
 </td>
 <td align="left">
-A collection of themeable WPF/MVVM <b>F</b>ile <b>S</b>ystem <b>C</b>ontrols similar to some parts (folder tree view, folder and file list view with filter) of Windows (7-10) Explorer.</a>.
+A collection of themeable WPF/MVVM <b>F</b>ile <b>S</b>ystem <b>C</b>ontrols similar to some parts (folder tree view, folder and file list view with filter) of Windows (7-10) Explorer.</a>. Please review the <a href="https://github.com/Dirkster99/fsc/wiki">WiKi</a> for <b>screenshots</b> and more details.
 </td>
 </tr>
 <table>
