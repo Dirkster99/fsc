@@ -5,7 +5,7 @@
         <ResourceDictionary Source="/BindToMLib;component/WatermarkControlsLib/DarkLightBrushs.xaml" />
         <ResourceDictionary Source="/BindToMLib;component/DropDownButtonLib/DarkBrushs.xaml" />
         <ResourceDictionary Source="/BindToMLib;component/MWindowLib/DarkBrushs.xaml" />
-        <ResourceDictionary Source="/BindToMlib;component/MWindowDialogLib/DarkBrushs.xaml" />
+        <!-- ResourceDictionary Source="/BindToMlib;component/MWindowDialogLib/DarkBrushs.xaml" / -->
     </ResourceDictionary.MergedDictionaries>
 
 </ResourceDictionary>

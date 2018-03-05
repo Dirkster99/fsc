@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    
+                   xmlns:options="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+                    xmlns:reskeys="clr-namespace:MWindowDialogLib.Themes;assembly=MWindowDialogLib"
+                    xmlns:MLib_reskeys="clr-namespace:MLib.Themes;assembly=MLib"
+                    >
+    <!-- xmlns:sys="clr-namespace:System;assembly=mscorlib" -->
+ 
+    <!-- Accent Color Brush Definition
+       - Look for references on ControlAccentBrushKey to find where this is being set in code -->
+    <Color x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                                ResourceId=ControlAccentColorKey}">Blue</Color>
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                                ResourceId=ControlAccentBrushKey}"
+                     Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}" />
+
+    <SolidColorBrush x:Key="{ComponentResourceKey TypeInTargetAssembly={x:Type reskeys:ResourceKeys},
+                                ResourceId=DialogFrameBrushKey}"
+                     Color="{DynamicResource {x:Static MLib_reskeys:ResourceKeys.ControlAccentColorKey}}"
+                     Opacity="0.5"
+                     />
+
+</ResourceDictionary>
