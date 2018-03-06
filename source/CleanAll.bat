@@ -10,6 +10,7 @@ ECHO Apps\BindToMLib
 ECHO Apps\ExplorerTest
 ECHO Apps\ExplorerTestLib
 ECHO Apps\ExplorerTestMLib
+ECHO Apps\FolderBrowserDemo
 ECHO.
 ECHO Components\ServiceLocator
 ECHO Components\Settings\Settings
@@ -58,6 +59,13 @@ ECHO Deleting BIN and OBJ Folders in Apps\ExplorerTestMLib
 ECHO.
 RMDIR /S /Q .\Apps\ExplorerTestMLib\bin
 RMDIR /S /Q .\Apps\ExplorerTestMLib\obj
+ECHO.
+
+ECHO.
+ECHO Deleting BIN and OBJ Folders in Apps\FolderBrowserDemo
+ECHO.
+RMDIR /S /Q .\Apps\FolderBrowserDemo\bin
+RMDIR /S /Q .\Apps\FolderBrowserDemo\obj
 ECHO.
 
 ECHO XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

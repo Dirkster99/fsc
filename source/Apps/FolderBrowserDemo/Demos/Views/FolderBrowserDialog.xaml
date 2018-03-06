@@ -8,7 +8,7 @@
         xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
         Width="600"
         Height="600"
-        WindowStyle="ToolWindow"
+        WindowStyle="SingleBorderWindow"
         ResizeMode="CanResizeWithGrip"
         Title="{x:Static Local:Strings.STR_SELECT_FOLDER_DIALOG_CAPTION}"
         
