@@ -7,6 +7,7 @@
 
         xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
 
+        Icon="Images/Open_32x.png"
         Title="Explorer" Height="350" Width="525">
     <Grid xmlns:views="clr-namespace:ExplorerLib.Views;assembly=ExplorerLib">
         <views:TreeListItemView DataContext="{Binding FolderTreeView}" />

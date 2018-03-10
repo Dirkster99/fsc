@@ -24,6 +24,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Binaries", "Binaries", "{F2
 	ProjectSection(SolutionItems) = preProject
 		Binaries\Microsoft.Expression.Interactions.dll = Binaries\Microsoft.Expression.Interactions.dll
 		Binaries\MLib.dll = Binaries\MLib.dll
+		Binaries\MWindowDialogLib.dll = Binaries\MWindowDialogLib.dll
 		Binaries\MWindowInterfacesLib.dll = Binaries\MWindowInterfacesLib.dll
 		Binaries\MWindowLib.dll = Binaries\MWindowLib.dll
 		Binaries\System.Windows.Interactivity.dll = Binaries\System.Windows.Interactivity.dll

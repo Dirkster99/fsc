@@ -8,7 +8,9 @@
         xmlns:behav="clr-namespace:ExplorerTestMLib.Demos.Behaviors"
                      
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        ShowIcon="False"
+    >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

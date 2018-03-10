@@ -150,5 +150,14 @@
       <Name>ExplorerLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Open_48x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Open_64x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Open_32x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
