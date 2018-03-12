@@ -45,9 +45,6 @@
             // delegates currently queued or running to process tasks, schedule another.
             lock (_tasks)
             {
-                if (_tasks.Count > 0)  // Always empty the queue since we want only 1 task
-                    _tasks.Clear();  // and the last task to be processed at any time...
-
                 _tasks.AddLast(task);
                 if (_delegatesQueuedOrRunning < _maxDegreeOfParallelism)
                 {

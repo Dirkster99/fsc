@@ -1,5 +1,6 @@
 namespace ExplorerTestLib.ViewModels
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -25,6 +26,7 @@ namespace ExplorerTestLib.ViewModels
         #region fields
         private readonly SemaphoreSlim _SlowStuffSemaphore;
         private readonly OneTaskLimitedScheduler _OneTaskScheduler;
+        private readonly CancellationTokenSource _CancelToken;
         #endregion fields
 
         #region constructor
@@ -56,6 +58,7 @@ namespace ExplorerTestLib.ViewModels
         {
             _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
             _OneTaskScheduler = new OneTaskLimitedScheduler();
+            _CancelToken = new CancellationTokenSource();
 
             FolderItemsView = FileListView.Factory.CreateFileListViewModel(new BrowseNavigation());
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
@@ -120,9 +123,36 @@ namespace ExplorerTestLib.ViewModels
         /// <param name="requestor"</param>
         public override void NavigateToFolder(IPathModel itemPath)
         {
-            // XXX Todo Keep task reference, support cancel, and remove on end?
-            var t = Task.Factory.StartNew(() => NavigateToFolderAsync(itemPath, null),
-               CancellationToken.None, TaskCreationOptions.LongRunning, _OneTaskScheduler );
+            try
+            {
+                // XXX Todo Keep task reference, support cancel, and remove on end?
+                var timeout = TimeSpan.FromSeconds(1);
+                var actualTask = new Task(() =>
+                {
+                    var token = _CancelToken.Token;
+
+                    var t = Task.Factory.StartNew(() => NavigateToFolderAsync(itemPath, token, null),
+                                                        token,
+                                                        TaskCreationOptions.LongRunning,
+                                                        _OneTaskScheduler);
+
+                    if (t.Wait(timeout) == true)
+                        return;
+
+                    _CancelToken.Cancel();       // Task timed out so lets abort it
+                    return;                     // Signal timeout here...
+                });
+
+                actualTask.Start();
+                actualTask.Wait();
+            }
+            catch (System.AggregateException e)
+            {
+
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         /// <summary>
@@ -132,12 +162,17 @@ namespace ExplorerTestLib.ViewModels
         /// </summary>
         /// <param name="itemPath"></param>
         /// <param name="requestor"</param>
-        private async Task NavigateToFolderAsync(IPathModel itemPath, object sender)
+        private async Task NavigateToFolderAsync(IPathModel itemPath,
+                                                 CancellationToken cancel,
+                                                 object sender)
         {
             // Make sure the task always processes the last input but is not started twice
             await _SlowStuffSemaphore.WaitAsync();
             try
             {
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
+
                 TreeBrowser.SetExternalBrowsingState(true);
                 FolderItemsView.SetExternalBrowsingState(true);
                 FolderTextPath.SetExternalBrowsingState(true);
@@ -148,13 +183,22 @@ namespace ExplorerTestLib.ViewModels
                 if (TreeBrowser != sender)
                     browseResult = await TreeBrowser.NavigateToAsync(itemPath);
 
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
+
                 // Navigate Folder ComboBox to this folder
                 if (FolderTextPath != sender && browseResult != false)
                     browseResult = await FolderTextPath.NavigateToAsync(itemPath);
 
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
+
                 // Navigate Folder/File ListView to this folder
                 if (FolderItemsView != sender && browseResult != false)
                     browseResult = await FolderItemsView.NavigateToAsync(itemPath);
+
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
 
                 if (browseResult == true)
                 {
@@ -202,8 +246,36 @@ namespace ExplorerTestLib.ViewModels
             if (e.IsBrowsing == false && e.Result == BrowseResult.Complete)
             {
                 // XXX Todo Keep task reference, support cancel, and remove on end?
-                var t = Task.Factory.StartNew(() => NavigateToFolderAsync(location, sender),
-                   CancellationToken.None, TaskCreationOptions.LongRunning, _OneTaskScheduler);
+                try
+                {
+                    var timeout = TimeSpan.FromSeconds(1);
+                    var actualTask = new Task(() =>
+                    {
+                        var token = _CancelToken.Token;
+
+                        var t = Task.Factory.StartNew(() => NavigateToFolderAsync(location, token, sender),
+                                                            token,
+                                                            TaskCreationOptions.LongRunning,
+                                                            _OneTaskScheduler);
+
+                        if (t.Wait(timeout) == true)
+                            return;
+
+                        _CancelToken.Cancel();           // Task timed out so lets abort it
+                        return;                         // Signal timeout here...
+                    });
+
+                    actualTask.Start();
+                    actualTask.Wait();
+                }
+                catch (System.AggregateException ex)
+                {
+
+                }
+                catch (Exception ex)
+                {
+
+                }
             }
             else
             {

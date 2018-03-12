@@ -15,7 +15,6 @@
              xmlns:loc="clr-namespace:FileSystemModels.Local;assembly=FileSystemModels"
                           
              xmlns:reskeys="clr-namespace:FolderBrowser.Themes"
-             
              >
     <UserControl.Resources>
         <conv:UpdateBindingConverter x:Key="UpdateBindingConverter" />
