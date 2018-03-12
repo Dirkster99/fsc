@@ -151,12 +151,34 @@
             }
         }
 
+        /// <summary>
+        /// Gets the current accent color based on user preference (if any) or
+        /// based on Windows 10 settings (if we run on Windows 10), otherwise
+        /// Accent Color defaults to default blue'ish.
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public static Color GetCurrentAccentColor(ISettingsManager settings)
         {
-            Color AccentColor;
+            Color AccentColor = default(Color);
 
             if (settings.Options.GetOptionValue<bool>("Appearance", "ApplyWindowsDefaultAccent"))
-                AccentColor = SystemParameters.WindowGlassColor;
+            {
+                try
+                {
+                    AccentColor = SystemParameters.WindowGlassColor;
+                }
+                catch
+                {
+                }
+
+                // This may be black on Windows 7 and the experience is black & white then :-(
+                if (AccentColor == default(Color) || AccentColor == Colors.Black || AccentColor.A == 0)
+                {
+                    // default blue accent color
+                    AccentColor = Color.FromRgb(0x1b, 0xa1, 0xe2);
+                }
+            }
             else
                 AccentColor = settings.Options.GetOptionValue<Color>("Appearance", "AccentColor");
 
