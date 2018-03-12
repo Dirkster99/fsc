@@ -1,6 +1,7 @@
 namespace ExplorerTestLib.ViewModels
 {
     using ExplorerTestLib.Interfaces;
+    using ExplorerTestLib.Tasks;
     using FileListView.Interfaces;
     using FileSystemModels.Browse;
     using FileSystemModels.Events;
@@ -19,9 +20,8 @@ namespace ExplorerTestLib.ViewModels
     internal class ListControllerViewModel : ControllerBaseViewModel, IListControllerViewModel
     {
         #region fields
-        protected readonly object _LockObject;
-
         private readonly SemaphoreSlim _SlowStuffSemaphore;
+        private readonly OneTaskLimitedScheduler _OneTaskScheduler;
         #endregion
 
         #region constructor
@@ -52,7 +52,7 @@ namespace ExplorerTestLib.ViewModels
         public ListControllerViewModel()
         {
             _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
-            _LockObject = new object();
+            _OneTaskScheduler = new OneTaskLimitedScheduler();
 
             FolderItemsView = FileListView.Factory.CreateFileListViewModel(new BrowseNavigation());
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
@@ -101,7 +101,8 @@ namespace ExplorerTestLib.ViewModels
         public override void NavigateToFolder(IPathModel itemPath)
         {
             // XXX Todo Keep task reference, support cancel, and remove on end?
-            var t = NavigateToFolderAsync(itemPath, null);
+            var t = Task.Factory.StartNew(() => NavigateToFolderAsync(itemPath, null),
+               CancellationToken.None, TaskCreationOptions.LongRunning, _OneTaskScheduler);
         }
 
         /// <summary>
@@ -117,12 +118,9 @@ namespace ExplorerTestLib.ViewModels
             await _SlowStuffSemaphore.WaitAsync();
             try
             {
-                lock (_LockObject)
-                {
-                    FolderItemsView.SetExternalBrowsingState(true);
-                    FolderTextPath.SetExternalBrowsingState(true);
-                    SelectedFolder = itemPath.Path;
-                }
+                FolderItemsView.SetExternalBrowsingState(true);
+                FolderTextPath.SetExternalBrowsingState(true);
+                SelectedFolder = itemPath.Path;
 
                 bool? browseResult = null;
 

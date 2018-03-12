@@ -209,7 +209,7 @@ namespace ExplorerTestLib.ViewModels
             {
                 if (e.IsBrowsing == true)
                 {
-                    // The sender has messaged: "I am chnaging location..."
+                    // The sender has messaged: "I am changing location..."
                     // So, we set this property to tell the others:
                     // 1) Don't change your location now (eg.: Disable UI)
                     // 2) We'll be back to tell you the location when we know it
