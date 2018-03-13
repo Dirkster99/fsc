@@ -50,6 +50,7 @@
           IsEnabled="{Binding IsBrowseViewEnabled}">
         <!-- The treeview of folders -->
         <TreeView behav:TreeViewSelectionChangedBehavior.ChangedCommand="{Binding SelectedFolderChangedCommand}"
+                  behav:TreeViewSelectionChangedBehavior.IsProcessing="{Binding IsBrowsing,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                   behav:TreeViewVirtualItemBehaviour.SelectedItem="{Binding SelectedItem,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
 
                   VirtualizingPanel.IsVirtualizing="True"

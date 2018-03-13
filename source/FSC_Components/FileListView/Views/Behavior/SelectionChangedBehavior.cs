@@ -146,31 +146,38 @@ namespace FileListView.Views.Behavior
         {
             Selector uiElement = sender as Selector;
 
-            // Sanity check just in case this was somehow send by something else
-            if (uiElement == null)
-                return;
-
-            bool isProcessing = SelectionChangedCommand.GetIsProcessing(uiElement);
-
-            if (isProcessing == true)
-                return;
-
-            ICommand changedCommand = SelectionChangedCommand.GetChangedCommand(uiElement);
-
-            // There may not be a command bound to this after all
-            if (changedCommand == null)
-                return;
-
-            // Check whether this attached behaviour is bound to a RoutedCommand
-            if (changedCommand is RoutedCommand)
+            try
             {
-                // Execute the routed command
-                (changedCommand as RoutedCommand).Execute(e.AddedItems, uiElement);
+                // Sanity check just in case this was somehow send by something else
+                if (uiElement == null)
+                    return;
+
+                bool isProcessing = SelectionChangedCommand.GetIsProcessing(uiElement);
+
+                if (isProcessing == true)
+                    return;
+
+                ICommand changedCommand = SelectionChangedCommand.GetChangedCommand(uiElement);
+
+                // There may not be a command bound to this after all
+                if (changedCommand == null)
+                    return;
+
+                // Check whether this attached behaviour is bound to a RoutedCommand
+                if (changedCommand is RoutedCommand)
+                {
+                    // Execute the routed command
+                    (changedCommand as RoutedCommand).Execute(e.AddedItems, uiElement);
+                }
+                else
+                {
+                    // Execute the Command as bound delegate
+                    changedCommand.Execute(e.AddedItems);
+                }
             }
-            else
+            catch
             {
-                // Execute the Command as bound delegate
-                changedCommand.Execute(e.AddedItems);
+                return;
             }
         }
     }
