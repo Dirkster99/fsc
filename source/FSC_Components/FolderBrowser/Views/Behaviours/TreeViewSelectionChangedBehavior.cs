@@ -116,45 +116,37 @@ namespace FolderBrowser.Views.Behaviours
         {
             var uiElement = sender as TreeView;
 
-            // Sanity check just in case this was somehow send by something else
-            if (uiElement == null)
-                return;
-
-            bool isProcessing = TreeViewSelectionChangedBehavior.GetIsProcessing(uiElement);
-
-            if (isProcessing == true)
-                return;
-
-            ICommand changedCommand = TreeViewSelectionChangedBehavior.GetChangedCommand(uiElement);
-
-            // There may not be a command bound to this after all
-            if (changedCommand == null)
-                return;
-
-
-
-            ////if ((e.NewValue == null && e.NewValue == null))
-            ////  return;
-            ////else
-            ////{
-            ////  // Actual value did not really change
-            ////  if ((e.NewValue != null && e.NewValue != null))
-            ////  {
-            ////    if ((e.NewValue == e.NewValue))
-            ////    return;
-            ////  }
-            ////}
-
-            // Check whether this attached behaviour is bound to a RoutedCommand
-            if (changedCommand is RoutedCommand)
+            try
             {
-                // Execute the routed command
-                (changedCommand as RoutedCommand).Execute(e.NewValue, uiElement);
+                // Sanity check just in case this was somehow send by something else
+                if (uiElement == null)
+                    return;
+
+                bool isProcessing = TreeViewSelectionChangedBehavior.GetIsProcessing(uiElement);
+
+                if (isProcessing == true)
+                    return;
+
+                ICommand changedCommand = TreeViewSelectionChangedBehavior.GetChangedCommand(uiElement);
+
+                // There may not be a command bound to this after all
+                if (changedCommand == null)
+                    return;
+
+                // Check whether this attached behaviour is bound to a RoutedCommand
+                if (changedCommand is RoutedCommand)
+                {
+                    // Execute the routed command
+                    (changedCommand as RoutedCommand).Execute(e.NewValue, uiElement);
+                }
+                else
+                {
+                    // Execute the Command as bound delegate
+                    changedCommand.Execute(e.NewValue);
+                }
             }
-            else
+            catch
             {
-                // Execute the Command as bound delegate
-                changedCommand.Execute(e.NewValue);
             }
         }
     }

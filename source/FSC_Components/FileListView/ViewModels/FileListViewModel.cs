@@ -753,7 +753,7 @@ namespace FileListView.ViewModels
                 }
 
                 if (result == true)
-                    SetCurrentLocation(newPathToNavigateTo.Path, true);
+                    SetCurrentLocation(_CurrentFolder.Path, true);
 
                 return result;
             }
