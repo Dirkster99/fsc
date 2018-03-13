@@ -282,7 +282,10 @@ namespace ExplorerTestLib.ViewModels
         /// <param name="path"></param>
         public void InitializeViewModel(IPathModel path)
         {
+            // Navigate demo controller without Treeview to this location
             FolderView.NavigateToFolder(path);
+
+            // Navigate demo controller with Treeview to this location
             FolderTreeView.NavigateToFolder(path);
         }
 
