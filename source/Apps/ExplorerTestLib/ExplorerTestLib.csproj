@@ -65,7 +65,6 @@
   <ItemGroup>
     <Compile Include="Behaviors\BringIntoViewListBoxItem.cs" />
     <Compile Include="Behaviors\DoubleClickSelectorItem.cs" />
-    <Compile Include="Behaviors\SelectionChangedCommand.cs" />
     <Compile Include="Converter\MultiBindingToObjectListConverter.cs" />
     <Compile Include="ExplorerTestFactory.cs" />
     <Compile Include="FileListItemOptionsView.xaml.cs">

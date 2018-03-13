@@ -47,6 +47,7 @@
                 ToolTipService.IsEnabled="True"
                                 
                 fvbehav:SelectionChangedCommand.ChangedCommand="{Binding SelectionChanged}"
+                fvbehav:SelectionChangedCommand.IsProcessing="{Binding IsBrowsing,Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                 VerticalAlignment="Top"
                 HorizontalAlignment="Stretch"
                 Grid.Column="0" Margin="3"

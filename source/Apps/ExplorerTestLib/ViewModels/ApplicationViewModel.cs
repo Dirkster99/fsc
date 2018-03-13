@@ -3,7 +3,6 @@ namespace ExplorerTestLib.ViewModels
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Windows;
     using System.Windows.Input;
     using System.Xml.Serialization;
     using ExplorerTestLib.Interfaces;
@@ -294,7 +293,6 @@ namespace ExplorerTestLib.ViewModels
         /// </summary>
         public void ApplicationClosed()
         {
-
         }
 
         private void AddRecentFolder_Executed(object p)
