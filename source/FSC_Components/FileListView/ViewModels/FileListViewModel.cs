@@ -27,6 +27,12 @@ namespace FileListView.ViewModels
     {
         #region fields
         /// <summary>
+        /// Defines the delimitor for multiple regular expression filter statements.
+        /// eg: "*.txt;*.ini"
+        /// </summary>
+        public const char FilterSplitCharacter = ';';
+
+        /// <summary>
         /// Log4Net facility to log errors and warnings for this class.
         /// </summary>
         protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -39,8 +45,8 @@ namespace FileListView.ViewModels
         private bool _ShowIcons = true;
         private bool _IsFiltered = false;
         private LVItemViewModel _SelectedItem;
+        private IPathModel _CurrentFolder = null;
 
-        private readonly IBrowseNavigation _BrowseNavigation = null;
         private readonly ObservableCollection<ILVItemViewModel> _CurrentItems = null;
 
         private ICommand _NavigateDownCommand = null;
@@ -65,21 +71,11 @@ namespace FileListView.ViewModels
 
         #region constructor
         /// <summary>
-        /// Class constructor
-        /// </summary>
-        public FileListViewModel(IBrowseNavigation browseNavigation)
-          : this()
-        {
-            this._BrowseNavigation = browseNavigation;
-
-            this._ParsedFilter = BrowseNavigation.GetParsedFilters(this._FilterString);
-        }
-
-        /// <summary>
         /// Standard class constructor
         /// </summary>
-        protected FileListViewModel()
+        public FileListViewModel()
         {
+            _ParsedFilter = this.GetParsedFilters(_FilterString);
             BookmarkFolder = new EditFolderBookmarks();
             Notification = new SendNotificationViewModel();
             _CurrentItems = new ObservableCollection<ILVItemViewModel>();
@@ -285,11 +281,8 @@ namespace FileListView.ViewModels
             {
                 Logger.DebugFormat("get CurrentFolder property");
 
-                if (_BrowseNavigation != null)
-                {
-                    if (_BrowseNavigation.CurrentFolder != null)
-                        return _BrowseNavigation.CurrentFolder.Path;
-                }
+                if (_CurrentFolder != null)
+                    return _CurrentFolder.Path;
 
                 return null;
             }
@@ -315,7 +308,14 @@ namespace FileListView.ViewModels
                         {
                             if (info.ItemType == FSItemType.Folder || info.ItemType == FSItemType.LogicalDrive)
                             {
-                                _BrowseNavigation.BrowseDown(info.ItemType, info.ItemPath);
+                                try
+                                {
+                                    _CurrentFolder = PathFactory.Create(info.ItemPath);
+                                }
+                                catch
+                                {
+                                }
+
                                 var model = PathFactory.Create(info.ItemPath, info.ItemType);
                                 PopulateView(model);
                             }
@@ -653,7 +653,7 @@ namespace FileListView.ViewModels
 
             _FilterString = filterText;
 
-            string[] tempParsedFilter = BrowseNavigation.GetParsedFilters(_FilterString);
+            string[] tempParsedFilter = this.GetParsedFilters(_FilterString);
 
             // Optimize nultiple requests for populating same view with unchanged filter away
             if (tempParsedFilter != this._ParsedFilter)
@@ -735,15 +735,22 @@ namespace FileListView.ViewModels
 
                 CurrentItemClear();
 
-                if (_BrowseNavigation.IsCurrentPathDirectory() == false)
+                if (_CurrentFolder == null)
                     return false;
 
-                DirectoryInfo cur = _BrowseNavigation.GetDirectoryInfoOnCurrentFolder();
+                try
+                {
+                    DirectoryInfo cur = new DirectoryInfo(_CurrentFolder.Path);
 
-                if (cur.Exists == false)
+                    if (cur.Exists == false)
+                        return false;
+
+                    result = InternalPopulateView(_ParsedFilter, cur, ShowIcons);
+                }
+                catch
+                {
                     return false;
-
-                result = InternalPopulateView(_ParsedFilter, cur, ShowIcons);
+                }
 
                 if (result == true)
                     SetCurrentLocation(newPathToNavigateTo.Path, true);
@@ -770,6 +777,39 @@ namespace FileListView.ViewModels
             return result;
         }
 
+
+        /// <summary>
+        /// Converts a filter string from "*.txt;*.tex" into a
+        /// string array based format string[] filterString = { "*.txt", "*.tex" };
+        /// </summary>
+        /// <param name="inputFilterString"></param>
+        protected string[] GetParsedFilters(string inputFilterString)
+        {
+            string[] filterString = { "*" };
+
+            try
+            {
+                if (string.IsNullOrEmpty(inputFilterString) == false)
+                {
+                    if (inputFilterString.Split(FilterSplitCharacter).Length > 1)
+                        filterString = inputFilterString.Split(FilterSplitCharacter);
+                    else
+                    {
+                        // Add asterix at front and beginning if user is too non-technical to type it.
+                        if (inputFilterString.Contains("*") == false)
+                            filterString = new string[] { "*" + inputFilterString + "*" };
+                        else
+                            filterString = new string[] { inputFilterString };
+                    }
+                }
+            }
+            catch
+            {
+            }
+
+            return filterString;
+        }
+
         #region FileSystem Commands
         /// <summary>
         /// A hyperlink has been clicked. Start a web browser and let it browse to where this points to...
@@ -792,7 +832,13 @@ namespace FileListView.ViewModels
 
         private void SetCurrentLocation(string path, bool bHistory)
         {
-            _BrowseNavigation.SetCurrentFolder(path, bHistory);
+            try
+            {
+                _CurrentFolder = PathFactory.Create(path);
+            }
+            catch
+            {
+            }
 
             RaisePropertyChanged(() => CurrentFolder);
         }

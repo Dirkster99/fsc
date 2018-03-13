@@ -60,7 +60,7 @@ namespace ExplorerTestLib.ViewModels
             _OneTaskScheduler = new OneTaskLimitedScheduler();
             _CancelToken = new CancellationTokenSource();
 
-            FolderItemsView = FileListView.Factory.CreateFileListViewModel(new BrowseNavigation());
+            FolderItemsView = FileListView.Factory.CreateFileListViewModel();
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
             RecentFolders = FileSystemModels.Factory.CreateBookmarksViewModel();
             TreeBrowser = FolderBrowser.FolderBrowserFactory.CreateBrowserViewModel(false);

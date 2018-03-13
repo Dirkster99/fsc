@@ -89,8 +89,11 @@
                         base.TryExecuteTask(item);
                     }
                 }
-                // We're done processing items on the current thread
-                finally { _currentThreadIsProcessingItems = false; }
+                finally
+                { 
+                    // We're done processing items on the current thread
+                    _currentThreadIsProcessingItems = false;
+                }        
             }, null);
         }
 

@@ -54,7 +54,7 @@ namespace ExplorerTestLib.ViewModels
             _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
             _OneTaskScheduler = new OneTaskLimitedScheduler();
 
-            FolderItemsView = FileListView.Factory.CreateFileListViewModel(new BrowseNavigation());
+            FolderItemsView = FileListView.Factory.CreateFileListViewModel();
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
             RecentFolders = FileSystemModels.Factory.CreateBookmarksViewModel();
 

@@ -98,7 +98,6 @@
     <Compile Include="FileSystemCommands.cs" />
     <Compile Include="Interfaces\Bookmark\IBookmarksViewModel.cs" />
     <Compile Include="Interfaces\Bookmark\IEditBookmarks.cs" />
-    <Compile Include="Interfaces\IBrowseNavigation.cs" />
     <Compile Include="Interfaces\IConfigExplorerSettings.cs" />
     <Compile Include="Interfaces\IItem.cs" />
     <Compile Include="Interfaces\IListItemViewModel.cs" />
@@ -148,7 +147,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.zh-CHS.resx</DependentUpon>
     </Compile>
-    <Compile Include="Models\BrowseNavigation.cs" />
     <Compile Include="Models\CustomFolderItemModel.cs" />
     <Compile Include="Models\ExplorerSettingsModel.cs" />
     <Compile Include="Models\ExplorerUserProfile.cs" />

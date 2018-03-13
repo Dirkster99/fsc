@@ -17,11 +17,11 @@
         /// Creates a viewmodel object that implements the <see cref="IFileListViewModel"/>
         /// interface to drive a file listview.
         /// </summary>
-        /// <param name="browseNavigation"></param>
-        /// <returns></returns>
-        public static IFileListViewModel CreateFileListViewModel(IBrowseNavigation browseNavigation)
+        /// <returns>A new instance of a file list viewmodel that can be used to drive
+        /// a listview that shows folders and files in the file system.</returns>
+        public static IFileListViewModel CreateFileListViewModel()
         {
-            return new FileListViewModel(browseNavigation);
+            return new FileListViewModel();
         }
 
         /// <summary>
