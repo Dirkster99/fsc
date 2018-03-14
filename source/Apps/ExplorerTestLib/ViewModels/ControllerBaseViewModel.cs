@@ -66,6 +66,15 @@
                                 if (item == null)  // Item does not appear to be what we need
                                     return;
 
+                                // Let's try and break recursion here ...
+                                if (NaviHistory.SelectedItem != null)
+                                {
+                                    if (item.CompareTo(NaviHistory.SelectedItem) == 0)
+                                    {
+                                        return;  // 'New' selected item is previously selected item
+                                    }
+                                }
+
                                 int idx = 0;       // Search the selected item in ViewModel and select it
                                 bool itemFound = false;
                                 foreach (var histItem in NaviHistory.Locations)
