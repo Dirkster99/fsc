@@ -8,6 +8,7 @@ namespace ExplorerTestLib.ViewModels
     using FileSystemModels.Interfaces;
     using FileSystemModels.Interfaces.Bookmark;
     using FilterControlsLib.Interfaces;
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
@@ -21,6 +22,7 @@ namespace ExplorerTestLib.ViewModels
         #region fields
         private readonly SemaphoreSlim _SlowStuffSemaphore;
         private readonly OneTaskLimitedScheduler _OneTaskScheduler;
+        private readonly CancellationTokenSource _CancelToken;
         #endregion
 
         #region constructor
@@ -52,6 +54,7 @@ namespace ExplorerTestLib.ViewModels
         {
             _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
             _OneTaskScheduler = new OneTaskLimitedScheduler();
+            _CancelToken = new CancellationTokenSource();
 
             FolderItemsView = FileListView.Factory.CreateFileListViewModel();
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
@@ -100,8 +103,36 @@ namespace ExplorerTestLib.ViewModels
         public override void NavigateToFolder(IPathModel itemPath)
         {
             // XXX Todo Keep task reference, support cancel, and remove on end?
-            var t = Task.Factory.StartNew(() => NavigateToFolderAsync(itemPath, null),
-               CancellationToken.None, TaskCreationOptions.LongRunning, _OneTaskScheduler);
+            try
+            {
+                // XXX Todo Keep task reference, support cancel, and remove on end?
+                var timeout = TimeSpan.FromSeconds(5);
+                var actualTask = new Task(() =>
+                {
+                    var token = _CancelToken.Token;
+
+                    var t = Task.Factory.StartNew(() => NavigateToFolderAsync(itemPath, token, null),
+                                                        token,
+                                                        TaskCreationOptions.LongRunning,
+                                                        _OneTaskScheduler);
+
+                    if (t.Wait(timeout) == true)
+                        return;
+
+                    _CancelToken.Cancel();       // Task timed out so lets abort it
+                    return;                     // Signal timeout here...
+                });
+
+                actualTask.Start();
+                actualTask.Wait();
+            }
+            catch (System.AggregateException e)
+            {
+
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         /// <summary>
@@ -110,13 +141,19 @@ namespace ExplorerTestLib.ViewModels
         /// - updates all related viewmodels.
         /// </summary>
         /// <param name="itemPath"></param>
+        /// <param name="cancel"></param>
         /// <param name="requestor"</param>
-        private async Task NavigateToFolderAsync(IPathModel itemPath, object sender)
+        private async Task NavigateToFolderAsync(IPathModel itemPath
+                                                 , CancellationToken cancel
+                                                 , object sender)
         {
             // Make sure the task always processes the last input but is not started twice
             await _SlowStuffSemaphore.WaitAsync();
             try
             {
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
+
                 FolderItemsView.SetExternalBrowsingState(true);
                 FolderTextPath.SetExternalBrowsingState(true);
                 SelectedFolder = itemPath.Path;
@@ -129,11 +166,17 @@ namespace ExplorerTestLib.ViewModels
                     browseResult = await FolderTextPath.NavigateToAsync(itemPath);
                 }
 
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
+
                 if (FolderItemsView != sender && browseResult != false)
                 {
                     // Navigate Folder/File ListView to this folder
                     browseResult = await FolderItemsView.NavigateToAsync(itemPath);
                 }
+
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
 
                 if (browseResult == true)    // Log location into history of recent locations
                     NaviHistory.Forward(itemPath);

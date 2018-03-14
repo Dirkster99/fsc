@@ -117,7 +117,10 @@
                     _ForwardCommand = new RelayCommand<object>((p) =>
                     {
                         if (NaviHistory.CanForward == true)
-                            NaviHistory.Forward();
+                        {
+                            if (NaviHistory.Forward() == true)
+                                NavigateToFolder(NaviHistory.SelectedItem);
+                        }
                     },
                     (p) => NaviHistory.CanForward);
                 }
@@ -138,7 +141,10 @@
                     _BackwardCommand = new RelayCommand<object>((p) =>
                     {
                         if (NaviHistory.CanBackward == true)
-                            NaviHistory.Backward();
+                        {
+                            if (NaviHistory.Backward() == true)
+                                NavigateToFolder(NaviHistory.SelectedItem);
+                        }
                     },
                     (p) => NaviHistory.CanBackward);
                 }
@@ -164,7 +170,10 @@
                             var dirItem = System.IO.Directory.GetParent(item);
 
                             if (dirItem != null)
+                            {
                                 NaviHistory.Forward(PathFactory.Create(dirItem.FullName));
+                                NavigateToFolder(NaviHistory.SelectedItem);
+                            }
                         }
                         catch
                         {
