@@ -2,7 +2,6 @@ namespace FolderControlsLib.ViewModels
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.IO;
     using System.Windows.Input;
     using FolderControlsLib.Interfaces;
@@ -14,6 +13,8 @@ namespace FolderControlsLib.ViewModels
     using FileSystemModels.Browse;
     using System.Threading.Tasks;
     using System.Windows;
+    using System.Threading;
+    using FileSystemModels.ViewModels.Collections.Generics;
 
     /// <summary>
     /// Class implements a viewmodel that can be used for a
@@ -24,27 +25,29 @@ namespace FolderControlsLib.ViewModels
         #region fields
         protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly ObservableCollection<IFolderItemViewModel> _CurrentItems;
+        private readonly SortableObservableDictionaryCollection<IFolderItemViewModel> _CurrentItems;
 
         private IFolderItemViewModel _SelectedItem = null;
 
         private ICommand _SelectionChanged = null;
         private string _SelectedRecentLocation = string.Empty;
 
-        private object _LockObject = new object();
+        private readonly SemaphoreSlim _SlowStuffSemaphore;
+
         private bool _IsBrowsing;
         private bool _IsExternallyBrowsing;
         #endregion fields
 
-        #region constructor
+        #region constructors
         /// <summary>
         /// Class constructor
         /// </summary>
         public FolderComboBoxViewModel()
         {
-            this._CurrentItems = new ObservableCollection<IFolderItemViewModel>();
+            _CurrentItems = new SortableObservableDictionaryCollection<IFolderItemViewModel>();
+            _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
         }
-        #endregion constructor
+        #endregion constructors
 
         #region Events
         /// <summary>
@@ -109,7 +112,7 @@ namespace FolderControlsLib.ViewModels
         {
             get
             {
-                return this._CurrentItems;
+                return _CurrentItems;
             }
         }
 
@@ -225,7 +228,7 @@ namespace FolderControlsLib.ViewModels
         /// <param name="isBrowsing"></param>
         public void SetExternalBrowsingState(bool isBrowsing)
         {
-            IsBrowsing = isBrowsing;
+            IsExternallyBrowsing = isBrowsing;
         }
 
         /// <summary>
@@ -233,82 +236,105 @@ namespace FolderControlsLib.ViewModels
         /// </summary>
         public bool PopulateView(IPathModel newPath)
         {
-            lock (this._LockObject)
+            // Make sure the task always processes the last input but is not started twice
+            _SlowStuffSemaphore.WaitAsync();
+            try
             {
-                try
+                // Initialize view with current path
+                if (_CurrentItems.Count() == 0)
                 {
-                    CurrentItemClear();
-
-                    // add drives
-                    string pathroot = string.Empty;
-
-                    if (newPath == null)
+                    CurrentItemsClear();
+                    SelectedItem = InitializeView(newPath);
+                }
+                else
+                {
+                    var match = _CurrentItems.TryGet(newPath.Path);
+                    if (match != null)
                     {
-                        if (string.IsNullOrEmpty(this.CurrentFolder) == false)
-                        {
-                            try
-                            {
-                                pathroot = System.IO.Path.GetPathRoot(CurrentFolder);
-                            }
-                            catch
-                            {
-                                pathroot = string.Empty;
-                            }
-                        }
+                        SelectedItem = match;
                     }
                     else
-                        pathroot = System.IO.Path.GetPathRoot(newPath.Path);
-
-                    foreach (string s in Directory.GetLogicalDrives())
                     {
-                        IFolderItemViewModel info = FolderControlsLib.Factory.CreateLogicalDrive(s);
-                        CurrentItemAdd(info);
+                        var folderItem = new FolderItemViewModel(newPath, newPath.Name);
+                        SelectedItem = CurrentItemsAdd(folderItem);
+                    }
+                }
 
-                        // add items under current folder if we currently create the root folder of the current path
-                        if (string.IsNullOrEmpty(pathroot) == false && string.Compare(pathroot, s, true) == 0)
+                // Force a selection on to the control when there is no selected item, yet
+                // Select last item in the list (hoping this is what we want...)
+                if (_CurrentItems.Count > 0 && SelectedItem == null)
+                {
+                    SelectedItem = _CurrentItems.Last();
+                }
+
+                return true;
+            }
+            catch (Exception exp)
+            {
+                Console.WriteLine("{0} -> {1}", exp.Message, exp.StackTrace);
+                return false;
+            }
+            finally
+            {
+                _SlowStuffSemaphore.Release();
+            }
+        }
+
+        private IFolderItemViewModel InitializeView(IPathModel newPath)
+        {
+            string pathroot = string.Empty;
+            IFolderItemViewModel selectedItem = null;
+            string[] dirs;
+
+            if (newPath == null)
+            {
+                if (string.IsNullOrEmpty(CurrentFolder) == false)
+                {
+                    return null; // No parameter available at this time ...
+                }
+                else
+                {
+                    try
+                    {
+                        newPath = PathFactory.Create(CurrentFolder);
+                    }
+                    catch { }
+                }
+            }
+
+            pathroot = newPath.PathRoot;
+            dirs = PathFactory.GetDirectories(newPath.Path);
+
+            // add drives
+            foreach (string s in Directory.GetLogicalDrives())
+            {
+                IFolderItemViewModel info = FolderControlsLib.Factory.CreateLogicalDrive(s);
+                CurrentItemsAdd(info);
+
+                // add items under current folder if we currently create the root folder of the current path
+                if (string.Compare(pathroot, s, true) == 0)
+                {
+                    for (int i = 1; i < dirs.Length; i++)
+                    {
+                        try
                         {
-                            string[] dirs;
+                            string curdir = PathFactory.Join(dirs, 0, i + 1);
 
-                            if (newPath == null)
-                                dirs = PathFactory.GetDirectories(CurrentFolder);
-                            else
-                                dirs = PathFactory.GetDirectories(newPath.Path);
+                            var curPath = PathFactory.Create(curdir);
+                            var info2 = new FolderItemViewModel(curPath, dirs[i]);
 
-                            for (int i = 1; i < dirs.Length; i++)
-                            {
-                                try
-                                {
-                                    string curdir = PathFactory.Join(dirs, 0, i + 1);
-
-                                    var curPath = PathFactory.Create(curdir);
-                                    info = new FolderItemViewModel(curPath, dirs[i]);
-
-                                    CurrentItemAdd(info);
-                                }
-                                catch // Non-existing/unknown items will thrown an exception here...
-                                {
-                                }
-                            }
-
-                            SelectedItem = _CurrentItems.Last();
+                            CurrentItemsAdd(info2);
+                        }
+                        catch // Non-existing/unknown items will throw an exception here...
+                        {
                         }
                     }
 
-                    // Force a selection on to the control when there is no selected item, yet
-                    if (this._CurrentItems != null && SelectedItem == null)
-                    {
-                        if (this._CurrentItems.Count > 0)
-                            this.SelectedItem = this._CurrentItems.Last();
-                    }
-
-                    return true;
-                }
-                catch (Exception exp)
-                {
-                    Console.WriteLine("{0} -> {1}", exp.Message, exp.StackTrace);
-                    return false;
+                    selectedItem = _CurrentItems.Last();
                 }
             }
+
+            return selectedItem;
         }
 
         private async Task InternalPopulateViewAsync(IPathModel newPath
@@ -437,7 +463,7 @@ namespace FolderControlsLib.ViewModels
         /// Clears the collection of current file/folder items and makes sure
         /// the operation is performed on the dispatcher thread.
         /// </summary>
-        private void CurrentItemClear()
+        private void CurrentItemsClear()
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
@@ -449,12 +475,15 @@ namespace FolderControlsLib.ViewModels
         /// Adds another item into the collection of file/folder items
         /// and ensures the operation is performed on the dispatcher thread.
         /// </summary>
-        private void CurrentItemAdd(IFolderItemViewModel item)
+        private IFolderItemViewModel CurrentItemsAdd(IFolderItemViewModel item)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {
-                _CurrentItems.Add(item);
+                _CurrentItems.AddItem(item.ItemPath, item);
+                _CurrentItems.Sort(it => it.ItemPath);
             });
+
+            return item;
         }
         #endregion methods
     }

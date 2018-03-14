@@ -89,6 +89,25 @@ namespace FileSystemModels.Models.FSItems.Base
         }
 
         /// <summary>
+        /// Gets the root of the path of this <seealso cref="PathModel"/> object.
+        /// Thats usually a drive eg. 'C:\'
+        /// </summary>
+        public string PathRoot
+        {
+            get
+            {
+                try
+                {
+                    return System.IO.Path.GetPathRoot(mPath);
+                }
+                catch
+                {
+                    return mPath;
+                }
+            }
+        }
+
+        /// <summary>
         /// Gets the type of item of this <seealso cref="PathModel"/> object.
         /// </summary>
         public FSItemType PathType

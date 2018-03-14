@@ -126,7 +126,7 @@ namespace ExplorerTestLib.ViewModels
             try
             {
                 // XXX Todo Keep task reference, support cancel, and remove on end?
-                var timeout = TimeSpan.FromSeconds(1);
+                var timeout = TimeSpan.FromSeconds(5);
                 var actualTask = new Task(() =>
                 {
                     var token = _CancelToken.Token;

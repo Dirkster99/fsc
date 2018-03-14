@@ -25,6 +25,12 @@ namespace FileSystemModels.Interfaces
         string Path { get; }
 
         /// <summary>
+        /// Gets the root of the path of this <seealso cref="PathModel"/> object.
+        /// Thats usually a drive eg. 'C:\'
+        /// </summary>
+        string PathRoot { get; }
+
+        /// <summary>
         /// Gets the type of item of this <seealso cref="PathModel"/> object.
         /// </summary>
         FSItemType PathType { get; }

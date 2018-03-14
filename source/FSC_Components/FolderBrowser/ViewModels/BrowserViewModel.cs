@@ -255,19 +255,19 @@
                 {
                     _CancelBrowsingCommand = new RelayCommand<object>((p) =>
                     {
-//// TODO XXX
-////                        if (_Processor != null)
-////                        {
-////                            if (_Processor.IsCancelable == true)
-////                                _Processor.Cancel();
-////                        }
+                        //// TODO XXX
+                        ////                        if (_Processor != null)
+                        ////                        {
+                        ////                            if (_Processor.IsCancelable == true)
+                        ////                                _Processor.Cancel();
+                        ////                        }
                     },
                     (p) =>
                     {
                         if (IsBrowsing == true)
                         {
-//// TODO XXX                            if (_Processor.IsCancelable == true)
-////                                 return _Processor.IsProcessing;
+                            //// TODO XXX                            if (_Processor.IsCancelable == true)
+                            ////                                 return _Processor.IsProcessing;
                         }
 
                         return false;
@@ -348,23 +348,23 @@
                     _SelectedFolderChangedCommand = new RelayCommand<object>((p) =>
                     {
                         if (IsBrowsing == true)  // ignore it since the viewmodel is the driver
-                          return;
-                      
+                            return;
+
                         var param = p as ITreeItemViewModel;
 
                         if (param != null)
                         {
                             // Did selection really change? => Use refresh to re-query same element
                             if (SelectedItem == null && param == null)
-                              return;
-                            
+                                return;
+
                             if (SelectedItem != null && param != null)
                             {
-                              if(object.Equals(SelectedItem, param) == true)
-                                return;
+                                if (object.Equals(SelectedItem, param) == true)
+                                    return;
                             }
-                            
-                          
+
+
                             SelectedItem = param;
 
                             try
@@ -573,7 +573,7 @@
                         {
                         }
                     },
-                    (p) => { return ! IsBrowsing; });
+                    (p) => { return !IsBrowsing; });
                 }
 
                 return this._FolderSelectedCommand;
@@ -617,9 +617,9 @@
                         {
                         }
                     }, (p) =>
-                        {
-                            return ! IsBrowsing;
-                        });
+                    {
+                        return !IsBrowsing;
+                    });
                 }
 
                 return this._RefreshViewCommand;
@@ -677,7 +677,7 @@
         /// <returns></returns>
         private async Task<bool> RequeryChildItems(TreeItemViewModel expandedItem)
         {
-            await Task.Run(() => 
+            await Task.Run(() =>
             {
                 expandedItem.ChildrenClear();  // Requery sub-folders of this item
                 expandedItem.ChildrenLoad();
@@ -818,7 +818,7 @@
 
             try
             {
-                ret = InternalBrowsePathAsync(location.Path, ResetBrowserStatus, cts);
+                ret = InternalBrowsePath(location, ResetBrowserStatus, cts);
             }
             finally
             {
@@ -861,17 +861,26 @@
             });
         }
 
-        private bool InternalBrowsePathAsync(string path,
-                                             bool ResetBrowserStatus,
-                                             CancellationTokenSource cts = null)
+        /// <summary>
+        /// Internal method for browsing the control along a given path.
+        /// </summary>
+        /// <param name="pmodel">Describes the location in the file system to browse to.</param>
+        /// <param name="ResetBrowserStatus">Any previously shown error message
+        /// and state is cleared if true, -available error messages and states are otherwise kept.</param>
+        /// <param name="cts">This token can be used to cancel the process if the
+        /// token was supplied and the method has been called in a Task context.</param>
+        /// <returns>True if path exists and was successfully browsed, otherwise false.</returns>
+        private bool InternalBrowsePath(IPathModel pmodel,
+                                        bool ResetBrowserStatus,
+                                        CancellationTokenSource cts = null)
         {
             if (ResetBrowserStatus == true)
                 ClearBrowserStates();
 
-            if (System.IO.Directory.Exists(path) == false)
+            if (pmodel.DirectoryPathExists() == false)
             {
                 DisplayMessage.IsErrorMessageAvailable = true;
-                DisplayMessage.Message = string.Format(FileSystemModels.Local.Strings.STR_ERROR_FOLDER_DOES_NOT_EXIST, path);
+                DisplayMessage.Message = string.Format(FileSystemModels.Local.Strings.STR_ERROR_FOLDER_DOES_NOT_EXIST, pmodel.Path);
                 return false;
             }
 
@@ -881,7 +890,7 @@
             if (cts != null)
                 cts.Token.ThrowIfCancellationRequested();
 
-            var pathItem = SelectDirectory(PathFactory.Create(path, FSItemType.Folder), cts);
+            var pathItem = SelectDirectory(pmodel, cts);
 
             if (pathItem != null)
             {
@@ -894,6 +903,15 @@
             return false;
         }
 
+        /// <summary>
+        /// Transforms a path model into an array of normalized viewmodel items
+        /// Drive 'C:\' , 'Folder', 'SubFolder', etc...
+        /// and returns these items, or null, if path cannot be split (path is invalid, does not exist etc).
+        /// </summary>
+        /// <param name="inputPath">Path to split into viewmodel items</param>
+        /// <param name="cts">This token can be used to cancel the process if the
+        /// token was supplied and the method has been called in a Task context.</param>
+        /// <returns>An array of viewmodel items or null.</returns>
         internal ITreeItemViewModel[] SelectDirectory(
             IPathModel inputPath,
             CancellationTokenSource cts = null)
@@ -926,11 +944,22 @@
             }
         }
 
+        /// <summary>
+        /// Transforms an array of strings into an array of viewmodel items
+        /// Drive 'C:\' , 'Folder', 'SubFolder', etc...
+        /// and returns these items, or null, if path verified (path is invalid, does not exist etc).
+        /// </summary>
+        /// <param name="parent">The parent item under which all other parent items
+        /// are to be displayed. Caller must ensure that parent item exists and is visible
+        /// in the current structure, before calling this method.</param>
+        /// <param name="folders">array of strings indicating folder parts to return
+        /// viewmodel items for.</param>
+        /// <returns>An array of viewmodel items or null.</returns>
         private ITreeItemViewModel[] NavigatePath(
             ITreeItemViewModel parent
-          , string[] folders
-          , int iMatchIdx = 0)
+          , string[] folders)
         {
+            int iMatchIdx = 0;
             ITreeItemViewModel[] pathFolders = new ITreeItemViewModel[folders.Count()];
 
             pathFolders[0] = parent;
@@ -949,7 +978,7 @@
                     parent = nextChild;
                 }
                 else
-                    return null; // couln not find target
+                    return null; // could not find target
             }
 
             return pathFolders;

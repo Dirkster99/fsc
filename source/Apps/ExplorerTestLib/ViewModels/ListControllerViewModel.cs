@@ -7,7 +7,6 @@ namespace ExplorerTestLib.ViewModels
     using FileSystemModels.Events;
     using FileSystemModels.Interfaces;
     using FileSystemModels.Interfaces.Bookmark;
-    using FileSystemModels.Models;
     using FilterControlsLib.Interfaces;
     using System.Threading;
     using System.Threading.Tasks;

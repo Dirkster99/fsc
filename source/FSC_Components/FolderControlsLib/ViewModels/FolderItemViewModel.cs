@@ -25,37 +25,6 @@ namespace FolderControlsLib.ViewModels
         /// <summary>
         /// class constructor
         /// </summary>
-        /// <param name="curdir"></param>
-        /// <param name="displayName"></param>
-        /// <param name="itemType"></param>
-        /// <param name="showIcon"></param>
-        public FolderItemViewModel(string curdir,
-                        FSItemType itemType,
-                        string displayName,
-                        bool showIcon)
-          : this(curdir, itemType, displayName)
-        {
-            this.ShowIcon = showIcon;
-        }
-
-        /// <summary>
-        /// class constructor
-        /// </summary>
-        /// <param name="curdir"></param>
-        /// <param name="itemType"></param>
-        /// <param name="itemName"></param>
-        public FolderItemViewModel(string curdir,
-                        FSItemType itemType,
-                        string itemName)
-          : this()
-        {
-            this._PathObject = PathFactory.Create(curdir, itemType);
-            this.ItemName = itemName;
-        }
-
-        /// <summary>
-        /// class constructor
-        /// </summary>
         /// <param name="model"></param>
         /// <param name="itemName"></param>
         public FolderItemViewModel(IPathModel model,

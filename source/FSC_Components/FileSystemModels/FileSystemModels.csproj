@@ -171,6 +171,8 @@
     <Compile Include="ViewModels\Collections\BinarySorter.cs" />
     <Compile Include="ViewModels\Collections\DoubleLinkListIndexNode.cs" />
     <Compile Include="ViewModels\Collections\FastObservableCollection.cs" />
+    <Compile Include="ViewModels\Collections\Generics\SortableObservableCollection.cs" />
+    <Compile Include="ViewModels\Collections\Generics\SortableObservableDictionaryCollection.cs" />
     <Compile Include="ViewModels\Collections\ImmutableCollectionBase.cs" />
     <Compile Include="ViewModels\Collections\KeyCollection.cs" />
     <Compile Include="ViewModels\Collections\ObservableDictionary.cs" />
