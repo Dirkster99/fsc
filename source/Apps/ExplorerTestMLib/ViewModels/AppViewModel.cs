@@ -82,7 +82,7 @@
                         ThemeDefinitionViewModel theme = null;
 
                         // Try to convert object[0] command parameter
-                        if(paramets != null)
+                        if (paramets != null)
                         {
                             if (paramets.Length == 1)
                             {
@@ -138,7 +138,7 @@
             get
             {
                 return _demo;
-            }            
+            }
         }
         #endregion properties
 
@@ -146,33 +146,33 @@
         #region Get/set Session Application Data
         internal void GetSessionData(IProfile sessionData)
         {
-/***
-            if (sessionData.LastActiveTargetFile != TargetFile.FileName)
-                sessionData.LastActiveTargetFile = TargetFile.FileName;
+            /***
+                        if (sessionData.LastActiveTargetFile != TargetFile.FileName)
+                            sessionData.LastActiveTargetFile = TargetFile.FileName;
 
-            sessionData.LastActiveSourceFiles = new List<SettingsModel.Models.FileReference>();
-            if (SourceFiles != null)
-            {
-                foreach (var item in SourceFiles)
-                    sessionData.LastActiveSourceFiles.Add(new SettingsModel.Models.FileReference()
-                    { path = item.FileName }
-                                                         );
-            }
-***/
+                        sessionData.LastActiveSourceFiles = new List<SettingsModel.Models.FileReference>();
+                        if (SourceFiles != null)
+                        {
+                            foreach (var item in SourceFiles)
+                                sessionData.LastActiveSourceFiles.Add(new SettingsModel.Models.FileReference()
+                                { path = item.FileName }
+                                                                     );
+                        }
+            ***/
         }
 
         internal void SetSessionData(IProfile sessionData)
         {
-/***
-            TargetFile.FileName = sessionData.LastActiveTargetFile;
+            /***
+                        TargetFile.FileName = sessionData.LastActiveTargetFile;
 
-            _SourceFiles = new ObservableCollection<FileInfoViewModel>();
-            if (sessionData.LastActiveSourceFiles != null)
-            {
-                foreach (var item in sessionData.LastActiveSourceFiles)
-                    _SourceFiles.Add(new FileInfoViewModel(item.path));
-            }
-***/
+                        _SourceFiles = new ObservableCollection<FileInfoViewModel>();
+                        if (sessionData.LastActiveSourceFiles != null)
+                        {
+                            foreach (var item in sessionData.LastActiveSourceFiles)
+                                _SourceFiles.Add(new FileInfoViewModel(item.path));
+                        }
+            ***/
         }
         #endregion Get/set Session Application Data
 

@@ -3,6 +3,7 @@ namespace ExplorerTestLib.ViewModels
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Windows;
     using System.Windows.Input;
     using System.Xml.Serialization;
     using ExplorerTestLib.Interfaces;
@@ -145,7 +146,7 @@ namespace ExplorerTestLib.ViewModels
                 }
             }
         }
-        
+
         /// <summary>
         /// Gets/sets a command for testing the serialization of session
         /// and settings data for this component.
@@ -173,7 +174,7 @@ namespace ExplorerTestLib.ViewModels
                                  serializer.Serialize(writer, result);
                                  this.SettingsXml = writer.ToString(); // Convert result to string to read below
                              }
-                             
+
                              // Write explorer session data into string for testing
                              serializer = new XmlSerializer(typeof(ExplorerUserProfile));
                              using (var writer = new StringWriter())            // Write Xml to string
@@ -208,26 +209,26 @@ namespace ExplorerTestLib.ViewModels
                              ExplorerUserProfile userProfile = new ExplorerUserProfile();
                              try
                              {
-                               var deserializer = new XmlSerializer(typeof(ExplorerUserProfile));
-                               using (var reader = new StringReader(this.SessionXml))  // Read Xml from string
-                               {
-                                   
-                                   userProfile = (ExplorerUserProfile)deserializer.Deserialize(reader);
-                               }
+                                 var deserializer = new XmlSerializer(typeof(ExplorerUserProfile));
+                                 using (var reader = new StringReader(this.SessionXml))  // Read Xml from string
+                                 {
+
+                                     userProfile = (ExplorerUserProfile)deserializer.Deserialize(reader);
+                                 }
                              }
-                             catch{}
+                             catch { }
 
                              // Read Settings data (if any useful available)
                              ExplorerSettingsModel settings = new ExplorerSettingsModel();
                              try
                              {
-                               var deserializer = new XmlSerializer(typeof(ExplorerSettingsModel));
-                               using (var reader = new StringReader(SettingsXml))        // Read Xml from string
-                               {
-                                 settings = (ExplorerSettingsModel)deserializer.Deserialize(reader);
-                               }
+                                 var deserializer = new XmlSerializer(typeof(ExplorerSettingsModel));
+                                 using (var reader = new StringReader(SettingsXml))        // Read Xml from string
+                                 {
+                                     settings = (ExplorerSettingsModel)deserializer.Deserialize(reader);
+                                 }
                              }
-                             catch{}
+                             catch { }
 
                              settings.SetUserProfile(userProfile);         // Bring session and settings together
                              param.ConfigureExplorerSettings(settings); // and apply to current instance
@@ -243,32 +244,32 @@ namespace ExplorerTestLib.ViewModels
         /// </summary>
         public ICommand AddRecentFolder
         {
-          get
-          {
-            if (this.mAddRecentFolder == null)
-              this.mAddRecentFolder = new RelayCommand<object>((p) =>
-              {
-                this.AddRecentFolder_Executed(p);
-              });
-        
-            return this.mAddRecentFolder;
-          }
+            get
+            {
+                if (this.mAddRecentFolder == null)
+                    this.mAddRecentFolder = new RelayCommand<object>((p) =>
+                    {
+                        this.AddRecentFolder_Executed(p);
+                    });
+
+                return this.mAddRecentFolder;
+            }
         }
-        
+
         /// <summary>
         /// Remove a folder from the list of recent folders.
         /// </summary>
         public ICommand RemoveRecentFolder
         {
-          get
-          {
-            if (this.mRemoveRecentFolder == null)
-              this.mRemoveRecentFolder = new RelayCommand<object>(
-                   (p) => this.RemoveRecentFolder_Executed(p),
-                   (p) => this.FolderView.SelectedRecentLocation != null);
-        
-            return this.mRemoveRecentFolder;
-          }
+            get
+            {
+                if (this.mRemoveRecentFolder == null)
+                    this.mRemoveRecentFolder = new RelayCommand<object>(
+                         (p) => this.RemoveRecentFolder_Executed(p),
+                         (p) => this.FolderView.SelectedRecentLocation != null);
+
+                return this.mRemoveRecentFolder;
+            }
         }
         #endregion Commands for tests with bookmarks
         #endregion properties
@@ -295,30 +296,40 @@ namespace ExplorerTestLib.ViewModels
         {
         }
 
+        /// <summary>
+        /// Creates a new instance of a generic folder browser dialog window.
+        /// Overwrite this method in an inheriting class to create a custom
+        /// theme-able dialog instead of the generic version.
+        /// </summary>
+        protected virtual Window CreateFolderBrowserDialog()
+        {
+            return new FolderBrowser.Views.FolderBrowserDialog();
+        }
+
         private void AddRecentFolder_Executed(object p)
         {
             string path;
             IListControllerViewModel vm;
-            
+
             this.ResolveParameterList(p as List<object>, out path, out vm);
-            
+
             if (vm == null)
-              return;
+                return;
 
             var browser = FolderBrowserFactory.CreateBrowserViewModel();
 
             path = (string.IsNullOrEmpty(path) == true ? PathFactory.SysDefault.Path : path);
             browser.InitialPath = path;
 
-            var dlg = new FolderBrowser.Views.FolderBrowserDialog();
-            
+            var dlg = CreateFolderBrowserDialog();
+
             var dlgViewModel = FolderBrowserFactory.CreateDialogViewModel(
                 browser, vm.RecentFolders.CloneBookmark());
-            
+
             dlg.DataContext = dlgViewModel;
-            
+
             bool? bResult = dlg.ShowDialog();
-            
+
             if (dlgViewModel.DialogCloseResult == true || bResult == true)
             {
                 vm.CloneBookmarks(dlgViewModel.BookmarkedLocations, vm.RecentFolders);
@@ -366,12 +377,12 @@ namespace ExplorerTestLib.ViewModels
                 }
                 else
                     if (item is IListControllerViewModel)
-                    {
-                        var vmItem = item as IListControllerViewModel;
+                {
+                    var vmItem = item as IListControllerViewModel;
 
-                        if (vmItem != null)
-                            vm = item as IListControllerViewModel;
-                    }
+                    if (vmItem != null)
+                        vm = item as IListControllerViewModel;
+                }
             }
 
             if (path == null)

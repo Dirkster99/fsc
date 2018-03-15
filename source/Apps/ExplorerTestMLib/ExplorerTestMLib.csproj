@@ -89,6 +89,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Demos\ViewModels\DemoViewModel.cs" />
+    <Compile Include="Demos\Views\FolderBrowserDialog.xaml.cs">
+      <DependentUpon>FolderBrowserDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Models\AppCore.cs" />
     <Compile Include="Models\SettingDefaults.cs" />
     <Compile Include="ServiceInjector.cs" />
@@ -97,6 +100,10 @@
     <Compile Include="ViewModels\Base\ModelBase.cs" />
     <Compile Include="ViewModels\ThemeDefinitionViewModel.cs" />
     <Compile Include="ViewModels\ThemeViewModel.cs" />
+    <Page Include="Demos\Views\FolderBrowserDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
