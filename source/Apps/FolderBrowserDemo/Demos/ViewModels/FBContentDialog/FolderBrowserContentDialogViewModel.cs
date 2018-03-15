@@ -1,4 +1,4 @@
-﻿namespace FsContentDialogDemo.Demos.ViewModels
+﻿namespace FsContentDialogDemo.Demos.ViewModels.FBContentDialog
 {
     using MWindowInterfacesLib.Events;
     using MWindowInterfacesLib.Interfaces;

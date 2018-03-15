@@ -5,6 +5,7 @@
     using FileSystemModels.Interfaces.Bookmark;
     using FolderBrowser;
     using FolderBrowser.Dialogs.Interfaces;
+    using FsContentDialogDemo.Demos.ViewModels.FBContentDialog;
     using FsContentDialogDemo.ViewModels.Base;
     using System.Linq;
     using System.Windows.Input;
@@ -85,17 +86,16 @@
                         var initialPath = p as string;
 
                         if (string.IsNullOrEmpty(initialPath) == true)
-                            initialPath = this.GetDefaultPath(FsContentDialogDemo.ViewModels.AppLifeCycleViewModel.MyDocumentsUserDir);
+                            initialPath = PathFactory.SysDefault.Path;
 
-                        FolderBrowserControler DlgDemo = new FolderBrowserControler(
-                            initialPath, this.BookmarkedLocations);
+                        var dlg = new FolderBrowserControler(initialPath, this.BookmarkedLocations);
 
-                        var path = await DlgDemo.ShowContentDialogFromVM(this, true);
+                        var path = await dlg.ShowContentDialogFromVM(this, true);
 
                         if (string.IsNullOrEmpty(path) == false)
                             this.Path = path;
 
-                        CloneBookMarks(DlgDemo.BookmarkedLocations);
+                        CloneBookMarks(dlg.BookmarkedLocations);
                     },
                     (p) => { return true; });
                 }
@@ -152,8 +152,9 @@
         }
 
         /// <summary>
-        /// Gets a viewmodel object that can be used to drive a folder browser
-        /// displayed inside a drop down button element.
+        /// Gets a viewmodel object that is used to drive a folder browser
+        /// displayed inside a drop down button element
+        /// (DropDownBrowser in XAML binds to this property).
         /// </summary>
         public IDropDownViewModel DropDownBrowser
         {
@@ -175,18 +176,6 @@
 
         #region methods
         /// <summary>
-        /// Get a source or distination file path as default path
-        /// </summary>
-        /// <param name="defaultPath"></param>
-        /// <returns></returns>
-        private string GetDefaultPath(string defaultPath = @"C:\")
-        {
-            // Insert Appplication Specific default paths here ...
-
-            return defaultPath;
-        }
-
-        /// <summary>
         /// Constructs a few initial entries for
         /// the recent folder collection that implements folder bookmarks.
         /// </summary>
@@ -204,17 +193,7 @@
             return ret;
         }
 
-        /// <summary>
-        /// Method is invoked when the user clicks the drop down and has selected an item.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BookmarkedLocations_RequestChangeOfDirectory(object sender, BrowsingEventArgs e)
-        {
-            if (e.IsBrowsing == false && e.Result == BrowseResult.Complete)
-                this.Path = e.Location.Path;
-        }
-
+        #region DropDownBrowser
         /// <summary>
         /// Method configures a drop down element to show a
         /// folder picker dialog on opening up.
@@ -279,7 +258,24 @@
                     this.Path = PathFactory.SysDefault.Path;
             }
         }
+        #endregion DropDownBrowser
 
+        /// <summary>
+        /// Method is invoked when the user clicks the drop down and has selected an item.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BookmarkedLocations_RequestChangeOfDirectory(object sender, BrowsingEventArgs e)
+        {
+            if (e.IsBrowsing == false && e.Result == BrowseResult.Complete)
+                this.Path = e.Location.Path;
+        }
+
+        /// <summary>
+        /// Method is invoked to copy the given bookmarks into the local
+        /// bookmark locations object (typically called up close of browser dialog).
+        /// </summary>
+        /// <param name="bookmarkedLocations"></param>
         private void CloneBookMarks(IBookmarksViewModel bookmarkedLocations)
         {
             if (bookmarkedLocations == null)

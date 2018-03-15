@@ -204,21 +204,21 @@ namespace FolderControlsLib.ViewModels
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="newPath"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        bool INavigateable.NavigateTo(IPathModel newPath)
+        FinalBrowseResult INavigateable.NavigateTo(BrowseRequest request)
         {
-            return PopulateView(newPath);
+            return PopulateView(request);
         }
 
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="newPath"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        async Task<bool> INavigateable.NavigateToAsync(IPathModel newPath)
+        async Task<FinalBrowseResult> INavigateable.NavigateToAsync(BrowseRequest request)
         {
-            return await Task.Run(() => { return PopulateView(newPath); });
+            return await Task.Run(() => { return PopulateView(request); });
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace FolderControlsLib.ViewModels
         /// if any. This method should only be called by an external controll instance.
         /// </summary>
         /// <param name="isBrowsing"></param>
-        public void SetExternalBrowsingState(bool isBrowsing)
+        void INavigateable.SetExternalBrowsingState(bool isBrowsing)
         {
             IsExternallyBrowsing = isBrowsing;
         }
@@ -234,12 +234,17 @@ namespace FolderControlsLib.ViewModels
         /// <summary>
         /// Can be invoked to refresh the currently visible set of data.
         /// </summary>
-        public bool PopulateView(IPathModel newPath)
+        public FinalBrowseResult PopulateView(BrowseRequest request)
         {
+            IPathModel newPath = request.NewLocation;
+
             // Make sure the task always processes the last input but is not started twice
             _SlowStuffSemaphore.WaitAsync();
             try
             {
+                if (request.CancelTok != null)
+                    request.CancelTok.ThrowIfCancellationRequested();
+
                 // Initialize view with current path
                 if (_CurrentItems.Count() == 0)
                 {
@@ -267,12 +272,14 @@ namespace FolderControlsLib.ViewModels
                     SelectedItem = _CurrentItems.Last();
                 }
 
-                return true;
+                return FinalBrowseResult.FromRequest(request, BrowseResult.Complete);
             }
             catch (Exception exp)
             {
-                Console.WriteLine("{0} -> {1}", exp.Message, exp.StackTrace);
-                return false;
+                //// Console.WriteLine("{0} -> {1}", exp.Message, exp.StackTrace);
+                var result = FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
+                result.UnexpectedError = exp;
+                return result;
             }
             finally
             {
@@ -337,9 +344,9 @@ namespace FolderControlsLib.ViewModels
             return selectedItem;
         }
 
-        private async Task InternalPopulateViewAsync(IPathModel newPath
-                                                   , bool sendNotification)
+        private async Task InternalPopulateViewAsync(BrowseRequest request, bool sendNotification)
         {
+            IPathModel newPath = request.NewLocation;
             IsBrowsing = true;
             try
             {
@@ -353,16 +360,16 @@ namespace FolderControlsLib.ViewModels
 
                 await Task.Run(() =>
                 {
-                    bool result = false;
-                    result = PopulateView(newPath);
+                    FinalBrowseResult result = null;
+                    result = PopulateView(request);
 
                     if (sendNotification == true && this.SelectedItem != null)
                     {
                         if (BrowseEvent != null)
                         {
                             BrowseEvent(this, new BrowsingEventArgs(
-                                newPath, false, (result == true ? BrowseResult.Complete :
-                                                                  BrowseResult.InComplete)));
+                                newPath, false, (result == null ? BrowseResult.InComplete :
+                                                                  result.Result)));
                         }
                     }
                 });
@@ -415,7 +422,11 @@ namespace FolderControlsLib.ViewModels
                         return;
                 }
 
-                await InternalPopulateViewAsync(PathFactory.Create(p as string, FSItemType.Folder), true);
+                if (param != null)
+                {
+                    var request = new BrowseRequest(param);
+                    await InternalPopulateViewAsync(request, true);
+                }
             }
             else
             {
@@ -431,27 +442,28 @@ namespace FolderControlsLib.ViewModels
 
                             if (newPath != null)
                             {
-                                IPathModel model = null;
+                                IPathModel location = null;
                                 IPathModel selectedItemModel = null;
                                 try
                                 {
-                                    model = PathFactory.Create(newPath.ItemPath, newPath.ItemType);
+                                    location = PathFactory.Create(newPath.ItemPath, newPath.ItemType);
                                     selectedItemModel = PathFactory.Create(SelectedItem.ItemPath, SelectedItem.ItemType);
                                 }
                                 catch
                                 {
                                 }
 
-                                if (model == null || selectedItemModel == null)
+                                if (location == null || selectedItemModel == null)
                                     return;
 
                                 // This breaks a possible recursion, if a new view is requested even though its
                                 // already available, because this could, otherwise, change the SelectedItem
                                 // which in turn could request another PopulateView(...) -> SelectedItem etc ...
-                                if (model.Equals(selectedItemModel))
+                                if (location.Equals(selectedItemModel))
                                     return;
 
-                                await InternalPopulateViewAsync(model, true);
+                                var request = new BrowseRequest(location);
+                                await InternalPopulateViewAsync(request, true);
                             }
                         }
                     }

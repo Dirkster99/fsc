@@ -1,4 +1,4 @@
-﻿namespace FileSystemModels.Browse
+namespace FileSystemModels.Browse
 {
     using FileSystemModels.Interfaces;
     using System.Threading.Tasks;
@@ -14,14 +14,14 @@
         /// </summary>
         /// <param name="newPath"></param>
         /// <returns></returns>
-        bool NavigateTo(IPathModel newPath);
+        FinalBrowseResult NavigateTo(BrowseRequest newPath);
 
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
         /// <param name="newPath"></param>
         /// <returns></returns>
-        Task<bool> NavigateToAsync(IPathModel newPath);
+        Task<FinalBrowseResult> NavigateToAsync(BrowseRequest newPath);
 
         /// <summary>
         /// Sets the IsExternalBrowsing state and cleans up any running processings

@@ -567,7 +567,7 @@
                         try
                         {
                             location = PathFactory.Create(path);
-                            NavigateTo(location, false);
+                            InternalNavigateTo(new BrowseRequest(location), false);
                         }
                         catch
                         {
@@ -609,9 +609,8 @@
                             if (IsBrowsing == true)
                                 return;
 
-                            IPathModel location = null;
-                            location = PathFactory.Create(item.ItemPath);
-                            NavigateTo(location, false);
+                            IPathModel location = PathFactory.Create(item.ItemPath);
+                            InternalNavigateTo(new BrowseRequest(location), false);
                         }
                         catch
                         {
@@ -761,23 +760,23 @@
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="location"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        bool INavigateable.NavigateTo(IPathModel location)
+        FinalBrowseResult INavigateable.NavigateTo(BrowseRequest request)
         {
-            return NavigateTo(location, false);
+            return InternalNavigateTo(request, false);
         }
 
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="location"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        async Task<bool> INavigateable.NavigateToAsync(IPathModel location)
+        async Task<FinalBrowseResult> INavigateable.NavigateToAsync(BrowseRequest request)
         {
             return await Task.Run(() =>
             {
-                return NavigateTo(location, false);
+                return InternalNavigateTo(request, false);
             });
         }
 
@@ -802,23 +801,27 @@
         }
 
         /// <summary>
-        /// Controller can start browser process if IsBrowsing = false
+        /// Start browser process initiated by controller or control specific
+        /// events (e.g.: Expand path on initial load...)
         /// </summary>
-        /// <param name="location"></param>
+        /// <param name="request"></param>
         /// <param name="ResetBrowserStatus"></param>
         /// <returns></returns>
-        private bool NavigateTo(IPathModel location,
-                                bool ResetBrowserStatus = true)
+        private FinalBrowseResult InternalNavigateTo(BrowseRequest request,
+                                                     bool ResetBrowserStatus = true)
         {
-            CancellationTokenSource cts = null;
-            bool ret = false;
-
             IsBrowsing = true;
             IsBrowseViewEnabled = UpdateView = false;
 
             try
             {
-                ret = InternalBrowsePath(location, ResetBrowserStatus, cts);
+                return InternalBrowsePath(request, ResetBrowserStatus);
+            }
+            catch (Exception exp)
+            {
+                var result = FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
+                result.UnexpectedError = exp;
+                return result;
             }
             finally
             {
@@ -826,54 +829,20 @@
                 IsBrowsing = false;
                 IsBrowseViewEnabled = UpdateView = true;
             }
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Initialize the treeview with a set of local drives
-        /// currently available on the computer.
-        /// </summary>
-        private void SetInitialDrives(CancellationTokenSource cts = null)
-        {
-            ClearFoldersCollections();
-
-            var items = DriveModel.GetLogicalDrives().ToList();
-
-            foreach (var item in items)
-            {
-                if (cts != null)
-                    cts.Token.ThrowIfCancellationRequested();
-
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    var vmItem = new DriveViewModel(item.Model, null);
-                    _Root.AddItem(vmItem);
-                });
-            }
-        }
-
-        private void ClearFoldersCollections()
-        {
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                _Root.Clear();
-            });
         }
 
         /// <summary>
         /// Internal method for browsing the control along a given path.
         /// </summary>
-        /// <param name="pmodel">Describes the location in the file system to browse to.</param>
-        /// <param name="ResetBrowserStatus">Any previously shown error message
-        /// and state is cleared if true, -available error messages and states are otherwise kept.</param>
-        /// <param name="cts">This token can be used to cancel the process if the
-        /// token was supplied and the method has been called in a Task context.</param>
-        /// <returns>True if path exists and was successfully browsed, otherwise false.</returns>
-        private bool InternalBrowsePath(IPathModel pmodel,
-                                        bool ResetBrowserStatus,
-                                        CancellationTokenSource cts = null)
+        /// <param name="request"></param>
+        /// <param name="ResetBrowserStatus"></param>
+        /// <returns>Whether path exists and was successfully browsed or not.</returns>
+        private FinalBrowseResult InternalBrowsePath(BrowseRequest request,
+                                                     bool ResetBrowserStatus)
         {
+            IPathModel pmodel = request.NewLocation;
+            CancellationToken ct = request.CancelTok;
+
             if (ResetBrowserStatus == true)
                 ClearBrowserStates();
 
@@ -881,26 +850,27 @@
             {
                 DisplayMessage.IsErrorMessageAvailable = true;
                 DisplayMessage.Message = string.Format(FileSystemModels.Local.Strings.STR_ERROR_FOLDER_DOES_NOT_EXIST, pmodel.Path);
-                return false;
+
+                return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
             }
 
             if (_Root.Count == 0)        // Make sure drives are available
-                SetInitialDrives(cts);
+                SetInitialDrives(ct);
 
-            if (cts != null)
-                cts.Token.ThrowIfCancellationRequested();
+            if (ct != null)
+                ct.ThrowIfCancellationRequested();
 
-            var pathItem = SelectDirectory(pmodel, cts);
+            var pathItem = SelectDirectory(pmodel, ct);
 
             if (pathItem != null)
             {
                 if (pathItem.Length > 0)
                     SelectedItem = pathItem[pathItem.Length - 1];
 
-                return true;
+                return FinalBrowseResult.FromRequest(request, BrowseResult.Complete);
             }
 
-            return false;
+            return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
         }
 
         /// <summary>
@@ -909,12 +879,12 @@
         /// and returns these items, or null, if path cannot be split (path is invalid, does not exist etc).
         /// </summary>
         /// <param name="inputPath">Path to split into viewmodel items</param>
-        /// <param name="cts">This token can be used to cancel the process if the
+        /// <param name="ct">This token can be used to cancel the process if the
         /// token was supplied and the method has been called in a Task context.</param>
         /// <returns>An array of viewmodel items or null.</returns>
-        internal ITreeItemViewModel[] SelectDirectory(
+        private ITreeItemViewModel[] SelectDirectory(
             IPathModel inputPath,
-            CancellationTokenSource cts = null)
+            CancellationToken ct = default(CancellationToken))
         {
             try
             {
@@ -942,6 +912,37 @@
             {
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Initialize the treeview with a set of local drives
+        /// currently available on the computer.
+        /// </summary>
+        private void SetInitialDrives(CancellationToken ct = default(CancellationToken))
+        {
+            ClearFoldersCollections();
+
+            var items = DriveModel.GetLogicalDrives().ToList();
+
+            foreach (var item in items)
+            {
+                if (ct != null)
+                    ct.ThrowIfCancellationRequested();
+
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var vmItem = new DriveViewModel(item.Model, null);
+                    _Root.AddItem(vmItem);
+                });
+            }
+        }
+
+        private void ClearFoldersCollections()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                _Root.Clear();
+            });
         }
 
         /// <summary>

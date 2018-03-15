@@ -1,4 +1,4 @@
-﻿namespace FsContentDialogDemo.Demos
+﻿namespace FsContentDialogDemo.Demos.ViewModels.FBContentDialog
 {
     using FileSystemModels.Interfaces.Bookmark;
     using FolderBrowser;
@@ -86,7 +86,7 @@
 
             var fsDlg = FolderBrowserFactory.CreateDialogViewModel(treeBrowserVM, BookmarkedLocations);
 
-            var customDialog = CreateFolderBrowserDialog(new ViewModels.FolderBrowserContentDialogViewModel(fsDlg));
+            var customDialog = CreateFolderBrowserDialog(new FolderBrowserContentDialogViewModel(fsDlg));
 
             var coord = GetService<IContentDialogService>().Coordinator;
             var manager = GetService<IContentDialogService>().Manager;

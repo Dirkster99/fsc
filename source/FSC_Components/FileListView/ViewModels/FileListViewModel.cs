@@ -4,6 +4,7 @@ namespace FileListView.ViewModels
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
@@ -167,17 +168,17 @@ namespace FileListView.ViewModels
         {
             get
             {
-                return this._SelectedItem;
+                return _SelectedItem;
             }
 
             set
             {
                 Logger.DebugFormat("Set SelectedItem '{0}' property", value);
 
-                if (this._SelectedItem != value)
+                if (_SelectedItem != value)
                 {
-                    this._SelectedItem = value;
-                    this.RaisePropertyChanged(() => this.SelectedItem);
+                    _SelectedItem = value;
+                    RaisePropertyChanged(() => SelectedItem);
                 }
             }
         }
@@ -189,17 +190,17 @@ namespace FileListView.ViewModels
         {
             get
             {
-                return this._ShowFolders;
+                return _ShowFolders;
             }
 
             protected set
             {
                 Logger.DebugFormat("Set ShowFolders '{0}' property", value);
 
-                if (this._ShowFolders != value)
+                if (_ShowFolders != value)
                 {
-                    this._ShowFolders = value;
-                    this.RaisePropertyChanged(() => this.ShowFolders);
+                    _ShowFolders = value;
+                    RaisePropertyChanged(() => ShowFolders);
                 }
             }
         }
@@ -211,17 +212,17 @@ namespace FileListView.ViewModels
         {
             get
             {
-                return this._ShowHidden;
+                return _ShowHidden;
             }
 
             protected set
             {
                 Logger.DebugFormat("Set ShowHidden '{0}' property", value);
 
-                if (this._ShowHidden != value)
+                if (_ShowHidden != value)
                 {
-                    this._ShowHidden = value;
-                    this.RaisePropertyChanged(() => this.ShowHidden);
+                    _ShowHidden = value;
+                    RaisePropertyChanged(() => ShowHidden);
                 }
             }
         }
@@ -233,17 +234,17 @@ namespace FileListView.ViewModels
         {
             get
             {
-                return this._ShowIcons;
+                return _ShowIcons;
             }
 
             protected set
             {
                 Logger.DebugFormat("Set ShowIcons '{0}' property", value);
 
-                if (this._ShowIcons != value)
+                if (_ShowIcons != value)
                 {
-                    this._ShowIcons = value;
-                    this.RaisePropertyChanged(() => this.ShowIcons);
+                    _ShowIcons = value;
+                    RaisePropertyChanged(() => ShowIcons);
                 }
             }
         }
@@ -255,17 +256,17 @@ namespace FileListView.ViewModels
         {
             get
             {
-                return this._IsFiltered;
+                return _IsFiltered;
             }
 
             private set
             {
                 Logger.DebugFormat("Set IsFiltered '{0}' property", value);
 
-                if (this._IsFiltered != value)
+                if (_IsFiltered != value)
                 {
-                    this._IsFiltered = value;
-                    this.RaisePropertyChanged(() => this.IsFiltered);
+                    _IsFiltered = value;
+                    RaisePropertyChanged(() => IsFiltered);
                 }
             }
         }
@@ -308,16 +309,16 @@ namespace FileListView.ViewModels
                         {
                             if (info.ItemType == FSItemType.Folder || info.ItemType == FSItemType.LogicalDrive)
                             {
-                                try
-                                {
-                                    _CurrentFolder = PathFactory.Create(info.ItemPath);
-                                }
-                                catch
-                                {
-                                }
+                                ////                                try
+                                ////                                {
+                                ////                                    _CurrentFolder = PathFactory.Create(info.ItemPath);
+                                ////                                }
+                                ////                                catch
+                                ////                                {
+                                ////                                }
 
                                 var model = PathFactory.Create(info.ItemPath, info.ItemType);
-                                PopulateView(model);
+                                PopulateView(new BrowseRequest(model), true);
                             }
                             else
                             {
@@ -346,10 +347,11 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._RefreshCommand == null)
-                    this._RefreshCommand = new RelayCommand<object>((p) => this.PopulateView());
+                if (_RefreshCommand == null)
+                    _RefreshCommand =
+                      new RelayCommand<object>((p) => PopulateCurrentView(true));
 
-                return this._RefreshCommand;
+                return _RefreshCommand;
             }
         }
 
@@ -360,10 +362,11 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._ToggleIsFolderVisibleCommand == null)
-                    this._ToggleIsFolderVisibleCommand = new RelayCommand<object>((p) => this.ToggleIsFolderVisible_Executed());
+                if (_ToggleIsFolderVisibleCommand == null)
+                    _ToggleIsFolderVisibleCommand =
+                      new RelayCommand<object>((p) => SetIsFolderVisible(!ShowFolders));
 
-                return this._ToggleIsFolderVisibleCommand;
+                return _ToggleIsFolderVisibleCommand;
             }
         }
 
@@ -374,10 +377,11 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._ToggleIsIconVisibleCommand == null)
-                    this._ToggleIsIconVisibleCommand = new RelayCommand<object>((p) => this.ToggleIsIconVisible_Executed());
+                if (_ToggleIsIconVisibleCommand == null)
+                    _ToggleIsIconVisibleCommand =
+                      new RelayCommand<object>((p) => SetShowIcons(!ShowIcons));
 
-                return this._ToggleIsIconVisibleCommand;
+                return _ToggleIsIconVisibleCommand;
             }
         }
 
@@ -388,10 +392,11 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._ToggleIsHiddenVisibleCommand == null)
-                    this._ToggleIsHiddenVisibleCommand = new RelayCommand<object>((p) => this.ToggleIsHiddenVisible_Executed());
+                if (_ToggleIsHiddenVisibleCommand == null)
+                    _ToggleIsHiddenVisibleCommand =
+                      new RelayCommand<object>((p) => SetShowHidden(!ShowHidden));
 
-                return this._ToggleIsHiddenVisibleCommand;
+                return _ToggleIsHiddenVisibleCommand;
             }
         }
         #region Windows Integration FileSystem Commands
@@ -404,8 +409,8 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._OpenContainingFolderCommand == null)
-                    this._OpenContainingFolderCommand = new RelayCommand<object>(
+                if (_OpenContainingFolderCommand == null)
+                    _OpenContainingFolderCommand = new RelayCommand<object>(
                       (p) =>
                       {
                           var path = p as ILVItemViewModel;
@@ -419,7 +424,7 @@ namespace FileListView.ViewModels
                           FileSystemCommands.OpenContainingFolder(path.ItemPath);
                       });
 
-                return this._OpenContainingFolderCommand;
+                return _OpenContainingFolderCommand;
             }
         }
 
@@ -434,8 +439,8 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._OpenInWindowsCommand == null)
-                    this._OpenInWindowsCommand = new RelayCommand<object>(
+                if (_OpenInWindowsCommand == null)
+                    _OpenInWindowsCommand = new RelayCommand<object>(
                       (p) =>
                       {
                           var path = p as ILVItemViewModel;
@@ -449,7 +454,7 @@ namespace FileListView.ViewModels
                           FileSystemCommands.OpenInWindows(path.ItemPath);
                       });
 
-                return this._OpenInWindowsCommand;
+                return _OpenInWindowsCommand;
             }
         }
 
@@ -461,8 +466,8 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._CopyPathCommand == null)
-                    this._CopyPathCommand = new RelayCommand<object>(
+                if (_CopyPathCommand == null)
+                    _CopyPathCommand = new RelayCommand<object>(
                       (p) =>
                       {
                           var path = p as ILVItemViewModel;
@@ -476,7 +481,7 @@ namespace FileListView.ViewModels
                           FileListViewModel.CopyPathCommand_Executed(path.ItemPath);
                       });
 
-                return this._CopyPathCommand;
+                return _CopyPathCommand;
             }
         }
 
@@ -488,14 +493,14 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._ToggleIsFilteredCommand == null)
-                    this._ToggleIsFilteredCommand = new RelayCommand<object>(
+                if (_ToggleIsFilteredCommand == null)
+                    _ToggleIsFilteredCommand = new RelayCommand<object>(
                       (p) =>
                       {
-                          this.SetIsFiltered(!this.IsFiltered);
+                          SetIsFiltered(!this.IsFiltered);
                       });
 
-                return this._ToggleIsFilteredCommand;
+                return _ToggleIsFilteredCommand;
             }
         }
         #endregion Windows Integration FileSystem Commands
@@ -509,8 +514,8 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._RenameCommand == null)
-                    this._RenameCommand = new RelayCommand<object>(it =>
+                if (_RenameCommand == null)
+                    _RenameCommand = new RelayCommand<object>(it =>
                     {
                         var tuple = it as Tuple<string, object>;
 
@@ -523,7 +528,7 @@ namespace FileListView.ViewModels
                         }
                     });
 
-                return this._RenameCommand;
+                return _RenameCommand;
             }
         }
 
@@ -541,8 +546,8 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._StartRenameCommand == null)
-                    this._StartRenameCommand = new RelayCommand<object>(it =>
+                if (_StartRenameCommand == null)
+                    _StartRenameCommand = new RelayCommand<object>(it =>
                     {
                         var folder = it as LVItemViewModel;
 
@@ -550,7 +555,7 @@ namespace FileListView.ViewModels
                             folder.RequestEditMode(InplaceEditBoxLib.Events.RequestEditEvent.StartEditMode);
                     });
 
-                return this._StartRenameCommand;
+                return _StartRenameCommand;
             }
         }
 
@@ -570,14 +575,14 @@ namespace FileListView.ViewModels
         {
             get
             {
-                if (this._CreateFolderCommand == null)
-                    this._CreateFolderCommand = new RelayCommand<object>(it =>
+                if (_CreateFolderCommand == null)
+                    _CreateFolderCommand = new RelayCommand<object>(it =>
                     {
                         var folder = it as string;
-                        this.CreateFolderCommandNewFolder(folder);
+                        CreateFolderCommandNewFolder(folder);
                     });
 
-                return this._CreateFolderCommand;
+                return _CreateFolderCommand;
             }
         }
         #endregion commands
@@ -601,10 +606,10 @@ namespace FileListView.ViewModels
             {
                 Logger.DebugFormat("Set Notification '{0}' property", value);
 
-                if (this._Notification != value)
+                if (_Notification != value)
                 {
-                    this._Notification = value;
-                    this.RaisePropertyChanged(() => this.Notification);
+                    _Notification = value;
+                    RaisePropertyChanged(() => Notification);
                 }
             }
         }
@@ -614,21 +619,21 @@ namespace FileListView.ViewModels
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="newPath"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        bool INavigateable.NavigateTo(IPathModel newPath)
+        FinalBrowseResult INavigateable.NavigateTo(BrowseRequest request)
         {
-            return PopulateView(newPath, false);
+            return PopulateView(request, false);
         }
 
         /// <summary>
         /// Controller can start browser process if IsBrowsing = false
         /// </summary>
-        /// <param name="newPath"></param>
+        /// <param name="request"></param>
         /// <returns></returns>
-        async Task<bool> INavigateable.NavigateToAsync(IPathModel newPath)
+        async Task<FinalBrowseResult> INavigateable.NavigateToAsync(BrowseRequest request)
         {
-            return await Task.Run(() => { return PopulateView(newPath, false); });
+            return await Task.Run(() => { return PopulateView(request, false); });
         }
 
         /// <summary>
@@ -636,9 +641,9 @@ namespace FileListView.ViewModels
         /// if any. This method should only be called by an external controll instance.
         /// </summary>
         /// <param name="isBrowsing"></param>
-        public void SetExternalBrowsingState(bool isBrowsing)
+        void INavigateable.SetExternalBrowsingState(bool isBrowsing)
         {
-            IsBrowsing = isBrowsing;
+            IsExternallyBrowsing = isBrowsing;
         }
 
         /// <summary>
@@ -653,13 +658,13 @@ namespace FileListView.ViewModels
 
             _FilterString = filterText;
 
-            string[] tempParsedFilter = this.GetParsedFilters(_FilterString);
+            string[] tempParsedFilter = GetParsedFilters(_FilterString);
 
             // Optimize nultiple requests for populating same view with unchanged filter away
-            if (tempParsedFilter != this._ParsedFilter)
+            if (tempParsedFilter != _ParsedFilter)
             {
-                this._ParsedFilter = tempParsedFilter;
-                this.PopulateView();
+                _ParsedFilter = tempParsedFilter;
+                PopulateCurrentView(false);
             }
         }
 
@@ -672,8 +677,8 @@ namespace FileListView.ViewModels
         {
             Logger.DebugFormat("SetIsFolderVisible method with '{0}'", isFolderVisible);
 
-            this.ShowFolders = isFolderVisible;
-            this.PopulateView();
+            ShowFolders = isFolderVisible;
+            PopulateCurrentView(false);
         }
 
         /// <summary>
@@ -686,7 +691,7 @@ namespace FileListView.ViewModels
             Logger.DebugFormat("SetIsFiltered method with '{0}'", isFiltered);
 
             this.IsFiltered = isFiltered;
-            this.PopulateView();
+            PopulateCurrentView(false);
         }
 
         /// <summary>
@@ -696,6 +701,7 @@ namespace FileListView.ViewModels
         public void SetShowIcons(bool showIcons)
         {
             ShowIcons = showIcons;
+            PopulateCurrentView(false);
         }
 
         /// <summary>
@@ -705,6 +711,19 @@ namespace FileListView.ViewModels
         public void SetShowHidden(bool showHiddenFiles)
         {
             ShowHidden = showHiddenFiles;
+            PopulateCurrentView(false);
+        }
+
+        /// <summary>
+        /// Generates a browse request based on the _CurrentFolder value
+        /// (eg. Refresh current view), attempts to full view it, and returns
+        /// the result indicator.
+        /// </summary>
+        protected FinalBrowseResult PopulateCurrentView(bool browseEvent,
+                                                        CancellationToken cancelToken = default(CancellationToken))
+        {
+            var request = new BrowseRequest(_CurrentFolder, cancelToken);
+            return PopulateView(request, browseEvent);
         }
 
         /// <summary>
@@ -714,10 +733,15 @@ namespace FileListView.ViewModels
         /// This method wraps a parameterized version of the same method 
         /// with a call that contains the standard data field.
         /// </summary>
-        protected bool PopulateView(IPathModel newPathToNavigateTo = null,
-                                    bool browseEvent = true)
+        /// <param name="request"></param>
+        /// <param name="browseEvent">Defines whether a request should result
+        /// in an explicit event relayed to a controller or not.</param>
+        protected FinalBrowseResult PopulateView(BrowseRequest request,
+                                                 bool browseEvent)
         {
             Logger.DebugFormat("PopulateView method");
+
+            IPathModel newPathToNavigateTo = request.NewLocation;
 
             bool result = false;
             IsBrowsing = true;
@@ -730,35 +754,28 @@ namespace FileListView.ViewModels
                                          new BrowsingEventArgs(newPathToNavigateTo, true));
                 }
 
-                if (newPathToNavigateTo != null)
-                    SetCurrentLocation(newPathToNavigateTo.Path, false);
+                DirectoryInfo cur = new DirectoryInfo(newPathToNavigateTo.Path);
+
+                if (cur.Exists == false)
+                    return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
 
                 CurrentItemClear();
 
-                if (_CurrentFolder == null)
-                    return false;
-
-                try
-                {
-                    DirectoryInfo cur = new DirectoryInfo(_CurrentFolder.Path);
-
-                    if (cur.Exists == false)
-                        return false;
-
-                    result = InternalPopulateView(_ParsedFilter, cur, ShowIcons);
-                }
-                catch
-                {
-                    return false;
-                }
+                result = InternalPopulateView(_ParsedFilter, cur, ShowIcons);
 
                 if (result == true)
-                    SetCurrentLocation(_CurrentFolder.Path, true);
+                {
+                    SetCurrentLocation(newPathToNavigateTo);
+                    return FinalBrowseResult.FromRequest(request, BrowseResult.Complete);
+                }
 
-                return result;
+                return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
             }
-            catch
+            catch (Exception exp)
             {
+                var bresult = FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
+                bresult.UnexpectedError = exp;
+                return bresult;
             }
             finally
             {
@@ -773,10 +790,7 @@ namespace FileListView.ViewModels
 
                 IsBrowsing = false;
             }
-
-            return result;
         }
-
 
         /// <summary>
         /// Converts a filter string from "*.txt;*.tex" into a
@@ -830,11 +844,11 @@ namespace FileListView.ViewModels
         }
         #endregion FileSystem Commands
 
-        private void SetCurrentLocation(string path, bool bHistory)
+        private void SetCurrentLocation(IPathModel pmodel)
         {
             try
             {
-                _CurrentFolder = PathFactory.Create(path);
+                _CurrentFolder = pmodel.Clone() as IPathModel;
             }
             catch
             {
@@ -855,7 +869,7 @@ namespace FileListView.ViewModels
                                         , DirectoryInfo cur
                                         , bool showIcons)
         {
-            Logger.DebugFormat("PopulateView method with filterString parameter");
+            Logger.DebugFormat("InternalPopulateView method with filterString parameter");
 
             try
             {
@@ -938,24 +952,6 @@ namespace FileListView.ViewModels
             {
                 _CurrentItems.Add(item);
             });
-        }
-
-        private void ToggleIsFolderVisible_Executed()
-        {
-            this.ShowFolders = !this.ShowFolders;
-            this.PopulateView();
-        }
-
-        private void ToggleIsIconVisible_Executed()
-        {
-            this.ShowIcons = !this.ShowIcons;
-            this.PopulateView();
-        }
-
-        private void ToggleIsHiddenVisible_Executed()
-        {
-            this.ShowHidden = !this.ShowHidden;
-            this.PopulateView();
         }
 
         /// <summary>

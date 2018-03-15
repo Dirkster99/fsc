@@ -1,6 +1,7 @@
 namespace FolderBrowser.Views
 {
     using FileSystemModels;
+    using FileSystemModels.Browse;
     using FileSystemModels.Interfaces;
     using FolderBrowser.Interfaces;
     using System.Windows;
@@ -46,7 +47,7 @@ namespace FolderBrowser.Views
                     location = PathFactory.Create(vm.InitialPath);
 
                     // XXX Todo Keep task reference, support cancel, and remove on end?
-                    var t = vm.NavigateToAsync(location);
+                    var t = vm.NavigateToAsync(new BrowseRequest(location));
                 }
                 catch
                 {
@@ -76,7 +77,7 @@ namespace FolderBrowser.Views
                 {
                     logger.DebugFormat("FolderBrowserTreeView: Browsing Path on DataContextChanged: '{0}'", vm.InitialPath);
 
-                    await vm.NavigateToAsync(PathFactory.Create(vm.InitialPath));
+                    await vm.NavigateToAsync(new BrowseRequest(PathFactory.Create(vm.InitialPath)));
                 }
             }
         }

@@ -129,7 +129,7 @@ namespace FolderBrowser.Dialogs.ViewModels
             if (e.IsBrowsing == false && e.Result == BrowseResult.Complete)
             {
                 // XXX Todo Keep task reference, support cancel, and remove on end?
-                var t = TreeBrowser.NavigateToAsync(e.Location);
+                var t = TreeBrowser.NavigateToAsync(new BrowseRequest(e.Location));
             }
         }
 

@@ -136,9 +136,9 @@
     </ApplicationDefinition>
     <Compile Include="Demos\Behaviors\SelectionChangedBehavior.cs .cs" />
     <Compile Include="Demos\Models\FolderBrowserResult.cs" />
-    <Compile Include="Demos\FolderBrowserControler.cs" />
+    <Compile Include="Demos\ViewModels\FBContentDialog\FolderBrowserControler.cs" />
     <Compile Include="Demos\ViewModels\DemoViewModel.cs" />
-    <Compile Include="Demos\ViewModels\FolderBrowserContentDialogViewModel.cs" />
+    <Compile Include="Demos\ViewModels\FBContentDialog\FolderBrowserContentDialogViewModel.cs" />
     <Compile Include="Demos\ViewModels\MsgDemoViewModel.cs" />
     <Compile Include="Demos\Views\FolderBrowserContentDialogView.xaml.cs">
       <DependentUpon>FolderBrowserContentDialogView.xaml</DependentUpon>
