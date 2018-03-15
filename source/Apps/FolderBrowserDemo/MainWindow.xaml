@@ -12,7 +12,9 @@
         Dialog:DialogParticipation.Register="{Binding Demo}"
                      
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        ShowIcon="False"
+        >
     <Grid xmlns:fbviews="clr-namespace:FolderBrowser.Views;assembly=FolderBrowser"
         >
         <Grid.ColumnDefinitions>
