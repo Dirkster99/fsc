@@ -154,10 +154,22 @@
 
         public static Color GetCurrentAccentColor(ISettingsManager settings)
         {
-            Color AccentColor;
+            Color AccentColor = default(Color);
 
             if (settings.Options.GetOptionValue<bool>("Appearance", "ApplyWindowsDefaultAccent"))
-                AccentColor = SystemParameters.WindowGlassColor;
+            {
+                try
+                {
+                    AccentColor = SystemParameters.WindowGlassColor;
+                }
+                catch
+                {
+                }
+
+                // This may be black on Windows 7 and the experience is black & white then :-(
+                if (AccentColor == default(Color) || AccentColor == Colors.Black || AccentColor.A == 0)
+                    AccentColor = Color.FromRgb(0x1b, 0xa1, 0xe2);
+            }
             else
                 AccentColor = settings.Options.GetOptionValue<Color>("Appearance", "AccentColor");
 
