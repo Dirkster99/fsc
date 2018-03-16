@@ -75,19 +75,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DropDownButtonLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.FolderBrowser.3.0.2\lib\net452\DropDownButtonLib.dll</HintPath>
-    </Reference>
-    <Reference Include="FileSystemModels, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.FolderBrowser.3.0.2\lib\net452\FileSystemModels.dll</HintPath>
-    </Reference>
-    <Reference Include="FolderBrowser, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.FolderBrowser.3.0.2\lib\net452\FolderBrowser.dll</HintPath>
-    </Reference>
-    <Reference Include="InplaceEditBoxLib, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.FolderBrowser.3.0.2\lib\net452\InplaceEditBoxLib.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.DropDownButtonLib.1.0.4\lib\net4\DropDownButtonLib.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.FolderBrowser.3.0.2\lib\net452\log4net.dll</HintPath>
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions">
       <HintPath>..\..\Binaries\Microsoft.Expression.Interactions.dll</HintPath>
@@ -120,7 +111,7 @@
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="UserNotification, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.FolderBrowser.3.0.2\lib\net452\UserNotification.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.UserNotifications.1.4.0\lib\net451\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WatermarkControlsLib, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.WatermarkControlsLib.1.0.1\lib\net4\WatermarkControlsLib.dll</HintPath>
@@ -209,6 +200,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\FSC_Components\FileSystemModels\FileSystemModels.csproj">
+      <Project>{391639c4-5c43-4391-9465-27686e82c33f}</Project>
+      <Name>FileSystemModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FSC_Components\FolderBrowser\FolderBrowser.csproj">
+      <Project>{7d4bd5f8-a98e-4966-abbd-cbe202dfbef7}</Project>
+      <Name>FolderBrowser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BindToMLib\BindToMLib.csproj">
       <Project>{dec77495-6e48-4f66-b22b-e9ba2ca6e257}</Project>
       <Name>BindToMLib</Name>
