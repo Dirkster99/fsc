@@ -1,6 +1,5 @@
 namespace FileSystemModels.Browse
 {
-    using FileSystemModels.Interfaces;
     using System.Threading.Tasks;
 
     /// <summary>

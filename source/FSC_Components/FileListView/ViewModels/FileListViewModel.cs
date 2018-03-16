@@ -16,7 +16,6 @@ namespace FileListView.ViewModels
     using FileSystemModels.Events;
     using FileSystemModels.Interfaces;
     using FileSystemModels.Interfaces.Bookmark;
-    using FileSystemModels.Models;
     using FileSystemModels.Models.FSItems.Base;
     using FileSystemModels.Utils;
     using UserNotification.ViewModel;

@@ -452,6 +452,7 @@
                                                  Text="{Binding ItemName}"
                                                  DisplayText="{Binding ItemDisplayString}"
                                                  RenameCommand="{Binding Path=Data.RenameCommand, Source={StaticResource DataContextProxy}}"
+                                                 ToolTip="{Binding ItemPath}"
                                                  ToolTipService.ShowOnDisabled="True"
                                                  
                                                  InvalidInputCharacters="{x:Static fvloc:Strings.ForbiddenRenameKeys}"

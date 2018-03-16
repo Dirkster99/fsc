@@ -236,9 +236,9 @@ namespace ExplorerTestLib.ViewModels
                         return;
                 }
 
-                if (browseResult != null)
-                {
-                    if (browseResult.Result != BrowseResult.Complete)
+                if (browseResult != null) // There should be at least one succesfull browse
+                {                         // to change selection and log history
+                    if (browseResult.Result == BrowseResult.Complete)
                     {
                         // Log location into history of recent locations
                         SelectedFolder = request.NewLocation.Path;
