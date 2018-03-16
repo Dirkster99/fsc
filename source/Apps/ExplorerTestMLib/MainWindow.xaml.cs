@@ -26,5 +26,15 @@
             var newPath = PathFactory.SysDefault;
             viewModel.Demo.InitializeViewModel(newPath);
         }
+
+        protected override void OnClosed(System.EventArgs e)
+        {
+            var app = this.DataContext as System.IDisposable;
+
+            if (app != null)
+                app.Dispose();
+
+            base.OnClosed(e);
+        }
     }
 }

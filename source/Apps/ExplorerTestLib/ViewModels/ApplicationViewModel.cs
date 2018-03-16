@@ -16,11 +16,13 @@ namespace ExplorerTestLib.ViewModels
     /// <summary>
     /// Class implements an application viewmodel that manages the test application.
     /// </summary>
-    public class ApplicationViewModel : Base.ViewModelBase
+    public class ApplicationViewModel : Base.ViewModelBase, IDisposable
     {
         #region fields
-        private ICommand mAddRecentFolder;
-        private ICommand mRemoveRecentFolder;
+        private bool _disposed = false;
+
+        private ICommand _AddRecentFolder;
+        private ICommand _RemoveRecentFolder;
 
         private int _SelectedTestviewModelIndex;
         private object[] _SelectedControllerTestViewModel;
@@ -28,8 +30,8 @@ namespace ExplorerTestLib.ViewModels
         private string _SettingsXml = string.Empty;
         private string _SessionXml = string.Empty;
 
-        private ICommand mTestSaveConfigCommand;
-        private ICommand mTestLoadConfigCommand;
+        private ICommand _TestSaveConfigCommand;
+        private ICommand _TestLoadConfigCommand;
         #endregion fields
 
         #region constructor
@@ -155,8 +157,8 @@ namespace ExplorerTestLib.ViewModels
         {
             get
             {
-                if (this.mTestSaveConfigCommand == null)
-                    this.mTestSaveConfigCommand = new RelayCommand<object>(
+                if (this._TestSaveConfigCommand == null)
+                    this._TestSaveConfigCommand = new RelayCommand<object>(
                          (p) =>
                          {
                              var param = p as IConfigExplorerSettings;
@@ -184,7 +186,7 @@ namespace ExplorerTestLib.ViewModels
                              }
                          });
 
-                return this.mTestSaveConfigCommand;
+                return this._TestSaveConfigCommand;
             }
         }
 
@@ -196,8 +198,8 @@ namespace ExplorerTestLib.ViewModels
         {
             get
             {
-                if (this.mTestLoadConfigCommand == null)
-                    this.mTestLoadConfigCommand = new RelayCommand<object>(
+                if (this._TestLoadConfigCommand == null)
+                    this._TestLoadConfigCommand = new RelayCommand<object>(
                          (p) =>
                          {
                              var param = p as IConfigExplorerSettings;
@@ -234,7 +236,7 @@ namespace ExplorerTestLib.ViewModels
                              param.ConfigureExplorerSettings(settings); // and apply to current instance
                          });
 
-                return this.mTestLoadConfigCommand;
+                return this._TestLoadConfigCommand;
             }
         }
 
@@ -246,13 +248,13 @@ namespace ExplorerTestLib.ViewModels
         {
             get
             {
-                if (this.mAddRecentFolder == null)
-                    this.mAddRecentFolder = new RelayCommand<object>((p) =>
+                if (this._AddRecentFolder == null)
+                    this._AddRecentFolder = new RelayCommand<object>((p) =>
                     {
                         this.AddRecentFolder_Executed(p);
                     });
 
-                return this.mAddRecentFolder;
+                return this._AddRecentFolder;
             }
         }
 
@@ -263,12 +265,12 @@ namespace ExplorerTestLib.ViewModels
         {
             get
             {
-                if (this.mRemoveRecentFolder == null)
-                    this.mRemoveRecentFolder = new RelayCommand<object>(
+                if (this._RemoveRecentFolder == null)
+                    this._RemoveRecentFolder = new RelayCommand<object>(
                          (p) => this.RemoveRecentFolder_Executed(p),
                          (p) => this.FolderView.SelectedRecentLocation != null);
 
-                return this.mRemoveRecentFolder;
+                return this._RemoveRecentFolder;
             }
         }
         #endregion Commands for tests with bookmarks
@@ -289,12 +291,44 @@ namespace ExplorerTestLib.ViewModels
             FolderTreeView.NavigateToFolder(path);
         }
 
+        #region Disposable Interfaces
         /// <summary>
-        /// Free resources (if any) when application exits.
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
         /// </summary>
-        public void ApplicationClosed()
+        public void Dispose()
         {
+            Dispose(true);
         }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the curently displayed content
+                    if (FolderView is IDisposable)
+                        (FolderView as IDisposable).Dispose();
+
+                    if (FolderTreeView is IDisposable)
+                        (FolderTreeView as IDisposable).Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion Disposable Interfaces
 
         /// <summary>
         /// Creates a new instance of a generic folder browser dialog window.

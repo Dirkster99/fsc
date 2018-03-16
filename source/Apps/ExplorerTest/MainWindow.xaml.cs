@@ -3,7 +3,6 @@
     using System.Windows;
     using ExplorerTestLib.ViewModels;
     using FileSystemModels;
-    using FileSystemModels.Models.FSItems.Base;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -17,16 +16,6 @@
             Loaded += MainWindow_Loaded;
         }
 
-        protected override void OnClosed(System.EventArgs e)
-        {
-            ApplicationViewModel app = this.DataContext as ApplicationViewModel;
-
-            if (app != null)
-                app.ApplicationClosed();
-
-            base.OnClosed(e);
-        }
-
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Loaded -= MainWindow_Loaded;
@@ -36,6 +25,16 @@
 
             var newPath = PathFactory.SysDefault;
             appVM.InitializeViewModel(newPath);
+        }
+
+        protected override void OnClosed(System.EventArgs e)
+        {
+            var app = this.DataContext as System.IDisposable;
+
+            if (app != null)
+                app.Dispose();
+
+            base.OnClosed(e);
         }
     }
 }

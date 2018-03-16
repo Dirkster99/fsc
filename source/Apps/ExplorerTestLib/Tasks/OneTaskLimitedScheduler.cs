@@ -16,18 +16,37 @@
     /// 
     /// This ensures that only the most recently queued task is processed at any time.
     /// </summary>
-    public class OneTaskLimitedScheduler : TaskScheduler
+    public class OneTaskLimitedScheduler : TaskScheduler, IDisposable
     {
-        /// <summary>Whether the current thread is processing work items.</summary>
+        #region fields
+        /// <summary>
+        /// Whether the current thread is processing work items.
+        /// </summary>
         [ThreadStatic]
         private static bool _currentThreadIsProcessingItems;
-        /// <summary>The list of tasks to be executed.</summary>
+
+        /// <summary>
+        /// The list of tasks to be executed.
+        /// </summary>
         private readonly LinkedList<Task> _tasks = new LinkedList<Task>(); // protected by lock(_tasks)
-        /// <summary>The maximum concurrency level allowed by this scheduler.</summary>
+
+        /// <summary>
+        /// The maximum concurrency level allowed by this scheduler.
+        /// </summary>
         private readonly int _maxDegreeOfParallelism;
-        /// <summary>Whether the scheduler is currently processing work items.</summary>
+
+        /// <summary>
+        /// Whether the scheduler is currently processing work items.
+        /// </summary>
         private int _delegatesQueuedOrRunning = 0; // protected by lock(_tasks)
 
+        /// <summary>
+        /// Whether the object is already disposed or not.
+        /// </summary>
+        private bool _disposed = false;
+        #endregion fields
+
+        #region constructors
         /// <summary>
         /// Initializes an instance of the LimitedConcurrencyLevelTaskScheduler class with the
         /// specified degree of parallelism.
@@ -36,8 +55,47 @@
         {
             _maxDegreeOfParallelism = 1;
         }
+        #endregion constructors
 
-        /// <summary>Queues a task to the scheduler.</summary>
+        #region methods
+        #region Disposable Interfaces
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the curently displayed content
+                    _tasks.Clear();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion Disposable Interfaces
+
+        /// <summary>
+        /// Queues a task to the scheduler.
+        /// </summary>
         /// <param name="task">The task to be queued.</param>
         protected sealed override void QueueTask(Task task)
         {
@@ -97,7 +155,9 @@
             }, null);
         }
 
-        /// <summary>Attempts to execute the specified task on the current thread.</summary>
+        /// <summary>
+        /// Attempts to execute the specified task on the current thread.
+        /// </summary>
         /// <param name="task">The task to be executed.</param>
         /// <param name="taskWasPreviouslyQueued"></param>
         /// <returns>Whether the task could be executed on the current thread.</returns>
@@ -113,7 +173,9 @@
             return base.TryExecuteTask(task);
         }
 
-        /// <summary>Attempts to remove a previously scheduled task from the scheduler.</summary>
+        /// <summary>
+        /// Attempts to remove a previously scheduled task from the scheduler.
+        /// </summary>
         /// <param name="task">The task to be removed.</param>
         /// <returns>Whether the task could be found and removed.</returns>
         protected sealed override bool TryDequeue(Task task)
@@ -121,10 +183,14 @@
             lock (_tasks) return _tasks.Remove(task);
         }
 
-        /// <summary>Gets the maximum concurrency level supported by this scheduler.</summary>
+        /// <summary>
+        /// Gets the maximum concurrency level supported by this scheduler.
+        /// </summary>
         public sealed override int MaximumConcurrencyLevel { get { return _maxDegreeOfParallelism; } }
 
-        /// <summary>Gets an enumerable of the tasks currently scheduled on this scheduler.</summary>
+        /// <summary>
+        /// Gets an enumerable of the tasks currently scheduled on this scheduler.
+        /// </summary>
         /// <returns>An enumerable of the tasks currently scheduled.</returns>
         protected sealed override IEnumerable<Task> GetScheduledTasks()
         {
@@ -140,5 +206,6 @@
                 if (lockTaken) Monitor.Exit(_tasks);
             }
         }
+        #endregion methods
     }
 }

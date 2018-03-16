@@ -15,7 +15,7 @@
     public class AppViewModel : ExplorerTestLib.ViewModels.Base.ViewModelBase, IDisposable
     {
         #region private fields
-        private bool mDisposed = false;
+        private bool _disposed = false;
         private AppLifeCycleViewModel _AppLifeCycle = null;
 
         private bool _isInitialized = false;       // application should be initialized through one method ONLY!
@@ -74,7 +74,7 @@
                 {
                     _ThemeSelectionChangedCommand = new RelayCommand<object>((p) =>
                     {
-                        if (this.mDisposed == true)
+                        if (this._disposed == true)
                             return;
 
                         object[] paramets = p as object[];
@@ -214,7 +214,7 @@
             this.AppTheme.ApplyTheme(Application.Current.MainWindow, themeDisplayName);
         }
 
-
+        #region Disposable Interfaces
         /// <summary>
         /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
         /// </summary>
@@ -227,26 +227,28 @@
         /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
         /// </summary>
         /// <param name="disposing"></param>
-        protected virtual void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
-            if (mDisposed == false)
+            if (_disposed == false)
             {
                 if (disposing == true)
                 {
-                    // Dispose of the curently displayed content
-                    ////mContent.Dispose();
+                    // Dispose of the curently displayed content if it is disposable
+                    if (_demo is IDisposable)
+                        (_demo as IDisposable).Dispose();
                 }
 
                 // There are no unmanaged resources to release, but
                 // if we add them, they need to be released here.
             }
 
-            mDisposed = true;
+            _disposed = true;
 
             //// If it is available, make the call to the
             //// base class's Dispose(Boolean) method
             ////base.Dispose(disposing);
         }
+        #endregion Disposable Interfaces
 
         /// <summary>
         /// Method is invoked when theme manager is asked

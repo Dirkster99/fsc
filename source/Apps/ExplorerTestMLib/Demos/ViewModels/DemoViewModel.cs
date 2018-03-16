@@ -1,8 +1,9 @@
 ﻿namespace ExplorerTestMLib.Demos.ViewModels
 {
+    using System;
     using System.Windows;
 
-    public class DemoViewModel : ExplorerTestLib.ViewModels.ApplicationViewModel
+    public class DemoViewModel : ExplorerTestLib.ViewModels.ApplicationViewModel, IDisposable
     {
         public DemoViewModel()
             : base()

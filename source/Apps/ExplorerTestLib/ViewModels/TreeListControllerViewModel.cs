@@ -20,14 +20,16 @@ namespace ExplorerTestLib.ViewModels
     /// 
     /// Common Sample dialogs are file pickers for load/save etc.
     /// </summary>
-    internal class TreeListControllerViewModel : ControllerBaseViewModel, ITreeListControllerViewModel
+    internal class TreeListControllerViewModel : ControllerBaseViewModel,
+                                                 ITreeListControllerViewModel, IDisposable
     {
         #region fields
         protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly SemaphoreSlim _SlowStuffSemaphore;
         private readonly OneTaskLimitedScheduler _OneTaskScheduler;
-        private readonly CancellationTokenSource _CancelToken;
+        private readonly CancellationTokenSource _CancelTokenSourc;
+        private bool _disposed = false;
         #endregion fields
 
         #region constructor
@@ -57,7 +59,7 @@ namespace ExplorerTestLib.ViewModels
         {
             _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
             _OneTaskScheduler = new OneTaskLimitedScheduler();
-            _CancelToken = new CancellationTokenSource();
+            _CancelTokenSourc = new CancellationTokenSource();
 
             FolderItemsView = FileListView.Factory.CreateFileListViewModel();
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
@@ -120,7 +122,7 @@ namespace ExplorerTestLib.ViewModels
                 var timeout = TimeSpan.FromSeconds(5);
                 var actualTask = new Task(() =>
                 {
-                    var request = new BrowseRequest(itemPath, _CancelToken.Token);
+                    var request = new BrowseRequest(itemPath, _CancelTokenSourc.Token);
 
                     var t = Task.Factory.StartNew(() => NavigateToFolderAsync(request, null),
                                                         request.CancelTok,
@@ -130,7 +132,7 @@ namespace ExplorerTestLib.ViewModels
                     if (t.Wait(timeout) == true)
                         return;
 
-                    _CancelToken.Cancel();       // Task timed out so lets abort it
+                    _CancelTokenSourc.Cancel();       // Task timed out so lets abort it
                     return;                     // Signal timeout here...
                 });
 
@@ -146,6 +148,43 @@ namespace ExplorerTestLib.ViewModels
                 Logger.Error(e);
             }
         }
+
+        #region Disposable Interfaces
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the curently displayed content
+                    _OneTaskScheduler.Dispose();
+                    _SlowStuffSemaphore.Dispose();
+                    _CancelTokenSourc.Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion Disposable Interfaces
 
         /// <summary>
         /// Master controler interface method to navigate all views
@@ -272,7 +311,7 @@ namespace ExplorerTestLib.ViewModels
                     var timeout = TimeSpan.FromSeconds(5);
                     var actualTask = new Task(() =>
                     {
-                        var request = new BrowseRequest(location, _CancelToken.Token);
+                        var request = new BrowseRequest(location, _CancelTokenSourc.Token);
 
                         var t = Task.Factory.StartNew(() => NavigateToFolderAsync(request, sender),
                                                             request.CancelTok,
@@ -282,7 +321,7 @@ namespace ExplorerTestLib.ViewModels
                         if (t.Wait(timeout) == true)
                             return;
 
-                        _CancelToken.Cancel();           // Task timed out so lets abort it
+                        _CancelTokenSourc.Cancel();           // Task timed out so lets abort it
                         return;                         // Signal timeout here...
                     });
 
