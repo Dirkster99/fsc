@@ -20,6 +20,8 @@ namespace ExplorerTestLib.ViewModels
     internal class ListControllerViewModel : ControllerBaseViewModel, IListControllerViewModel
     {
         #region fields
+        protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly SemaphoreSlim _SlowStuffSemaphore;
         private readonly OneTaskLimitedScheduler _OneTaskScheduler;
         private readonly CancellationTokenSource _CancelToken;
@@ -120,10 +122,11 @@ namespace ExplorerTestLib.ViewModels
             }
             catch (System.AggregateException e)
             {
-
+                Logger.Error(e);
             }
             catch (Exception e)
             {
+                Logger.Error(e);
             }
         }
 

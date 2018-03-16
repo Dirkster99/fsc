@@ -11,7 +11,6 @@ namespace ExplorerTestLib.ViewModels
     using FileSystemModels.Events;
     using FileSystemModels.Interfaces;
     using FileSystemModels.Interfaces.Bookmark;
-    using FileSystemModels.Models;
     using FilterControlsLib.Interfaces;
     using FolderBrowser.Interfaces;
 
@@ -24,6 +23,8 @@ namespace ExplorerTestLib.ViewModels
     internal class TreeListControllerViewModel : ControllerBaseViewModel, ITreeListControllerViewModel
     {
         #region fields
+        protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private readonly SemaphoreSlim _SlowStuffSemaphore;
         private readonly OneTaskLimitedScheduler _OneTaskScheduler;
         private readonly CancellationTokenSource _CancelToken;
@@ -138,10 +139,11 @@ namespace ExplorerTestLib.ViewModels
             }
             catch (System.AggregateException e)
             {
-
+                Logger.Error(e);
             }
             catch (Exception e)
             {
+                Logger.Error(e);
             }
         }
 
@@ -289,11 +291,11 @@ namespace ExplorerTestLib.ViewModels
                 }
                 catch (System.AggregateException ex)
                 {
-
+                    Logger.Error(ex);
                 }
                 catch (Exception ex)
                 {
-
+                    Logger.Error(ex);
                 }
             }
             else
