@@ -17,17 +17,17 @@ namespace ExplorerLib.ViewModels
     /// <summary>
     /// Class implements an application viewmodel that manages the test application.
     /// </summary>
-    public class ApplicationViewModel : Base.ViewModelBase
+    public class ApplicationViewModel : Base.ViewModelBase, IDisposable
     {
         #region fields
         private ICommand mAddRecentFolder;
-        private ICommand mRemoveRecentFolder;
 
         private string _SettingsXml = string.Empty;
         private string _SessionXml = string.Empty;
 
         private ICommand mTestSaveConfigCommand;
         private ICommand mTestLoadConfigCommand;
+        private bool _disposed;
         #endregion fields
 
         #region constructor
@@ -203,22 +203,6 @@ namespace ExplorerLib.ViewModels
             return this.mAddRecentFolder;
           }
         }
-        
-        /// <summary>
-        /// Remove a folder from the list of recent folders.
-        /// </summary>
-        public ICommand RemoveRecentFolder
-        {
-          get
-          {
-////            if (this.mRemoveRecentFolder == null)
-////              this.mRemoveRecentFolder = new RelayCommand<object>(
-////                   (p) => this.RemoveRecentFolder_Executed(p),
-////                   (p) => this.FolderView.SelectedRecentLocation != null);
-      
-            return this.mRemoveRecentFolder;
-          }
-        }
         #endregion Commands for tests with bookmarks
         #endregion properties
 
@@ -233,13 +217,40 @@ namespace ExplorerLib.ViewModels
             FolderTreeView.NavigateToFolder(path);
         }
 
+        #region Disposable Interfaces
         /// <summary>
-        /// Free resources (if any) when application exits.
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
         /// </summary>
-        public void ApplicationClosed()
+        public void Dispose()
         {
-
+            Dispose(true);
         }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    if (FolderTreeView is IDisposable)
+                        (FolderTreeView as IDisposable).Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion Disposable Interfaces
 
         private void AddRecentFolder_Executed(object p)
         {

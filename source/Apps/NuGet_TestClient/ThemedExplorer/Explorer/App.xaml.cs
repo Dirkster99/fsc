@@ -157,29 +157,6 @@
             {
                 Logger.Error(exp);
             }
-
-            /***
-                        try
-                        {
-                            Application.Current.MainWindow = mMainWin = new MainWindow();
-                            ShutdownMode = System.Windows.ShutdownMode.OnLastWindowClose;
-
-                            AppCore.CreateAppDataFolder();
-
-                            if (mMainWin != null && app != null)
-                            {
-                                mMainWin.Closing += OnClosing;
-
-
-                                ConstructMainWindowSession(app, mMainWin);
-                                mMainWin.Show();
-                            }
-                        }
-                        catch (Exception exp)
-                        {
-                            Logger.Error(exp);
-                        }
-            ***/
         }
 
         /// <summary>
@@ -241,6 +218,13 @@
                     {
                         // (other than exception and error handling)
                         wsVM.AppLifeCycle.OnRequestClose(true);
+
+                        var disposeAble = (wsVM as IDisposable); // Dispose of ViewModels
+                        if (disposeAble != null)
+                        {
+                            disposeAble.Dispose();
+                        }
+                        base.MainWindow.DataContext = null;
 
                         e.Cancel = false;
                     }

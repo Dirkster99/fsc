@@ -26,6 +26,7 @@ namespace ExplorerLib.ViewModels
 
         private ICommand mTestSaveConfigCommand;
         private ICommand mTestLoadConfigCommand;
+        private bool _disposed=false;
         #endregion fields
 
         #region constructor
@@ -215,13 +216,40 @@ namespace ExplorerLib.ViewModels
             FolderTreeView.NavigateToFolder(path);
         }
 
+        #region Disposable Interfaces
         /// <summary>
-        /// Free resources (if any) when application exits.
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
         /// </summary>
-        public void ApplicationClosed()
+        public void Dispose()
         {
-
+            Dispose(true);
         }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    if (FolderTreeView is IDisposable)
+                        (FolderTreeView as IDisposable).Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion Disposable Interfaces
 
         private void AddRecentFolder_Executed(object p)
         {

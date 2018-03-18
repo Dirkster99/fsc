@@ -1,5 +1,6 @@
 ﻿namespace Explorer
 {
+    using System;
     using System.Windows;
 
     /// <summary>
@@ -23,6 +24,18 @@
 
             var newPath = FileSystemModels.PathFactory.SysDefault;
             appVM.InitializeViewModel(newPath);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            var disposeAble = (this.DataContext as IDisposable); // Dispose of ViewModels
+            if (disposeAble != null)
+            {
+                disposeAble.Dispose();
+            }
+            this.DataContext = null;
+
+            base.OnClosed(e);
         }
     }
 }
