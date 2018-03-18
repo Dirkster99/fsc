@@ -50,6 +50,11 @@ Other features include:
   - A forward and backward history control to navigated back and forth between recently visited folders
   - A set of folder short-cut buttons to navigate directly to a folder.
 
+## Build Status of NuGet Demo Appliactions
+- [![Build status](https://ci.appveyor.com/api/projects/status/v9vv5edinqwneoiy?svg=true)](https://ci.appveyor.com/project/Dirkster99/fsc-062w1) <a href="https://github.com/Dirkster99/fsc/tree/master/source/Apps/NuGet_TestClient/Explorer">Explorer (NuGet Demo Application)</a>
+
+- [![Build status](https://ci.appveyor.com/api/projects/status/nhono3ru0xbsmsof?svg=true)](https://ci.appveyor.com/project/Dirkster99/fsc-a1uv6) <a href="https://github.com/Dirkster99/fsc/tree/master/source/Apps/NuGet_TestClient/ThemedExplorer">Themed Explorer (NuGet Demo Application)</a>
+
 ## Limitations ##
 
   - Universal Control (UNC) network share paths are not supported
