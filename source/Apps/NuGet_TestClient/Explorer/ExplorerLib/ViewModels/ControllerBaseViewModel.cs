@@ -66,6 +66,15 @@
                                 if (item == null)  // Item does not appear to be what we need
                                     return;
 
+                                // Let's try and break recursion here ...
+                                if (NaviHistory.SelectedItem != null)
+                                {
+                                    if (item.CompareTo(NaviHistory.SelectedItem) == 0)
+                                    {
+                                        return;  // 'New' selected item is previously selected item
+                                    }
+                                }
+
                                 int idx = 0;       // Search the selected item in ViewModel and select it
                                 bool itemFound = false;
                                 foreach (var histItem in NaviHistory.Locations)
@@ -108,7 +117,10 @@
                     _ForwardCommand = new RelayCommand<object>((p) =>
                     {
                         if (NaviHistory.CanForward == true)
-                            NaviHistory.Forward();
+                        {
+                            if (NaviHistory.Forward() == true)
+                                NavigateToFolder(NaviHistory.SelectedItem);
+                        }
                     },
                     (p) => NaviHistory.CanForward);
                 }
@@ -129,7 +141,10 @@
                     _BackwardCommand = new RelayCommand<object>((p) =>
                     {
                         if (NaviHistory.CanBackward == true)
-                            NaviHistory.Backward();
+                        {
+                            if (NaviHistory.Backward() == true)
+                                NavigateToFolder(NaviHistory.SelectedItem);
+                        }
                     },
                     (p) => NaviHistory.CanBackward);
                 }
@@ -155,7 +170,10 @@
                             var dirItem = System.IO.Directory.GetParent(item);
 
                             if (dirItem != null)
+                            {
                                 NaviHistory.Forward(PathFactory.Create(dirItem.FullName));
+                                NavigateToFolder(NaviHistory.SelectedItem);
+                            }
                         }
                         catch
                         {

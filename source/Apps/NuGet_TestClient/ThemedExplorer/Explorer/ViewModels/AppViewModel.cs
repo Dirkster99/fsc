@@ -180,7 +180,7 @@
         /// <summary>
         /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
         /// </summary>
-        public void Dispose()
+        public new void Dispose()
         {
             Dispose(true);
         }
@@ -222,7 +222,7 @@
         /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
         /// </summary>
         /// <param name="disposing"></param>
-        protected virtual void Dispose(bool disposing)
+        protected new void Dispose(bool disposing)
         {
             if (mDisposed == false)
             {
@@ -240,7 +240,7 @@
 
             //// If it is available, make the call to the
             //// base class's Dispose(Boolean) method
-            ////base.Dispose(disposing);
+            base.Dispose(disposing);
         }
 
         /// <summary>
