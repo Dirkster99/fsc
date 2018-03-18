@@ -20,10 +20,10 @@ This project contains the source code for an implementation of controls that are
 A closely related project is the <img src="https://github.com/Dirkster99/Docu/blob/master/HistoryControlLib/Branch_32x.png?raw=true" width="24"/> <a href="https://github.com/Dirkster99/HistoryControlLib">HistoryControlLib</a>
 project which is also (via NuGet) part of the test applications in this repository.
 
-- [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FileSystemModels.svg)](http://nuget.org/packages/Dirkster.FileSystemModels) FileSystemModels
+- [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FolderBrowser.svg)](http://nuget.org/packages/Dirkster.FolderBrowser) FolderBrowser
 - [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FileListView.svg)](http://nuget.org/packages/Dirkster.FileListView) FileListView
 - [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FilterControlsLib.svg)](http://nuget.org/packages/Dirkster.FilterControlsLib) FilterControlsLib
-- [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FolderBrowser.svg)](http://nuget.org/packages/Dirkster.FolderBrowser) FolderBrowser
+- [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FileSystemModels.svg)](http://nuget.org/packages/Dirkster.FileSystemModels) FileSystemModels
 - [![NuGet](https://img.shields.io/nuget/dt/Dirkster.FolderControlsLib.svg)](http://nuget.org/packages/Dirkster.FolderControlsLib) FolderControlsLib
 
 The project source code in this repository contains the above control projects and also demos these features:
