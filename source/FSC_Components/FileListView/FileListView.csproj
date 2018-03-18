@@ -81,6 +81,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\UpdateBindingConverter.cs" />
     <Compile Include="Factory.cs" />
     <Compile Include="Interfaces\IFileOpenEventSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

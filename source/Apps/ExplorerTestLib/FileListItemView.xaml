@@ -16,11 +16,13 @@
              xmlns:EditInPlace="clr-namespace:InplaceEditBoxLib.Views;assembly=InplaceEditBoxLib"
              xmlns:view ="clr-namespace:UserNotification.View;assembly=UserNotification"
              xmlns:fsconv="clr-namespace:FileSystemModels.Converters;assembly=FileSystemModels"
+             xmlns:conv="clr-namespace:FileListView.Converters;assembly=FileListView"
 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="400">
     <Grid Grid.Column="0">
         <Grid.Resources>
+            <conv:UpdateBindingConverter x:Key="UpdateBindingConverter" />
             <fsconv:BrowseItemTypeToShellImageConverter x:Key="FolderBrowseItemTypeToShellImageConverter" />
         </Grid.Resources>
         <Grid.RowDefinitions>
@@ -358,7 +360,6 @@
                                        Grid.Row="3" Margin="3">
 
             <ListBox xmlns:bindLocal="clr-namespace:FileListView.Views;assembly=FileListView"
-                     ItemsSource="{Binding CurrentItems}"
                      SelectedItem="{Binding SelectedItem}"
   
                      fvbehav:DoubleClickSelectorItem.DoubleClickItemCommand="{Binding Path=NavigateDownCommand}"
@@ -368,6 +369,15 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Auto"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                    >
+                <ListBox.ItemsSource>
+                    <MultiBinding Converter="{StaticResource UpdateBindingConverter}">
+                        <!-- First & Second argument control update of binding on 3rd argument-->
+                        <Binding Path="IsLoaded"  RelativeSource="{RelativeSource Self}" />
+                        <Binding Path="IsBrowsing" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                        <Binding Path="CurrentItems" UpdateSourceTrigger="PropertyChanged" Mode="OneWay" />
+                    </MultiBinding>
+                </ListBox.ItemsSource>
+
                 <ListBox.Resources>
                     <BooleanToVisibilityConverter x:Key="boolToVis" />
                     <bindLocal:BindingProxy  x:Key="DataContextProxy"  Data="{Binding}" />
