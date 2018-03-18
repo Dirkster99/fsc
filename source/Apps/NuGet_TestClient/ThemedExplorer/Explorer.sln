@@ -4,15 +4,6 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Explorer", "Explorer\Explorer.csproj", "{F182E3FE-5043-47D5-80C2-56C234A7548D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Binaries", "Binaries", "{A4CE1936-2029-44AC-986F-89EFCABA62E4}"
-	ProjectSection(SolutionItems) = preProject
-		Binaries\Microsoft.Expression.Interactions.dll = Binaries\Microsoft.Expression.Interactions.dll
-		Binaries\MLib.dll = Binaries\MLib.dll
-		Binaries\MWindowInterfacesLib.dll = Binaries\MWindowInterfacesLib.dll
-		Binaries\MWindowLib.dll = Binaries\MWindowLib.dll
-		Binaries\System.Windows.Interactivity.dll = Binaries\System.Windows.Interactivity.dll
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Components", "Components", "{2EB845EC-3FC8-4CCF-9848-C95F06F22BBA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Settings", "Settings", "{8A519E43-424D-482A-9DAC-D19B398B1BA4}"

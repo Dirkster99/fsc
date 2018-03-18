@@ -73,22 +73,22 @@
     <Reference Include="HistoryControlLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dirkster.HistoryControlLib.1.0.0\lib\net4\HistoryControlLib.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Expression.Interactions">
-      <HintPath>..\Binaries\Microsoft.Expression.Interactions.dll</HintPath>
+    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.MWindowLib.1.0.4.1\lib\net452\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
-    <Reference Include="MLib">
-      <HintPath>..\Binaries\MLib.dll</HintPath>
+    <Reference Include="MLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.MLib.1.0.4\lib\net4\MLib.dll</HintPath>
     </Reference>
-    <Reference Include="MWindowInterfacesLib">
-      <HintPath>..\Binaries\MWindowInterfacesLib.dll</HintPath>
+    <Reference Include="MWindowInterfacesLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.MWindowLib.1.0.4.1\lib\net452\MWindowInterfacesLib.dll</HintPath>
     </Reference>
-    <Reference Include="MWindowLib">
-      <HintPath>..\Binaries\MWindowLib.dll</HintPath>
+    <Reference Include="MWindowLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.MWindowLib.1.0.4.1\lib\net452\MWindowLib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity">
-      <HintPath>..\Binaries\System.Windows.Interactivity.dll</HintPath>
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.MWindowLib.1.0.4.1\lib\net452\System.Windows.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
