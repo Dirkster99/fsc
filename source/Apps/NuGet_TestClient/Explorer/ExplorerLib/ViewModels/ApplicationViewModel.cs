@@ -20,7 +20,6 @@ namespace ExplorerLib.ViewModels
     {
         #region fields
         private ICommand mAddRecentFolder;
-        private ICommand mRemoveRecentFolder;
 
         private string _SettingsXml = string.Empty;
         private string _SessionXml = string.Empty;
@@ -200,22 +199,6 @@ namespace ExplorerLib.ViewModels
               });
         
             return this.mAddRecentFolder;
-          }
-        }
-        
-        /// <summary>
-        /// Remove a folder from the list of recent folders.
-        /// </summary>
-        public ICommand RemoveRecentFolder
-        {
-          get
-          {
-////            if (this.mRemoveRecentFolder == null)
-////              this.mRemoveRecentFolder = new RelayCommand<object>(
-////                   (p) => this.RemoveRecentFolder_Executed(p),
-////                   (p) => this.FolderView.SelectedRecentLocation != null);
-      
-            return this.mRemoveRecentFolder;
           }
         }
         #endregion Commands for tests with bookmarks

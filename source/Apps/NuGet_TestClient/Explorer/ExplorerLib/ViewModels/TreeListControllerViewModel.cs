@@ -1,15 +1,16 @@
 namespace ExplorerLib.ViewModels
 {
+    using System;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using ExplorerLib.Interfaces;
+    using ExplorerLib.Tasks;
     using FileListView.Interfaces;
     using FileSystemModels.Browse;
     using FileSystemModels.Events;
     using FileSystemModels.Interfaces;
     using FileSystemModels.Interfaces.Bookmark;
-    using FileSystemModels.Models;
     using FilterControlsLib.Interfaces;
     using FolderBrowser.Interfaces;
 
@@ -19,12 +20,16 @@ namespace ExplorerLib.ViewModels
     /// 
     /// Common Sample dialogs are file pickers for load/save etc.
     /// </summary>
-    internal class TreeListControllerViewModel : ControllerBaseViewModel, ITreeListControllerViewModel
+    internal class TreeListControllerViewModel : ControllerBaseViewModel,
+                                                 ITreeListControllerViewModel, IDisposable
     {
         #region fields
-        protected readonly object _LockObject;
+        protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly SemaphoreSlim _SlowStuffSemaphore;
+        private readonly OneTaskLimitedScheduler _OneTaskScheduler;
+        private readonly CancellationTokenSource _CancelTokenSourc;
+        private bool _disposed = false;
         #endregion fields
 
         #region constructor
@@ -36,14 +41,12 @@ namespace ExplorerLib.ViewModels
           : this()
         {
             // Remove the standard constructor event that is fired when a user opens a file
-            //this.FolderItemsView.OnFileOpen -= this.FolderItemsView_OnFileOpen;
             WeakEventManager<IFileOpenEventSource, FileOpenEventArgs>
                 .RemoveHandler(FolderItemsView, "OnFileOpen", FolderItemsView_OnFileOpen);
 
             // ...and establish a new link (if any)
             if (onFileOpenMethod != null)
             {
-                //this.FolderItemsView.OnFileOpen += onFileOpenMethod;
                 WeakEventManager<IFileOpenEventSource, FileOpenEventArgs>
                     .AddHandler(FolderItemsView, "OnFileOpen", onFileOpenMethod);
             }
@@ -55,49 +58,42 @@ namespace ExplorerLib.ViewModels
         public TreeListControllerViewModel()
         {
             _SlowStuffSemaphore = new SemaphoreSlim(1, 1);
-            _LockObject = new object();
+            _OneTaskScheduler = new OneTaskLimitedScheduler();
+            _CancelTokenSourc = new CancellationTokenSource();
 
-            FolderItemsView = FileListView.Factory.CreateFileListViewModel(new BrowseNavigation());
+            FolderItemsView = FileListView.Factory.CreateFileListViewModel();
             FolderTextPath = FolderControlsLib.Factory.CreateFolderComboBoxVM();
             RecentFolders = FileSystemModels.Factory.CreateBookmarksViewModel();
             TreeBrowser = FolderBrowser.FolderBrowserFactory.CreateBrowserViewModel(false);
 
             // This is fired when the user selects a new folder bookmark from the drop down button
-            //RecentFolders.BrowseEvent += FolderTextPath_BrowseEvent;
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
                 .AddHandler(RecentFolders, "BrowseEvent", FolderTextPath_BrowseEvent);
 
             // This is fired when the text path in the combobox changes to another existing folder
-            //FolderTextPath.BrowseEvent += FolderTextPath_BrowseEvent;
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
                 .AddHandler(FolderTextPath, "BrowseEvent", FolderTextPath_BrowseEvent);
 
             Filters = FilterControlsLib.Factory.CreateFilterComboBoxViewModel();
-            //Filters.OnFilterChanged += this.FileViewFilter_Changed;
             WeakEventManager<IFilterComboBoxViewModel, FilterChangedEventArgs>
                 .AddHandler(Filters, "OnFilterChanged", FileViewFilter_Changed);
 
             // This is fired when the current folder in the listview changes to another existing folder
-            //this.FolderItemsView.BrowseEvent += FolderTextPath_BrowseEvent;
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
                 .AddHandler(FolderItemsView, "BrowseEvent", FolderTextPath_BrowseEvent);
 
             // Event fires when the user requests to add a folder into the list of recently visited folders
-            //FolderItemsView.BookmarkFolder.RequestEditBookmarkedFolders += this.FolderItemsView_RequestEditBookmarkedFolders;
             WeakEventManager<IEditBookmarks, EditBookmarkEvent>
                 .AddHandler(FolderItemsView.BookmarkFolder, "RequestEditBookmarkedFolders", FolderItemsView_RequestEditBookmarkedFolders);
 
             // This event is fired when a user opens a file
-            //this.FolderItemsView.OnFileOpen += this.FolderItemsView_OnFileOpen;
             WeakEventManager<IFileOpenEventSource, FileOpenEventArgs>
                 .AddHandler(FolderItemsView, "OnFileOpen", FolderItemsView_OnFileOpen);
 
-            //TreeBrowser.BrowseEvent += FolderTextPath_BrowseEvent;
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
                 .AddHandler(TreeBrowser, "BrowseEvent", FolderTextPath_BrowseEvent);
 
             // Event fires when the user requests to add a folder into the list of recently visited folders
-            //TreeBrowser.BookmarkFolder.RequestEditBookmarkedFolders += FolderItemsView_RequestEditBookmarkedFolders;
             WeakEventManager<IEditBookmarks, EditBookmarkEvent>
                 .AddHandler(TreeBrowser.BookmarkFolder, "RequestEditBookmarkedFolders", FolderItemsView_RequestEditBookmarkedFolders);
         }
@@ -120,53 +116,159 @@ namespace ExplorerLib.ViewModels
         /// <param name="requestor"</param>
         public override void NavigateToFolder(IPathModel itemPath)
         {
-            // XXX Todo Keep task reference, support cancel, and remove on end?
-            var t = NavigateToFolderAsync(itemPath, null);
+            try
+            {
+                // XXX Todo Keep task reference, support cancel, and remove on end?
+                var timeout = TimeSpan.FromSeconds(5);
+                var actualTask = new Task(() =>
+                {
+                    var request = new BrowseRequest(itemPath, _CancelTokenSourc.Token);
+
+                    var t = Task.Factory.StartNew(() => NavigateToFolderAsync(request, null),
+                                                        request.CancelTok,
+                                                        TaskCreationOptions.LongRunning,
+                                                        _OneTaskScheduler);
+
+                    if (t.Wait(timeout) == true)
+                        return;
+
+                    _CancelTokenSourc.Cancel();       // Task timed out so lets abort it
+                    return;                     // Signal timeout here...
+                });
+
+                actualTask.Start();
+                actualTask.Wait();
+            }
+            catch (System.AggregateException e)
+            {
+                Logger.Error(e);
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+            }
         }
+
+        #region Disposable Interfaces
+        /// <summary>
+        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (_disposed == false)
+            {
+                if (disposing == true)
+                {
+                    // Dispose of the curently displayed content
+                    _OneTaskScheduler.Dispose();
+                    _SlowStuffSemaphore.Dispose();
+                    _CancelTokenSourc.Dispose();
+                }
+
+                // There are no unmanaged resources to release, but
+                // if we add them, they need to be released here.
+            }
+
+            _disposed = true;
+
+            //// If it is available, make the call to the
+            //// base class's Dispose(Boolean) method
+            ////base.Dispose(disposing);
+        }
+        #endregion Disposable Interfaces
 
         /// <summary>
         /// Master controler interface method to navigate all views
         /// to the folder indicated in <paramref name="folder"/>
         /// - updates all related viewmodels.
         /// </summary>
-        /// <param name="itemPath"></param>
-        /// <param name="requestor"</param>
-        private async Task NavigateToFolderAsync(IPathModel itemPath, object sender)
+        /// <param name="request"></param>
+        private async Task<FinalBrowseResult> NavigateToFolderAsync(BrowseRequest request,
+                                                                    object sender)
         {
             // Make sure the task always processes the last input but is not started twice
             await _SlowStuffSemaphore.WaitAsync();
             try
             {
-                lock (_LockObject)
-                {
-                    TreeBrowser.SetExternalBrowsingState(true);
-                    FolderItemsView.SetExternalBrowsingState(true);
-                    FolderTextPath.SetExternalBrowsingState(true);
-                }
+                var newPath = request.NewLocation;
+                var cancel = request.CancelTok;
 
-                bool? browseResult = null;
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
+
+                TreeBrowser.SetExternalBrowsingState(true);
+                FolderItemsView.SetExternalBrowsingState(true);
+                FolderTextPath.SetExternalBrowsingState(true);
+
+                FinalBrowseResult browseResult = null;
 
                 // Navigate TreeView to this file system location
                 if (TreeBrowser != sender)
-                    browseResult = await TreeBrowser.NavigateToAsync(itemPath);
+                {
+                    browseResult = await TreeBrowser.NavigateToAsync(request);
+
+                    if (cancel != null)
+                        cancel.ThrowIfCancellationRequested();
+
+                    if (browseResult.Result != BrowseResult.Complete)
+                        return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
+                }
 
                 // Navigate Folder ComboBox to this folder
-                if (FolderTextPath != sender && browseResult != false)
-                    browseResult = await FolderTextPath.NavigateToAsync(itemPath);
+                if (FolderTextPath != sender)
+                {
+                    browseResult = await FolderTextPath.NavigateToAsync(request);
+
+                    if (cancel != null)
+                        cancel.ThrowIfCancellationRequested();
+
+                    if (browseResult.Result != BrowseResult.Complete)
+                        return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
+                }
+
+                if (cancel != null)
+                    cancel.ThrowIfCancellationRequested();
 
                 // Navigate Folder/File ListView to this folder
-                if (FolderItemsView != sender && browseResult != false)
-                    browseResult = await FolderItemsView.NavigateToAsync(itemPath);
-
-                if (browseResult == true)
+                if (FolderItemsView != sender)
                 {
-                    SelectedFolder = itemPath.Path;
+                    browseResult = await FolderItemsView.NavigateToAsync(request);
 
-                    // Log location into history of recent locations
-                    NaviHistory.Forward(itemPath);
+                    if (cancel != null)
+                        cancel.ThrowIfCancellationRequested();
+
+                    if (browseResult.Result != BrowseResult.Complete)
+                        return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
                 }
+
+                if (browseResult != null)
+                {
+                    if (browseResult.Result == BrowseResult.Complete)
+                    {
+                        SelectedFolder = newPath.Path;
+
+                        // Log location into history of recent locations
+                        NaviHistory.Forward(newPath);
+                    }
+                }
+
+                return browseResult;
             }
-            catch { }
+            catch (Exception exp)
+            {
+                var result = FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
+                result.UnexpectedError = exp;
+                return result;
+            }
             finally
             {
                 TreeBrowser.SetExternalBrowsingState(true);
@@ -204,13 +306,42 @@ namespace ExplorerLib.ViewModels
             if (e.IsBrowsing == false && e.Result == BrowseResult.Complete)
             {
                 // XXX Todo Keep task reference, support cancel, and remove on end?
-                var t = NavigateToFolderAsync(location, sender);
+                try
+                {
+                    var timeout = TimeSpan.FromSeconds(5);
+                    var actualTask = new Task(() =>
+                    {
+                        var request = new BrowseRequest(location, _CancelTokenSourc.Token);
+
+                        var t = Task.Factory.StartNew(() => NavigateToFolderAsync(request, sender),
+                                                            request.CancelTok,
+                                                            TaskCreationOptions.LongRunning,
+                                                            _OneTaskScheduler);
+
+                        if (t.Wait(timeout) == true)
+                            return;
+
+                        _CancelTokenSourc.Cancel();           // Task timed out so lets abort it
+                        return;                         // Signal timeout here...
+                    });
+
+                    actualTask.Start();
+                    actualTask.Wait();
+                }
+                catch (System.AggregateException ex)
+                {
+                    Logger.Error(ex);
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex);
+                }
             }
             else
             {
                 if (e.IsBrowsing == true)
                 {
-                    // The sender has messaged: "I am chnaging location..."
+                    // The sender has messaged: "I am changing location..."
                     // So, we set this property to tell the others:
                     // 1) Don't change your location now (eg.: Disable UI)
                     // 2) We'll be back to tell you the location when we know it
