@@ -51,8 +51,7 @@ Other features include:
   - A set of folder short-cut buttons to navigate directly to a folder.
 
 ## Build Status of NuGet Demo Appliactions
-- [![Build status](https://ci.appveyor.com/api/projects/status/v9vv5edinqwneoiy?svg=true)](https://ci.appveyor.com/project/Dirkster99/fsc-062w1) Explorer (NuGet Demo Application)
-
+- [![Build status](https://ci.appveyor.com/api/projects/status/v9vv5edinqwneoiy?svg=true)](https://ci.appveyor.com/project/Dirkster99/fsc-062w1) <a href="https://github.com/Dirkster99/fsc/tree/master/source/Apps/NuGet_TestClient/Explorer">Explorer (NuGet Demo Application)</a>
 
 ## Limitations ##
 
