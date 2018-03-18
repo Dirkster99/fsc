@@ -20,16 +20,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings", "Components\Sett
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SettingsModel", "Components\Settings\SettingsModel\SettingsModel.csproj", "{9B0BA841-5A2F-4ED3-A908-253DBCA70E77}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Binaries", "Binaries", "{F2FA9A2A-BC0C-45DC-BF9B-CEDCA751235C}"
-	ProjectSection(SolutionItems) = preProject
-		Binaries\Microsoft.Expression.Interactions.dll = Binaries\Microsoft.Expression.Interactions.dll
-		Binaries\MLib.dll = Binaries\MLib.dll
-		Binaries\MWindowDialogLib.dll = Binaries\MWindowDialogLib.dll
-		Binaries\MWindowInterfacesLib.dll = Binaries\MWindowInterfacesLib.dll
-		Binaries\MWindowLib.dll = Binaries\MWindowLib.dll
-		Binaries\System.Windows.Interactivity.dll = Binaries\System.Windows.Interactivity.dll
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FSC_Components", "FSC_Components", "{A6DFB022-E466-46DF-9A0A-97FB6BA37A6C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileListView", "FSC_Components\FileListView\FileListView.csproj", "{735CF8EC-A4EF-49A2-BC72-EC360A0185A4}"

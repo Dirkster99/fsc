@@ -739,6 +739,7 @@ namespace FileListView.ViewModels
                                                  bool browseEvent)
         {
             Logger.DebugFormat("PopulateView method");
+            Logger.DebugFormat("Populating view for request id: {0} - '{1}'", request.RequestId, request.NewLocation.Path);
 
             IPathModel newPathToNavigateTo = request.NewLocation;
 

@@ -50,7 +50,6 @@
             </TabControl>
 
             <GridSplitter Grid.Column="1"
-                          Background="Transparent"
                           Margin="3"
                           HorizontalAlignment="Stretch" Width="6" />
 
