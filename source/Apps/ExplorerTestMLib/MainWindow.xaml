@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                            
         xmlns:MWindow="clr-namespace:MWindowLib;assembly=MWindowLib"
-        xmlns:behav="clr-namespace:FileListView.Views.Behavior;assembly=FileListView"
+        xmlns:behav="clr-namespace:ExplorerTestMLib.Demos.Behaviors"
                      
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"

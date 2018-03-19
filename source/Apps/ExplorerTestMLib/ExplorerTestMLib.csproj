@@ -37,9 +37,6 @@
     <Reference Include="DropDownButtonLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.DropDownButtonLib.1.0.4\lib\net4\DropDownButtonLib.dll</HintPath>
     </Reference>
-    <Reference Include="HistoryControlLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.HistoryControlLib.1.0.0\lib\net4\HistoryControlLib.dll</HintPath>
-    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -57,23 +54,14 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.MWindowLib.1.0.4.1\lib\net452\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="UserNotification, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.UserNotifications.1.4.0\lib\net451\UserNotification.dll</HintPath>
-    </Reference>
-    <Reference Include="WatermarkControlsLib, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.WatermarkControlsLib.1.0.1\lib\net4\WatermarkControlsLib.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -84,6 +72,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Demos\Behaviors\SelectionChangedBehavior.cs" />
     <Compile Include="Demos\ViewModels\DemoViewModel.cs" />
     <Compile Include="Demos\Views\FolderBrowserDialog.xaml.cs">
       <DependentUpon>FolderBrowserDialog.xaml</DependentUpon>
@@ -141,6 +130,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\FSC_Components\FolderBrowser\FolderBrowser.csproj">
+      <Project>{7d4bd5f8-a98e-4966-abbd-cbe202dfbef7}</Project>
+      <Name>FolderBrowser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BindToMLib\BindToMLib.csproj">
       <Project>{dec77495-6e48-4f66-b22b-e9ba2ca6e257}</Project>
       <Name>BindToMLib</Name>
@@ -149,25 +142,9 @@
       <Project>{abd0c546-0168-49b9-9c27-c7211293d461}</Project>
       <Name>ExplorerTestLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\FSC_Components\FileListView\FileListView.csproj">
-      <Project>{735cf8ec-a4ef-49a2-bc72-ec360a0185a4}</Project>
-      <Name>FileListView</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\FSC_Components\FileSystemModels\FileSystemModels.csproj">
       <Project>{391639c4-5c43-4391-9465-27686e82c33f}</Project>
       <Name>FileSystemModels</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FSC_Components\FilterControlsLib\FilterControlsLib.csproj">
-      <Project>{52f61815-3ec5-461b-bce0-ab80b1c5b229}</Project>
-      <Name>FilterControlsLib</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FSC_Components\FolderBrowser\FolderBrowser.csproj">
-      <Project>{7d4bd5f8-a98e-4966-abbd-cbe202dfbef7}</Project>
-      <Name>FolderBrowser</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FSC_Components\FolderControlsLib\FolderControlsLib.csproj">
-      <Project>{511fa2d6-2022-4de1-9a3e-731e04e8f10c}</Project>
-      <Name>FolderControlsLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Components\ServiceLocator\ServiceLocator.csproj">
       <Project>{252126d1-e1d9-49c3-910b-fcf2266265ef}</Project>
