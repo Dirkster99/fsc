@@ -39,9 +39,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -82,10 +79,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FileListView\FileListView.csproj">
-      <Project>{735CF8EC-A4EF-49A2-BC72-EC360A0185A4}</Project>
-      <Name>FileListView</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FileSystemModels\FileSystemModels.csproj">
       <Project>{391639c4-5c43-4391-9465-27686e82c33f}</Project>
       <Name>FileSystemModels</Name>
