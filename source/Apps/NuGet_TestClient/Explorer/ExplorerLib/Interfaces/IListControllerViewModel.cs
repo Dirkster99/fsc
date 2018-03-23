@@ -5,6 +5,7 @@ namespace ExplorerLib.Interfaces
     using FileSystemModels.Interfaces.Bookmark;
     using FilterControlsLib.Interfaces;
     using FolderControlsLib.Interfaces;
+    using HistoryControlLib.Interfaces;
 
     /// <summary>
     /// Interface implements a folder/file view model class
@@ -13,6 +14,12 @@ namespace ExplorerLib.Interfaces
     public interface IListControllerViewModel : IConfigExplorerSettings
     {
         #region properties
+        /// <summary>
+        /// Gets the viewmodel that binds and controls the History Control
+        /// (<seealso cref="HistoryControlLib"/>).
+        /// </summary>
+        IBrowseHistory<IPathModel> NaviHistory { get; }
+
         /// <summary>
         /// Expose a viewmodel that can represent a Folder-ComboBox drop down
         /// element similar to a web browser Uri drop down control but using
