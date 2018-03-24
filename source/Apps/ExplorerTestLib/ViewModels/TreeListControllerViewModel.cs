@@ -68,11 +68,11 @@ namespace ExplorerTestLib.ViewModels
 
             // This is fired when the user selects a new folder bookmark from the drop down button
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
-                .AddHandler(RecentFolders, "BrowseEvent", FolderTextPath_BrowseEvent);
+                .AddHandler(RecentFolders, "BrowseEvent", Control_BrowseEvent);
 
             // This is fired when the text path in the combobox changes to another existing folder
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
-                .AddHandler(FolderTextPath, "BrowseEvent", FolderTextPath_BrowseEvent);
+                .AddHandler(FolderTextPath, "BrowseEvent", Control_BrowseEvent);
 
             Filters = FilterControlsLib.Factory.CreateFilterComboBoxViewModel();
             WeakEventManager<IFilterComboBoxViewModel, FilterChangedEventArgs>
@@ -80,7 +80,7 @@ namespace ExplorerTestLib.ViewModels
 
             // This is fired when the current folder in the listview changes to another existing folder
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
-                .AddHandler(FolderItemsView, "BrowseEvent", FolderTextPath_BrowseEvent);
+                .AddHandler(FolderItemsView, "BrowseEvent", Control_BrowseEvent);
 
             // Event fires when the user requests to add a folder into the list of recently visited folders
             WeakEventManager<IEditBookmarks, EditBookmarkEvent>
@@ -91,7 +91,7 @@ namespace ExplorerTestLib.ViewModels
                 .AddHandler(FolderItemsView, "OnFileOpen", FolderItemsView_OnFileOpen);
 
             WeakEventManager<ICanNavigate, BrowsingEventArgs>
-                .AddHandler(TreeBrowser, "BrowseEvent", FolderTextPath_BrowseEvent);
+                .AddHandler(TreeBrowser, "BrowseEvent", Control_BrowseEvent);
 
             // Event fires when the user requests to add a folder into the list of recently visited folders
             WeakEventManager<IEditBookmarks, EditBookmarkEvent>
@@ -296,7 +296,7 @@ namespace ExplorerTestLib.ViewModels
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void FolderTextPath_BrowseEvent(object sender,
+        private void Control_BrowseEvent(object sender,
                                                 FileSystemModels.Browse.BrowsingEventArgs e)
         {
             var location = e.Location;
