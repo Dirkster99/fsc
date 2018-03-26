@@ -15,7 +15,7 @@ A collection of themeable WPF/MVVM <b>F</b>ile <b>S</b>ystem <b>C</b>ontrols sim
 <table>
 </dl>
 
-This project contains the source code for an implementation of controls that are related to browsing files within an existing application. Go to: https://github.com/Dirkster99/Edi to see the controls in full action (see Explorer tool window).
+This project contains the source code for an implementation of controls that are related to browsing files within an existing application. Go to: https://github.com/Dirkster99/Edi to see the controls in full action (see Explorer tool window) or review this <a href="https://www.codeproject.com/Articles/1236588/File-System-Controls-in-WPF-Version-III">CodeProject article</a> to learn more.
 
 A closely related project is the <img src="https://github.com/Dirkster99/Docu/blob/master/HistoryControlLib/Branch_32x.png?raw=true" width="24"/> <a href="https://github.com/Dirkster99/HistoryControlLib">HistoryControlLib</a>
 project which is also (via NuGet) part of the test applications in this repository.
