@@ -157,8 +157,6 @@
             {
                 if (_IsSelected != value)
                 {
-                    Logger.Debug("Detail: set Folder IsSelected");
-
                     _IsSelected = value;
 
                     RaisePropertyChanged(() => IsSelected);
@@ -263,8 +261,6 @@
         /// <param name="newFolderName"></param>
         public void Rename(string newFolderName)
         {
-            Logger.DebugFormat("Detail: Rename into new folder {0}:", newFolderName);
-
             lock (_LockObject)
             {
                 try

@@ -146,8 +146,6 @@
         /// <returns>a viewmodel of the newly created directory or null</returns>
         public override ITreeItemViewModel CreateNewDirectory()
         {
-            Logger.DebugFormat("Detail: Create new directory with standard name.");
-
             lock (_LockObject)
             {
                 try

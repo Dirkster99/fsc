@@ -18,7 +18,7 @@ namespace FileListView.ViewModels
         /// <summary>
         /// Logger facility
         /// </summary>
-        protected new static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private string _ItemName;
         private IPathModel _PathObject;
