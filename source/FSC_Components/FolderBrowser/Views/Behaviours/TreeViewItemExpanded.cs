@@ -1,5 +1,6 @@
 namespace FolderBrowser.Views.Behaviours
 {
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -45,6 +46,9 @@ namespace FolderBrowser.Views.Behaviours
         #region methods
         private static void OnPropertyChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs e)
         {
+            if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()))
+                return;
+
             TreeViewItem item = depObj as TreeViewItem;
             if (item == null)
                 return;

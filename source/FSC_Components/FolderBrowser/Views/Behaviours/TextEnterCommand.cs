@@ -1,5 +1,6 @@
 namespace FolderBrowser.Views.Behaviours
 {
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -45,6 +46,9 @@ namespace FolderBrowser.Views.Behaviours
         /// <param name="e"></param>
         private static void OnTextEnterCommandChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()))
+                return;
+
             TextBox uiElement = d as TextBox;   // Remove the handler if it exist to avoid memory leaks
 
             if (uiElement != null)

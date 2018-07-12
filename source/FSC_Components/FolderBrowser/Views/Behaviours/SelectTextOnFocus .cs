@@ -1,5 +1,6 @@
 ﻿namespace FolderBrowser.Views.Behaviours
 {
+    using System.ComponentModel;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
@@ -23,6 +24,9 @@
 
         private static void ActivePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
+            if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()))
+                return;
+
             if (d is TextBox)
             {
                 TextBox textBox = d as TextBox;

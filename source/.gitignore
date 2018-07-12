@@ -1,5 +1,6 @@
 source/packages/
 /source/.vs
+.vs
 packages/
 00_Release/
 01_Nuget/

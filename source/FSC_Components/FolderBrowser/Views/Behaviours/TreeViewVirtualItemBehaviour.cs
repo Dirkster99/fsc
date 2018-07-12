@@ -3,6 +3,7 @@
     using FolderBrowser.Interfaces;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Reflection;
     using System.Windows;
@@ -72,6 +73,9 @@
         {
             try
             {
+                if (DesignerProperties.GetIsInDesignMode(new System.Windows.DependencyObject()))
+                    return;
+
                 var rootControl = d as ItemsControl;
                 var currentParent = d as ItemsControl;
 
