@@ -75,16 +75,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DropDownButtonLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.DropDownButtonLib.1.0.4\lib\net4\DropDownButtonLib.dll</HintPath>
+      <HintPath>..\..\packages\Dirkster.DropDownButtonLib.1.0.4.1\lib\net4\DropDownButtonLib.dll</HintPath>
     </Reference>
-    <Reference Include="InplaceEditBoxLib, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.1.1\lib\net4\InplaceEditBoxLib.dll</HintPath>
+    <Reference Include="InplaceEditBoxLib, Version=1.1.2.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.1.2.1\lib\net4\InplaceEditBoxLib.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="MLib, Version=1.0.4.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.MLib.1.0.4.2\lib\net4\MLib.dll</HintPath>
+    <Reference Include="MLib, Version=1.0.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.MLib.1.0.9.1\lib\net4\MLib.dll</HintPath>
     </Reference>
     <Reference Include="MWindowDialogLib, Version=1.0.4.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.MWindowDialogLib.1.0.4.2\lib\net452\MWindowDialogLib.dll</HintPath>
@@ -107,8 +107,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="UserNotification, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.1.1\lib\net4\UserNotification.dll</HintPath>
+    <Reference Include="UserNotification, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Dirkster.InplaceEditBoxLib.1.1.2.1\lib\net4\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WatermarkControlsLib, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Dirkster.WatermarkControlsLib.1.0.1\lib\net4\WatermarkControlsLib.dll</HintPath>
