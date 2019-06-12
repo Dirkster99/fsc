@@ -75,7 +75,10 @@ namespace FileSystemModels.Browse
         /// <returns></returns>
         public static FinalBrowseResult FromRequest(BrowseRequest request, BrowseResult result)
         {
-          return new FinalBrowseResult(request.NewLocation, request.RequestId, result);
+            if (request != null)
+                return new FinalBrowseResult(request.NewLocation, request.RequestId, result);
+
+            return new FinalBrowseResult(null, default(System.Guid), result);
         }
     }
 }

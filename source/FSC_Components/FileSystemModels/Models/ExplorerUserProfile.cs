@@ -2,7 +2,6 @@
 {
     using FileSystemModels.Interfaces;
     using FileSystemModels.Models.FSItems.Base;
-    using System;
     using System.Xml;
     using System.Xml.Schema;
     using System.Xml.Serialization;
@@ -89,7 +88,11 @@
                 try
                 {
                     var path = reader.GetAttribute("Path");
-                    CurrentPath = PathFactory.Create(path);
+
+                    if (string.IsNullOrEmpty(path))
+                        CurrentPath = PathFactory.SysDefault;
+                    else
+                        CurrentPath = PathFactory.Create(path);
                 }
                 catch
                 {

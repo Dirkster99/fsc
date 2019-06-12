@@ -721,6 +721,13 @@ namespace FileListView.ViewModels
         protected FinalBrowseResult PopulateCurrentView(bool browseEvent,
                                                         CancellationToken cancelToken = default(CancellationToken))
         {
+            // This can happen when the viewmodel is configured at start-up
+            // but the current folder is not configured, yet
+            if (_CurrentFolder == null)
+            {
+                return new FinalBrowseResult(null, default(System.Guid), BrowseResult.InComplete);
+            }
+
             var request = new BrowseRequest(_CurrentFolder, cancelToken);
             return PopulateView(request, browseEvent);
         }
@@ -740,6 +747,13 @@ namespace FileListView.ViewModels
         {
             Logger.DebugFormat("PopulateView method");
             Logger.DebugFormat("Populating view for request id: {0} - '{1}'", request.RequestId, request.NewLocation.Path);
+
+            // This can happen when the viewmodel is configured at start-up
+            // but the current folder is not configured, yet
+            if (request == null)
+            {
+                return FinalBrowseResult.FromRequest(request, BrowseResult.InComplete);
+            }
 
             IPathModel newPathToNavigateTo = request.NewLocation;
 
