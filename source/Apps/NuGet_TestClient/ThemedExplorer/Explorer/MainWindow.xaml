@@ -10,6 +10,10 @@
         Icon="Images/Open_32x.png"
         Title="Explorer" Height="350" Width="525">
     <Grid xmlns:views="clr-namespace:ExplorerLib.Views;assembly=ExplorerLib">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="16"/>
+        </Grid.RowDefinitions>
         <views:TreeListItemView DataContext="{Binding FolderTreeView}" />
     </Grid>
 </MWindow:SimpleMetroWindow>

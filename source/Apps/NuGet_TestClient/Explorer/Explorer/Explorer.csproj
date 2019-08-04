@@ -36,7 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DropDownButtonLib, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dirkster.DropDownButtonLib.1.0.4\lib\net4\DropDownButtonLib.dll</HintPath>
+      <HintPath>..\packages\Dirkster.DropDownButtonLib.1.0.4.1\lib\net4\DropDownButtonLib.dll</HintPath>
     </Reference>
     <Reference Include="FileSystemModels, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dirkster.FileSystemModels.3.1.0\lib\net452\FileSystemModels.dll</HintPath>
@@ -52,8 +52,8 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="UserNotification, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dirkster.UserNotifications.1.4.1\lib\net4\UserNotification.dll</HintPath>
+    <Reference Include="UserNotification, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dirkster.UserNotifications.1.5.0\lib\net40\UserNotification.dll</HintPath>
     </Reference>
     <Reference Include="WatermarkControlsLib, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Dirkster.WatermarkControlsLib.1.0.1\lib\net4\WatermarkControlsLib.dll</HintPath>
