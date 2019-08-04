@@ -1,17 +1,17 @@
 ﻿namespace ExplorerTestMLib.ViewModels
 {
-    using MLib.Themes;
+    using MLib.Interfaces;
 
     public class ThemeDefinitionViewModel : Base.ModelBase
     {
         #region private fields
-        readonly private ThemeDefinition _model;
+        readonly private IThemeInfo _model;
 
         private bool _IsSelected;
         #endregion private fields
 
         #region constructors
-        public ThemeDefinitionViewModel(ThemeDefinition model)
+        public ThemeDefinitionViewModel(IThemeInfo model)
             : this()
         {
             _model = model;
@@ -28,7 +28,7 @@
         /// <summary>
         /// Gets the static theme model based data items.
         /// </summary>
-        public ThemeDefinition Model
+        public IThemeInfo Model
         {
             get
             {

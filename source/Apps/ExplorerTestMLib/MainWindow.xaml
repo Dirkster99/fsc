@@ -15,13 +15,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="16"/>
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="3,3,24,3" HorizontalAlignment="Left">
             <TextBlock Text="Themes" />
             <ComboBox ItemsSource="{Binding AppTheme.ListOfThemes}"
-                      DisplayMemberPath="Model.Name"
+                      DisplayMemberPath="Model.DisplayName"
                       SelectedItem="{Binding AppTheme.SelectedTheme, Mode=OneWay,UpdateSourceTrigger=PropertyChanged}"
                       behav:SelectionChangedCommand.ChangedCommand="{Binding ThemeSelectionChangedCommand}"
                       IsEnabled="{Binding AppTheme.IsEnabled, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
