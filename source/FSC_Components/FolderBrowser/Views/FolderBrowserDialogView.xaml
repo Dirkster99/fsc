@@ -1,186 +1,224 @@
-﻿<UserControl x:Class="FolderBrowser.Views.FolderBrowserDialogView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid Width="Auto" Height="Auto"
-        xmlns:conv="clr-namespace:FolderBrowser.Converters"
-        xmlns:behav="clr-namespace:FolderBrowser.Views.Behaviours"
-        xmlns:views="clr-namespace:FolderBrowser.Views"
-        xmlns:Local="clr-namespace:FileSystemModels.Local;assembly=FileSystemModels"
-        xmlns:dbthemes="clr-namespace:DropDownButtonLib.Themes;assembly=DropDownButtonLib"
-        >
-        <Grid.Resources>
-            <conv:InverseBooleanConverter x:Key="inverter" />
-            <conv:BoolToVisibilityConverter x:Key="BoolToVis" TrueValue="Visible" FalseValue="Collapsed" />
-            <conv:BoolToVisibilityConverter x:Key="BoolToVis2" TrueValue="Collapsed" FalseValue="Visible" />
+﻿<UserControl
+	x:Class="FolderBrowser.Views.FolderBrowserDialogView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	d:DesignHeight="300"
+	d:DesignWidth="300"
+	mc:Ignorable="d">
+	<Grid
+		xmlns:Local="clr-namespace:FileSystemModels.Local;assembly=FileSystemModels"
+		xmlns:behav="clr-namespace:FolderBrowser.Views.Behaviours"
+		xmlns:conv="clr-namespace:FolderBrowser.Converters"
+		xmlns:dbthemes="clr-namespace:DropDownButtonLib.Themes;assembly=DropDownButtonLib"
+		xmlns:views="clr-namespace:FolderBrowser.Views"
+		Width="Auto"
+		Height="Auto">
+		<Grid.Resources>
+			<conv:InverseBooleanConverter x:Key="inverter" />
+			<conv:BoolToVisibilityConverter
+				x:Key="BoolToVis"
+				FalseValue="Collapsed"
+				TrueValue="Visible" />
+			<conv:BoolToVisibilityConverter
+				x:Key="BoolToVis2"
+				FalseValue="Visible"
+				TrueValue="Collapsed" />
 
-            <views:BindingProxy x:Key="MainViewModelProxy" Data="{Binding}"/>
-        </Grid.Resources>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+			<views:BindingProxy x:Key="MainViewModelProxy" Data="{Binding}" />
+		</Grid.Resources>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*" />
+		</Grid.ColumnDefinitions>
 
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
 
-        <views:BrowseDirectoriesView DataContext="{Binding TreeBrowser}"
-                                     x:Name="TreeBrowserView"
-                                     IsEnabled="{Binding Path=IsBrowsing, Converter={StaticResource inverter}}"
-                                     Grid.Column="0"
-                                     Margin="3"/>
+		<views:BrowseDirectoriesView
+			x:Name="TreeBrowserView"
+			Grid.Column="0"
+			Margin="3"
+			DataContext="{Binding TreeBrowser}"
+			IsEnabled="{Binding Path=IsBrowsing, Converter={StaticResource inverter}}" />
 
-        <!-- Display an icon and message text when an error meeds communication -->
-        <Grid Grid.Row="1" DataContext="{Binding TreeBrowser}"
-              Margin="3"
-              Visibility="{Binding Path=DisplayMessage.IsErrorMessageAvailable, Converter={StaticResource BoolToVis}}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+		<!--  Display an icon and message text when an error meeds communication  -->
+		<Grid
+			Grid.Row="1"
+			Margin="3"
+			DataContext="{Binding TreeBrowser}"
+			Visibility="{Binding Path=DisplayMessage.IsErrorMessageAvailable, Converter={StaticResource BoolToVis}}">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Width="24" Margin="3" Source="{DynamicResource Error_Image}" />
-            <TextBlock Grid.Column="1" Text="{Binding DisplayMessage.Message}" Margin="3"
-                       HorizontalAlignment="Left" VerticalAlignment="Center" />
-        </Grid>
+			<Image
+				Grid.Column="0"
+				Width="24"
+				Margin="3"
+				Source="{DynamicResource Error_Image}" />
+			<TextBlock
+				Grid.Column="1"
+				Margin="3"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Center"
+				Text="{Binding DisplayMessage.Message}" />
+		</Grid>
 
-        <!-- The selected folder path -->
-        <Grid Grid.Row="2" Grid.Column="0">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+		<!--  The selected folder path  -->
+		<Grid Grid.Row="2" Grid.Column="0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
 
-            <!-- Display a progress bar and Cancel button when processing is executed -->
-            <ProgressBar Grid.Row="0" IsIndeterminate="True" Height="8" Margin="3"
-                     Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis}}"/>
+			<!--  Display a progress bar and Cancel button when processing is executed  -->
+			<ProgressBar
+				Grid.Row="0"
+				Height="8"
+				Margin="3"
+				IsIndeterminate="True"
+				Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis}}" />
 
-            <Grid Grid.Row="1"
-                  xmlns:ctrls="clr-namespace:DropDownButtonLib.Controls;assembly=DropDownButtonLib"
-                  xmlns:dbthemes="clr-namespace:DropDownButtonLib.Themes;assembly=DropDownButtonLib"
-                  xmlns:bindLocal="clr-namespace:FolderBrowser.Views"
-                  >
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+			<Grid
+				xmlns:bindLocal="clr-namespace:FolderBrowser.Views"
+				xmlns:ctrls="clr-namespace:DropDownButtonLib.Controls;assembly=DropDownButtonLib"
+				xmlns:dbthemes="clr-namespace:DropDownButtonLib.Themes;assembly=DropDownButtonLib"
+				Grid.Row="1">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+					<ColumnDefinition Width="Auto" />
+				</Grid.ColumnDefinitions>
 
-                <!-- views:BookmarkFolderDropDown Grid.Column="0"
-                                              DataContext="{Binding BookmarkedLocations}"
-                                              Margin="3" / -->
+				<!--
+					views:BookmarkFolderDropDown Grid.Column="0"
+					DataContext="{Binding BookmarkedLocations}"
+					Margin="3" /
+				-->
 
-                <TextBox DataContext="{Binding TreeBrowser}" Grid.Column="0"
-                         Text="{Binding Path=SelectedFolder, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                         behav:SelectTextOnFocus.Active="True"
-                         behav:TextEnterCommand.Command="{Binding FolderSelectedCommand}"
-                         IsEnabled="{Binding IsBrowsing, Converter={StaticResource inverter}}"
-                         MinHeight="25"
-                         Margin="3"
-                         VerticalContentAlignment="Center" FontSize="16" x:Name="BrowserAddress" />
+				<TextBox
+					x:Name="BrowserAddress"
+					Grid.Column="0"
+					MinHeight="25"
+					Margin="3"
+					VerticalContentAlignment="Center"
+					behav:SelectTextOnFocus.Active="True"
+					behav:TextEnterCommand.Command="{Binding FolderSelectedCommand}"
+					DataContext="{Binding TreeBrowser}"
+					FontSize="16"
+					IsEnabled="{Binding IsBrowsing, Converter={StaticResource inverter}}"
+					Text="{Binding Path=SelectedFolder, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
 
-                <ctrls:SplitItemsButton
-                              ToolTip="{Binding BookmarkedLocations.SelectedItem,Mode=OneWay,UpdateSourceTrigger=PropertyChanged,FallbackValue='Add a bookmark to quick access it here'}"
-                              ItemsSource="{Binding BookmarkedLocations.DropDownItems}"
-                              Command="{Binding TreeBrowser.FolderSelectedCommand}"
-                              CommandParameter="{Binding ElementName=BrowserAddress,Path=Text}"
-                              IsOpen="{Binding BookmarkedLocations.IsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              DropDownMaxHeight="300"
-                              Padding="12,0"
-                              Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis2}}"
-                              Grid.Column="1"
-                              Margin="3"
-                        >
-                    <ctrls:SplitItemsButton.Content>
-                        <Border BorderBrush="Transparent"
-                                VerticalAlignment="Stretch"
-                                HorizontalAlignment="Stretch">
-                            <Image Source="{DynamicResource FLV_Image_Refresh}" Width="16" />
-                        </Border>
-                    </ctrls:SplitItemsButton.Content>
-                    <ctrls:DropDownItemsButton.Resources>
-                        <!-- Use a proxy to bind items to root object of this collection -->
-                        <bindLocal:BindingProxy  x:Key="DropDownItemsButtonProxy" Data="{Binding BookmarkedLocations}" />
-                    </ctrls:DropDownItemsButton.Resources>
-                    <ctrls:DropDownItemsButton.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Name="MyBorder" Margin="0" Background="Transparent">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
+				<ctrls:SplitItemsButton
+					Grid.Column="1"
+					Margin="3"
+					Padding="12,0"
+					Command="{Binding TreeBrowser.FolderSelectedCommand}"
+					CommandParameter="{Binding ElementName=BrowserAddress, Path=Text}"
+					DropDownMaxHeight="300"
+					IsOpen="{Binding BookmarkedLocations.IsOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+					ItemsSource="{Binding BookmarkedLocations.DropDownItems}"
+					ToolTip="{Binding BookmarkedLocations.SelectedItem, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, FallbackValue='Add a bookmark to quick access it here'}"
+					Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis2}}">
+					<ctrls:SplitItemsButton.Content>
+						<Border
+							HorizontalAlignment="Stretch"
+							VerticalAlignment="Stretch"
+							BorderBrush="Transparent">
+							<Image Width="16" Source="{DynamicResource FLV_Image_Refresh}" />
+						</Border>
+					</ctrls:SplitItemsButton.Content>
+					<ctrls:DropDownItemsButton.Resources>
+						<!--  Use a proxy to bind items to root object of this collection  -->
+						<bindLocal:BindingProxy x:Key="DropDownItemsButtonProxy" Data="{Binding BookmarkedLocations}" />
+					</ctrls:DropDownItemsButton.Resources>
+					<ctrls:DropDownItemsButton.ItemTemplate>
+						<DataTemplate>
+							<Grid
+								Name="MyBorder"
+								Margin="0"
+								Background="Transparent">
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto" />
+									<ColumnDefinition Width="*" />
+								</Grid.ColumnDefinitions>
 
-                                <Button Content="-" Grid.Column="0"
-                                            ToolTip="Remove Folder Bookmark"
-                                            Command="{Binding Path=Data.RemoveFolderBookmark, Source={StaticResource DropDownItemsButtonProxy}}"
-                                            CommandParameter="{Binding}"
-                                            HorizontalAlignment="Stretch"
-                                            VerticalAlignment="Stretch" Margin="0" Padding="3,0"
-                                            MinWidth="16" MinHeight="16"
-                                            x:Name="RemoveFolderBookmarkButton"
-                                            />
+								<Button
+									x:Name="RemoveFolderBookmarkButton"
+									Grid.Column="0"
+									MinWidth="16"
+									MinHeight="16"
+									Margin="0"
+									Padding="3,0"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									Command="{Binding Path=Data.RemoveFolderBookmark, Source={StaticResource DropDownItemsButtonProxy}}"
+									CommandParameter="{Binding}"
+									Content="-"
+									ToolTip="Remove Folder Bookmark" />
 
-                                <Button Content="{Binding ItemName}"
-                                            Command="{Binding Path=Data.ChangeOfDirectoryCommand, Source={StaticResource DropDownItemsButtonProxy}}"
-                                            CommandParameter="{Binding}"
-                                            Grid.Column="1"
-                                            HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                            HorizontalContentAlignment="Left"
-                                            BorderBrush="Transparent"
-                                            ToolTip="{Binding ItemPath}"
-                                            Margin="3,0,0,0"
-                                        >
-                                    <Button.Style>
-                                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
-                                            <Setter Property="Background" Value="Transparent"/>
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type Button}">
-                                                        <Border Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                Padding="3,0"
-                                                                >
-                                                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                                      />
-                                                        </Border>
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                            <Style.Triggers>
-                                                <Trigger Property="IsMouseOver" Value="true">
-                                                    <Setter Property="Background" Value="{DynamicResource {x:Static dbthemes:ResourceKeys.ButtonMouseOverBackgroundKey}}" />
-                                                </Trigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Style>
-                                </Button>
-                            </Grid>
+								<Button
+									Grid.Column="1"
+									Margin="3,0,0,0"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Stretch"
+									HorizontalContentAlignment="Left"
+									BorderBrush="Transparent"
+									Command="{Binding Path=Data.ChangeOfDirectoryCommand, Source={StaticResource DropDownItemsButtonProxy}}"
+									CommandParameter="{Binding}"
+									Content="{Binding ItemName}"
+									ToolTip="{Binding ItemPath}">
+									<Button.Style>
+										<Style BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+											<Setter Property="Background" Value="Transparent" />
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate TargetType="{x:Type Button}">
+														<Border
+															Padding="3,0"
+															Background="{TemplateBinding Background}"
+															BorderBrush="{TemplateBinding BorderBrush}"
+															BorderThickness="{TemplateBinding BorderThickness}">
+															<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+														</Border>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+											<Style.Triggers>
+												<Trigger Property="IsMouseOver" Value="true">
+													<Setter Property="Background" Value="{DynamicResource {x:Static dbthemes:ResourceKeys.ButtonMouseOverBackgroundKey}}" />
+												</Trigger>
+											</Style.Triggers>
+										</Style>
+									</Button.Style>
+								</Button>
+							</Grid>
 
-                            <DataTemplate.Triggers>
-                                <DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="True" >
-                                    <Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Visible" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="False" >
-                                    <Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Hidden" />
-                                </DataTrigger>
-                            </DataTemplate.Triggers>
-                        </DataTemplate>
-                    </ctrls:DropDownItemsButton.ItemTemplate>
-                </ctrls:SplitItemsButton>
-                <Button Grid.Column="1" Margin="3"
-                        Padding="12,0"
-                        Command="{Binding TreeBrowser.CancelBrowsingCommand, FallbackValue={x:Null}}"
-                        Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis}}">
-                    <Image Source="{DynamicResource GoButton_Image_Cancel}" Width="16" />
-                </Button>
-            </Grid>
-        </Grid>
-    </Grid>
+							<DataTemplate.Triggers>
+								<DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="True">
+									<Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Visible" />
+								</DataTrigger>
+								<DataTrigger Binding="{Binding ElementName=MyBorder, Path=IsMouseOver}" Value="False">
+									<Setter TargetName="RemoveFolderBookmarkButton" Property="Visibility" Value="Hidden" />
+								</DataTrigger>
+							</DataTemplate.Triggers>
+						</DataTemplate>
+					</ctrls:DropDownItemsButton.ItemTemplate>
+				</ctrls:SplitItemsButton>
+				<Button
+					Grid.Column="1"
+					Margin="3"
+					Padding="12,0"
+					Command="{Binding TreeBrowser.CancelBrowsingCommand, FallbackValue={x:Null}}"
+					Visibility="{Binding Path=TreeBrowser.IsBrowsing, Converter={StaticResource BoolToVis}}">
+					<Image Width="16" Source="{DynamicResource GoButton_Image_Cancel}" />
+				</Button>
+			</Grid>
+		</Grid>
+	</Grid>
 </UserControl>

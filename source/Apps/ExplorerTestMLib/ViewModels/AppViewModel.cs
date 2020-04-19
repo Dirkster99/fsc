@@ -1,152 +1,152 @@
 ﻿namespace ExplorerTestMLib.ViewModels
 {
-    using ExplorerTestMLib.Demos.ViewModels;
-    using FileSystemModels.ViewModels.Base;
-    using MLib.Interfaces;
-    using Settings.Interfaces;
-    using System;
-    using System.Windows;
-    using System.Windows.Input;
+	using ExplorerTestMLib.Demos.ViewModels;
+	using FileSystemModels.ViewModels.Base;
+	using MLib.Interfaces;
+	using Settings.Interfaces;
+	using System;
+	using System.Windows;
+	using System.Windows.Input;
 
-    /// <summary>
-    /// Main ViewModel vlass that manages session start-up, life span, and shutdown
-    /// of the application.
-    /// </summary>
-    public class AppViewModel : ExplorerTestLib.ViewModels.Base.ViewModelBase, IDisposable
-    {
-        #region private fields
-        private bool _disposed = false;
-        private AppLifeCycleViewModel _AppLifeCycle = null;
+	/// <summary>
+	/// Main ViewModel vlass that manages session start-up, life span, and shutdown
+	/// of the application.
+	/// </summary>
+	public class AppViewModel : ExplorerTestLib.ViewModels.Base.ViewModelBase, IDisposable
+	{
+		#region private fields
+		private bool _disposed = false;
+		private AppLifeCycleViewModel _AppLifeCycle = null;
 
-        private bool _isInitialized = false;       // application should be initialized through one method ONLY!
-        private object _lockObject = new object(); // thread lock semaphore
+		private bool _isInitialized = false;       // application should be initialized through one method ONLY!
+		private object _lockObject = new object(); // thread lock semaphore
 
-        private ICommand _ThemeSelectionChangedCommand = null;
-        private ThemeViewModel _AppTheme = null;
+		private ICommand _ThemeSelectionChangedCommand = null;
+		private ThemeViewModel _AppTheme = null;
 
-        private readonly DemoViewModel _demo = null;
-        #endregion private fields
+		private readonly DemoViewModel _demo = null;
+		#endregion private fields
 
-        #region constructors
-        /// <summary>
-        /// Standard Constructor
-        /// </summary>
-        public AppViewModel(AppLifeCycleViewModel lifecycle)
-            : this()
-        {
-            _AppLifeCycle = lifecycle;
-        }
+		#region constructors
+		/// <summary>
+		/// Standard Constructor
+		/// </summary>
+		public AppViewModel(AppLifeCycleViewModel lifecycle)
+			: this()
+		{
+			_AppLifeCycle = lifecycle;
+		}
 
-        /// <summary>
-        /// Hidden standard constructor
-        /// </summary>
-        protected AppViewModel()
-        {
-            _AppTheme = new ThemeViewModel();
-            _demo = new DemoViewModel();
-        }
-        #endregion constructors
+		/// <summary>
+		/// Hidden standard constructor
+		/// </summary>
+		protected AppViewModel()
+		{
+			_AppTheme = new ThemeViewModel();
+			_demo = new DemoViewModel();
+		}
+		#endregion constructors
 
-        #region properties
-        public AppLifeCycleViewModel AppLifeCycle
-        {
-            get
-            {
-                return _AppLifeCycle;
-            }
-        }
+		#region properties
+		public AppLifeCycleViewModel AppLifeCycle
+		{
+			get
+			{
+				return _AppLifeCycle;
+			}
+		}
 
-        #region app theme
-        /// <summary>
-        /// Command executes when the user has selected
-        /// a different UI theme to display.
-        /// 
-        /// Command Parameter is the <seealso cref="ThemeDefinitionViewModel"/> object
-        /// that should be selected next. This object can be handed over as:
-        /// 1> an object[] array at object[0] or as simple object
-        /// 2> <seealso cref="ThemeDefinitionViewModel"/> p
-        /// </summary>
-        public ICommand ThemeSelectionChangedCommand
-        {
-            get
-            {
-                if (_ThemeSelectionChangedCommand == null)
-                {
-                    _ThemeSelectionChangedCommand = new RelayCommand<object>((p) =>
-                    {
-                        if (this._disposed == true)
-                            return;
+		#region app theme
+		/// <summary>
+		/// Command executes when the user has selected
+		/// a different UI theme to display.
+		/// 
+		/// Command Parameter is the <seealso cref="ThemeDefinitionViewModel"/> object
+		/// that should be selected next. This object can be handed over as:
+		/// 1> an object[] array at object[0] or as simple object
+		/// 2> <seealso cref="ThemeDefinitionViewModel"/> p
+		/// </summary>
+		public ICommand ThemeSelectionChangedCommand
+		{
+			get
+			{
+				if (_ThemeSelectionChangedCommand == null)
+				{
+					_ThemeSelectionChangedCommand = new RelayCommand<object>((p) =>
+					{
+						if (this._disposed == true)
+							return;
 
-                        object[] paramets = p as object[];
+						object[] paramets = p as object[];
 
-                        ThemeDefinitionViewModel theme = null;
+						ThemeDefinitionViewModel theme = null;
 
-                        // Try to convert object[0] command parameter
-                        if (paramets != null)
-                        {
-                            if (paramets.Length == 1)
-                            {
-                                theme = paramets[0] as ThemeDefinitionViewModel;
-                            }
-                        }
+						// Try to convert object[0] command parameter
+						if (paramets != null)
+						{
+							if (paramets.Length == 1)
+							{
+								theme = paramets[0] as ThemeDefinitionViewModel;
+							}
+						}
 
-                        // Try to convert ThemeDefinitionViewModel command parameter
-                        if (theme == null)
-                            theme = p as ThemeDefinitionViewModel;
+						// Try to convert ThemeDefinitionViewModel command parameter
+						if (theme == null)
+							theme = p as ThemeDefinitionViewModel;
 
-                        if (Application.Current == null)
-                            return;
+						if (Application.Current == null)
+							return;
 
-                        if (Application.Current.MainWindow == null)
-                            return;
+						if (Application.Current.MainWindow == null)
+							return;
 
-                        if (theme != null)
-                        {
-                            _AppTheme.ApplyTheme(Application.Current.MainWindow,
-                                                 theme.Model.DisplayName);
-                        }
-                    });
-                }
+						if (theme != null)
+						{
+							_AppTheme.ApplyTheme(Application.Current.MainWindow,
+												 theme.Model.DisplayName);
+						}
+					});
+				}
 
-                return _ThemeSelectionChangedCommand;
-            }
-        }
+				return _ThemeSelectionChangedCommand;
+			}
+		}
 
-        /// <summary>
-        /// Gets the currently selected application theme object.
-        /// </summary>
-        public ThemeViewModel AppTheme
-        {
-            get { return _AppTheme; }
+		/// <summary>
+		/// Gets the currently selected application theme object.
+		/// </summary>
+		public ThemeViewModel AppTheme
+		{
+			get { return _AppTheme; }
 
-            private set
-            {
-                if (_AppTheme != value)
-                {
-                    _AppTheme = value;
-                    NotifyPropertyChanged(() => this.AppTheme);
-                }
-            }
-        }
-        #endregion app theme
+			private set
+			{
+				if (_AppTheme != value)
+				{
+					_AppTheme = value;
+					NotifyPropertyChanged(() => this.AppTheme);
+				}
+			}
+		}
+		#endregion app theme
 
-        /// <summary>
-        /// Gets the demo viewmodel and all its properties and commands
-        /// </summary>
-        public DemoViewModel Demo
-        {
-            get
-            {
-                return _demo;
-            }
-        }
-        #endregion properties
+		/// <summary>
+		/// Gets the demo viewmodel and all its properties and commands
+		/// </summary>
+		public DemoViewModel Demo
+		{
+			get
+			{
+				return _demo;
+			}
+		}
+		#endregion properties
 
-        #region methods
-        #region Get/set Session Application Data
-        internal void GetSessionData(IProfile sessionData)
-        {
-            /***
+		#region methods
+		#region Get/set Session Application Data
+		internal void GetSessionData(IProfile sessionData)
+		{
+			/***
                         if (sessionData.LastActiveTargetFile != TargetFile.FileName)
                             sessionData.LastActiveTargetFile = TargetFile.FileName;
 
@@ -159,11 +159,11 @@
                                                                      );
                         }
             ***/
-        }
+		}
 
-        internal void SetSessionData(IProfile sessionData)
-        {
-            /***
+		internal void SetSessionData(IProfile sessionData)
+		{
+			/***
                         TargetFile.FileName = sessionData.LastActiveTargetFile;
 
                         _SourceFiles = new ObservableCollection<FileInfoViewModel>();
@@ -173,93 +173,93 @@
                                 _SourceFiles.Add(new FileInfoViewModel(item.path));
                         }
             ***/
-        }
-        #endregion Get/set Session Application Data
+		}
+		#endregion Get/set Session Application Data
 
-        /// <summary>
-        /// Call this method if you want to initialize a headless
-        /// (command line) application. This method will initialize only
-        /// Non-WPF related items.
-        /// 
-        /// Method should not be called after <seealso cref="InitForMainWindow"/>
-        /// </summary>
-        public void InitWithoutMainWindow()
-        {
-            lock (_lockObject)
-            {
-                if (_isInitialized == true)
-                    throw new Exception("AppViewModel initizialized twice.");
+		/// <summary>
+		/// Call this method if you want to initialize a headless
+		/// (command line) application. This method will initialize only
+		/// Non-WPF related items.
+		/// 
+		/// Method should not be called after <seealso cref="InitForMainWindow"/>
+		/// </summary>
+		public void InitWithoutMainWindow()
+		{
+			lock (_lockObject)
+			{
+				if (_isInitialized == true)
+					throw new Exception("AppViewModel initizialized twice.");
 
-                _isInitialized = true;
-            }
-        }
+				_isInitialized = true;
+			}
+		}
 
-        /// <summary>
-        /// Call this to initialize application specific items that should be initialized
-        /// before loading and display of mainWindow.
-        /// 
-        /// Invocation of This method is REQUIRED if UI is used in this application instance.
-        /// 
-        /// Method should not be called after <seealso cref="InitWithoutMainWindow"/>
-        /// </summary>
-        public void InitForMainWindow(IAppearanceManager appearance
-                                      , string themeDisplayName)
-        {
-            // Initialize base that does not require UI
-            InitWithoutMainWindow();
+		/// <summary>
+		/// Call this to initialize application specific items that should be initialized
+		/// before loading and display of mainWindow.
+		/// 
+		/// Invocation of This method is REQUIRED if UI is used in this application instance.
+		/// 
+		/// Method should not be called after <seealso cref="InitWithoutMainWindow"/>
+		/// </summary>
+		public void InitForMainWindow(IAppearanceManager appearance
+									  , string themeDisplayName)
+		{
+			// Initialize base that does not require UI
+			InitWithoutMainWindow();
 
-            appearance.AccentColorChanged += Appearance_AccentColorChanged;
+			appearance.AccentColorChanged += Appearance_AccentColorChanged;
 
-            // Initialize UI specific stuff here
-            this.AppTheme.ApplyTheme(Application.Current.MainWindow, themeDisplayName);
-        }
+			// Initialize UI specific stuff here
+			this.AppTheme.ApplyTheme(Application.Current.MainWindow, themeDisplayName);
+		}
 
-        #region Disposable Interfaces
-        /// <summary>
-        /// Standard dispose method of the <seealso cref="IDisposable" /> interface.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
+		#region Disposable Interfaces
+		/// <summary>
+		/// Standard dispose method of the <seealso cref="IDisposable" /> interface.
+		/// </summary>
+		public void Dispose()
+		{
+			Dispose(true);
+		}
 
-        /// <summary>
-        /// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected void Dispose(bool disposing)
-        {
-            if (_disposed == false)
-            {
-                if (disposing == true)
-                {
-                    // Dispose of the curently displayed content if it is disposable
-                    if (_demo is IDisposable)
-                        (_demo as IDisposable).Dispose();
-                }
+		/// <summary>
+		/// Source: http://www.codeproject.com/Articles/15360/Implementing-IDisposable-and-the-Dispose-Pattern-P
+		/// </summary>
+		/// <param name="disposing"></param>
+		protected void Dispose(bool disposing)
+		{
+			if (_disposed == false)
+			{
+				if (disposing == true)
+				{
+					// Dispose of the curently displayed content if it is disposable
+					if (_demo is IDisposable)
+						(_demo as IDisposable).Dispose();
+				}
 
-                // There are no unmanaged resources to release, but
-                // if we add them, they need to be released here.
-            }
+				// There are no unmanaged resources to release, but
+				// if we add them, they need to be released here.
+			}
 
-            _disposed = true;
+			_disposed = true;
 
-            //// If it is available, make the call to the
-            //// base class's Dispose(Boolean) method
-            ////base.Dispose(disposing);
-        }
-        #endregion Disposable Interfaces
+			//// If it is available, make the call to the
+			//// base class's Dispose(Boolean) method
+			////base.Dispose(disposing);
+		}
+		#endregion Disposable Interfaces
 
-        /// <summary>
-        /// Method is invoked when theme manager is asked
-        /// to change the accent color and has actually changed it.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Appearance_AccentColorChanged(object sender, MLib.Events.ColorChangedEventArgs e)
-        {
+		/// <summary>
+		/// Method is invoked when theme manager is asked
+		/// to change the accent color and has actually changed it.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void Appearance_AccentColorChanged(object sender, MLib.Events.ColorChangedEventArgs e)
+		{
 
-        }
-        #endregion methods
-    }
+		}
+		#endregion methods
+	}
 }

@@ -1,85 +1,85 @@
 namespace FolderBrowser.Views
 {
-    using FileSystemModels;
-    using FileSystemModels.Browse;
-    using FileSystemModels.Interfaces;
-    using FolderBrowser.Interfaces;
-    using System.Windows;
-    using System.Windows.Controls;
+	using FileSystemModels;
+	using FileSystemModels.Browse;
+	using FileSystemModels.Interfaces;
+	using FolderBrowser.Interfaces;
+	using System.Windows;
+	using System.Windows.Controls;
 
-    /// <summary>
-    /// Interaction logic for FolderBrowserTreeView.xaml
-    /// </summary>
-    public partial class FolderBrowserTreeView : UserControl
-    {
-        private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+	/// <summary>
+	/// Interaction logic for FolderBrowserTreeView.xaml
+	/// </summary>
+	public partial class FolderBrowserTreeView : UserControl
+	{
+		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// Standard class constructor
-        /// </summary>
-        public FolderBrowserTreeView()
-        {
-            InitializeComponent();
+		/// <summary>
+		/// Standard class constructor
+		/// </summary>
+		public FolderBrowserTreeView()
+		{
+			InitializeComponent();
 
-            //Loaded += FolderBrowserTreeView_Loaded;
-            WeakEventManager<FrameworkElement, RoutedEventArgs>
-                .AddHandler(this, "Loaded", FolderBrowserTreeView_Loaded);
-        }
+			//Loaded += FolderBrowserTreeView_Loaded;
+			WeakEventManager<FrameworkElement, RoutedEventArgs>
+				.AddHandler(this, "Loaded", FolderBrowserTreeView_Loaded);
+		}
 
-        /// <summary>
-        /// Initializes the folder browser viewmodel and view as soon as the view is loaded.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FolderBrowserTreeView_Loaded(object sender,
-                                                  System.Windows.RoutedEventArgs e)
-        {
-            var vm = DataContext as IBrowserViewModel;
+		/// <summary>
+		/// Initializes the folder browser viewmodel and view as soon as the view is loaded.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void FolderBrowserTreeView_Loaded(object sender,
+												  System.Windows.RoutedEventArgs e)
+		{
+			var vm = DataContext as IBrowserViewModel;
 
-            if (vm != null)
-            {
-                if (string.IsNullOrEmpty(vm.InitialPath) == true)
-                    return;
+			if (vm != null)
+			{
+				if (string.IsNullOrEmpty(vm.InitialPath) == true)
+					return;
 
-                IPathModel location = null;
-                try
-                {
-                    location = PathFactory.Create(vm.InitialPath);
+				IPathModel location = null;
+				try
+				{
+					location = PathFactory.Create(vm.InitialPath);
 
-                    // XXX Todo Keep task reference, support cancel, and remove on end?
-                    var t = vm.NavigateToAsync(new BrowseRequest(location));
-                }
-                catch
-                {
-                }
-            }
-            else
-            {
-                if (DataContext != null)
-                    logger.DebugFormat("FolderBrowserTreeView: Attached vm is: {0}", DataContext.ToString());
-                else
-                {
-                    logger.DebugFormat("FolderBrowserTreeView: No Vm Attached!");
-                    this.DataContextChanged += FolderBrowserTreeView_DataContextChangedAsync;
-                }
-            }
-        }
+					// XXX Todo Keep task reference, support cancel, and remove on end?
+					var t = vm.NavigateToAsync(new BrowseRequest(location));
+				}
+				catch
+				{
+				}
+			}
+			else
+			{
+				if (DataContext != null)
+					logger.DebugFormat("FolderBrowserTreeView: Attached vm is: {0}", DataContext.ToString());
+				else
+				{
+					logger.DebugFormat("FolderBrowserTreeView: No Vm Attached!");
+					this.DataContextChanged += FolderBrowserTreeView_DataContextChangedAsync;
+				}
+			}
+		}
 
-        private async void FolderBrowserTreeView_DataContextChangedAsync(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
-        {
-            this.DataContextChanged -= FolderBrowserTreeView_DataContextChangedAsync;
+		private async void FolderBrowserTreeView_DataContextChangedAsync(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+		{
+			this.DataContextChanged -= FolderBrowserTreeView_DataContextChangedAsync;
 
-            var vm = e.NewValue as IBrowserViewModel;
+			var vm = e.NewValue as IBrowserViewModel;
 
-            if (vm != null)
-            {
-                if (string.IsNullOrEmpty(vm.InitialPath) == false)
-                {
-                    logger.DebugFormat("FolderBrowserTreeView: Browsing Path on DataContextChanged: '{0}'", vm.InitialPath);
+			if (vm != null)
+			{
+				if (string.IsNullOrEmpty(vm.InitialPath) == false)
+				{
+					logger.DebugFormat("FolderBrowserTreeView: Browsing Path on DataContextChanged: '{0}'", vm.InitialPath);
 
-                    await vm.NavigateToAsync(new BrowseRequest(PathFactory.Create(vm.InitialPath)));
-                }
-            }
-        }
-    }
+					await vm.NavigateToAsync(new BrowseRequest(PathFactory.Create(vm.InitialPath)));
+				}
+			}
+		}
+	}
 }

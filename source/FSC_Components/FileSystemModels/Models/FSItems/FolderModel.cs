@@ -1,78 +1,78 @@
 ﻿namespace FileSystemModels.Models.FSItems
 {
-    using FileSystemModels.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Security;
+	using FileSystemModels.Interfaces;
+	using System;
+	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
+	using System.Security;
 
-    /// <summary>
-    /// Implements a low level wrapper class for folder items stored on a
-    /// drive or other folders.
-    /// </summary>
-    public class FolderModel : Base.FileSystemModel
-    {
-        #region constructors
-        /// <summary>
-        /// Parameterized class  constructor
-        /// </summary>
-        /// <param name="model"></param>
-        [SecuritySafeCritical]
-        public FolderModel(IPathModel model)
-          : base(model)
-        {
-        }
-        #endregion constructors
+	/// <summary>
+	/// Implements a low level wrapper class for folder items stored on a
+	/// drive or other folders.
+	/// </summary>
+	public class FolderModel : Base.FileSystemModel
+	{
+		#region constructors
+		/// <summary>
+		/// Parameterized class  constructor
+		/// </summary>
+		/// <param name="model"></param>
+		[SecuritySafeCritical]
+		public FolderModel(IPathModel model)
+		  : base(model)
+		{
+		}
+		#endregion constructors
 
-        #region properties
-        /// <summary>
-        /// Gets whether this folder really exists or not.
-        /// </summary>
-        public bool Exists
-        {
-            get
-            {
-                var dir = GetDirInfo();
-                return (dir != null ? dir.Exists : false);
-            }
-        }
+		#region properties
+		/// <summary>
+		/// Gets whether this folder really exists or not.
+		/// </summary>
+		public bool Exists
+		{
+			get
+			{
+				var dir = GetDirInfo();
+				return (dir != null ? dir.Exists : false);
+			}
+		}
 
-        /// <summary>
-        /// Gets the parent directory of this folder.
-        /// </summary>
-        public DirectoryInfo Parent
-        {
-            get
-            {
-                var dir = GetDirInfo();
-                return (dir != null ? dir.Parent : null);
-            }
-        }
+		/// <summary>
+		/// Gets the parent directory of this folder.
+		/// </summary>
+		public DirectoryInfo Parent
+		{
+			get
+			{
+				var dir = GetDirInfo();
+				return (dir != null ? dir.Parent : null);
+			}
+		}
 
-        /// <summary>
-        /// Gets the root entry of this folder.
-        /// </summary>
-        public DirectoryInfo Root
-        {
-            get
-            {
-                var dir = GetDirInfo();
-                return (dir != null ? dir.Root : null);
-            }
-        }
-        #endregion properties
+		/// <summary>
+		/// Gets the root entry of this folder.
+		/// </summary>
+		public DirectoryInfo Root
+		{
+			get
+			{
+				var dir = GetDirInfo();
+				return (dir != null ? dir.Root : null);
+			}
+		}
+		#endregion properties
 
-        #region methods
-        // <summary>
-        // Fills the CurrentItems property for display in ItemsControl
-        // based view (ListBox, ListView etc.)
-        // 
-        // This version is parameterized since the filterstring can be parsed
-        // seperately and does not need to b parsed each time when this method
-        // executes.
-        // </summary>
-        /*
+		#region methods
+		// <summary>
+		// Fills the CurrentItems property for display in ItemsControl
+		// based view (ListBox, ListView etc.)
+		// 
+		// This version is parameterized since the filterstring can be parsed
+		// seperately and does not need to b parsed each time when this method
+		// executes.
+		// </summary>
+		/*
         internal static Response GetSubFolderItems(string[] filterString,
                                                     bool IsFiltered,
                                                     PathModel folder,
@@ -150,157 +150,157 @@
                     return new Response(ResponseType.Data, ret);
                 }
 */
-        /// <summary>
-        /// Method implements an extension that lets us filter files
-        /// with multiple filter arguments.
-        /// </summary>
-        /// <param name="dir">Points at the folder that is queried for files and folder entries.</param>
-        /// <param name="extensions">Contains the extension that we want to filter for, eg: string[]{"*.*"} or string[]{"*.tex", "*.txt"}</param>
-        public static IEnumerable<FileInfo> SelectFilesByFilter(DirectoryInfo dir,
-                                                                params string[] extensions)
-        {
-            if (dir.Exists == false)
-                yield break;
+		/// <summary>
+		/// Method implements an extension that lets us filter files
+		/// with multiple filter arguments.
+		/// </summary>
+		/// <param name="dir">Points at the folder that is queried for files and folder entries.</param>
+		/// <param name="extensions">Contains the extension that we want to filter for, eg: string[]{"*.*"} or string[]{"*.tex", "*.txt"}</param>
+		public static IEnumerable<FileInfo> SelectFilesByFilter(DirectoryInfo dir,
+																params string[] extensions)
+		{
+			if (dir.Exists == false)
+				yield break;
 
-            IEnumerable<FileSystemInfo> matches = new List<FileSystemInfo>();
-            if (extensions == null)
-            {
-                try
-                {
-                    matches = dir.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
-                }
-                catch
-                {
-                    yield break;
-                }
+			IEnumerable<FileSystemInfo> matches = new List<FileSystemInfo>();
+			if (extensions == null)
+			{
+				try
+				{
+					matches = dir.EnumerateFiles("*.*", SearchOption.TopDirectoryOnly);
+				}
+				catch
+				{
+					yield break;
+				}
 
-                foreach (var file in matches)
-                {
-                    if (file as FileInfo != null)
-                        yield return file as FileInfo;
-                }
+				foreach (var file in matches)
+				{
+					if (file as FileInfo != null)
+						yield return file as FileInfo;
+				}
 
-                yield break;
-            }
+				yield break;
+			}
 
-            List<string> patterns = new List<string>(extensions);
-            try
-            {
-                foreach (var pattern in patterns)
-                {
-                    matches = matches.Concat(dir.EnumerateFiles(pattern, SearchOption.TopDirectoryOnly));
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
-                yield break;
-            }
-            catch (PathTooLongException ptle)
-            {
-                Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
-                yield break;
-            }
+			List<string> patterns = new List<string>(extensions);
+			try
+			{
+				foreach (var pattern in patterns)
+				{
+					matches = matches.Concat(dir.EnumerateFiles(pattern, SearchOption.TopDirectoryOnly));
+				}
+			}
+			catch (UnauthorizedAccessException)
+			{
+				Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
+				yield break;
+			}
+			catch (PathTooLongException ptle)
+			{
+				Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
+				yield break;
+			}
 
-            ////      try
-            ////      {
-            ////        foreach (var pattern in patterns)
-            ////        {
-            ////          matches = matches.Concat(dir.EnumerateFiles(pattern, SearchOption.TopDirectoryOnly));
-            ////        }
-            ////      }
-            ////      catch (UnauthorizedAccessException)
-            ////      {
-            ////        Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
-            ////        yield break;
-            ////      }
-            ////      catch (PathTooLongException ptle)
-            ////      {
-            ////        Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
-            ////        yield break;
-            ////      }
-            ////
-            ////      Console.WriteLine("Returning all objects that match the pattern(s) '{0}'", string.Join(",", patterns));
+			////      try
+			////      {
+			////        foreach (var pattern in patterns)
+			////        {
+			////          matches = matches.Concat(dir.EnumerateFiles(pattern, SearchOption.TopDirectoryOnly));
+			////        }
+			////      }
+			////      catch (UnauthorizedAccessException)
+			////      {
+			////        Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
+			////        yield break;
+			////      }
+			////      catch (PathTooLongException ptle)
+			////      {
+			////        Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
+			////        yield break;
+			////      }
+			////
+			////      Console.WriteLine("Returning all objects that match the pattern(s) '{0}'", string.Join(",", patterns));
 
-            foreach (var file in matches)
-            {
-                if (file as FileInfo != null)
-                    yield return file as FileInfo;
-            }
-        }
+			foreach (var file in matches)
+			{
+				if (file as FileInfo != null)
+					yield return file as FileInfo;
+			}
+		}
 
-        /// <summary>
-        /// Method implements an extension that lets us filter (sub-)directory entries
-        /// with multiple filter aruments.
-        /// </summary>
-        /// <param name="dir">Points at the folder that is queried for sub-directory entries.</param>
-        /// <param name="extensions">Contains the extension that we want to filter for, eg: string[]{"*.*"} or string[]{"*.tex", "*.txt"}</param>
-        public static IEnumerable<DirectoryInfo> SelectDirectoriesByFilter(DirectoryInfo dir,
-                                                                           params string[] extensions)
-        {
-            if (dir.Exists == false)
-                yield break;
+		/// <summary>
+		/// Method implements an extension that lets us filter (sub-)directory entries
+		/// with multiple filter aruments.
+		/// </summary>
+		/// <param name="dir">Points at the folder that is queried for sub-directory entries.</param>
+		/// <param name="extensions">Contains the extension that we want to filter for, eg: string[]{"*.*"} or string[]{"*.tex", "*.txt"}</param>
+		public static IEnumerable<DirectoryInfo> SelectDirectoriesByFilter(DirectoryInfo dir,
+																		   params string[] extensions)
+		{
+			if (dir.Exists == false)
+				yield break;
 
-            // Enumerate directories without filter if filters are not supplied
-            IEnumerable<DirectoryInfo> matches = new List<DirectoryInfo>();
-            if (extensions == null)
-            {
-                try
-                {
-                    matches = dir.EnumerateDirectories();
-                }
-                catch
-                {
-                    yield break;
-                }
+			// Enumerate directories without filter if filters are not supplied
+			IEnumerable<DirectoryInfo> matches = new List<DirectoryInfo>();
+			if (extensions == null)
+			{
+				try
+				{
+					matches = dir.EnumerateDirectories();
+				}
+				catch
+				{
+					yield break;
+				}
 
-                foreach (var item in matches)
-                    yield return item;
+				foreach (var item in matches)
+					yield return item;
 
-                yield break;
-            }
+				yield break;
+			}
 
-            List<string> patterns = new List<string>(extensions);
+			List<string> patterns = new List<string>(extensions);
 
-            try
-            {
-                foreach (var pattern in patterns)
-                {
-                    matches = matches.Concat(dir.EnumerateDirectories(pattern, SearchOption.TopDirectoryOnly));
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
-                yield break;
-            }
-            catch (PathTooLongException ptle)
-            {
-                Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
-                yield break;
-            }
+			try
+			{
+				foreach (var pattern in patterns)
+				{
+					matches = matches.Concat(dir.EnumerateDirectories(pattern, SearchOption.TopDirectoryOnly));
+				}
+			}
+			catch (UnauthorizedAccessException)
+			{
+				Console.WriteLine("Unable to access '{0}'. Skipping...", dir.FullName);
+				yield break;
+			}
+			catch (PathTooLongException ptle)
+			{
+				Console.WriteLine(@"Could not process path '{0}\{1} ({2})'.", dir.Parent.FullName, dir.Name, ptle.Message);
+				yield break;
+			}
 
-            ////Console.WriteLine("Returning all objects that match the pattern(s) '{0}'", string.Join(",", _patterns));
-            foreach (var file in matches)
-            {
-                if (file as DirectoryInfo != null)
-                    yield return file as DirectoryInfo;
-            }
-        }
+			////Console.WriteLine("Returning all objects that match the pattern(s) '{0}'", string.Join(",", _patterns));
+			foreach (var file in matches)
+			{
+				if (file as DirectoryInfo != null)
+					yield return file as DirectoryInfo;
+			}
+		}
 
-        private DirectoryInfo GetDirInfo()
-        {
-            try
-            {
-                var drive = new DirectoryInfo(Model.Path);
-                return drive;
-            }
-            catch
-            {
-            }
+		private DirectoryInfo GetDirInfo()
+		{
+			try
+			{
+				var drive = new DirectoryInfo(Model.Path);
+				return drive;
+			}
+			catch
+			{
+			}
 
-            return null;
-        }
-        #endregion methods
-    }
+			return null;
+		}
+		#endregion methods
+	}
 }

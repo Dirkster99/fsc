@@ -9,96 +9,96 @@
 
 namespace FileSystemModels.ViewModels.Collections
 {
-    using System.Collections.Generic;
+	using System.Collections.Generic;
 
-    /// <summary>
-    /// Provides an immutable key collection as an interface to the keys
-    /// stored in an observable dictionary
-    /// </summary>
-    public class KeyCollection<TKey, TValue> : ImmutableCollectionBase<TKey>
-    {
+	/// <summary>
+	/// Provides an immutable key collection as an interface to the keys
+	/// stored in an observable dictionary
+	/// </summary>
+	public class KeyCollection<TKey, TValue> : ImmutableCollectionBase<TKey>
+	{
 
-        // ************************************************************************
-        // Private Fields
-        // ************************************************************************
-        #region Private Fields
+		// ************************************************************************
+		// Private Fields
+		// ************************************************************************
+		#region Private Fields
 
-        /// <summary>
-        /// The source dictionary
-        /// </summary>
-        private ObservableDictionary<TKey, TValue> _dictionary;
+		/// <summary>
+		/// The source dictionary
+		/// </summary>
+		private ObservableDictionary<TKey, TValue> _dictionary;
 
-        #endregion Private Fields
+		#endregion Private Fields
 
-        // ************************************************************************
-        // Constructors
-        // ************************************************************************
-        #region Constructors
+		// ************************************************************************
+		// Constructors
+		// ************************************************************************
+		#region Constructors
 
-        /// <summary>
-        /// Constructor that takes the source dictionary as a parameter
-        /// </summary>
-        public KeyCollection(ObservableDictionary<TKey, TValue> dictionary)
-        {
-            _dictionary = dictionary;
-        }
+		/// <summary>
+		/// Constructor that takes the source dictionary as a parameter
+		/// </summary>
+		public KeyCollection(ObservableDictionary<TKey, TValue> dictionary)
+		{
+			_dictionary = dictionary;
+		}
 
-        #endregion Constructors
+		#endregion Constructors
 
-        // ************************************************************************
-        // ImmutableCollectionBase Implementation
-        // ************************************************************************
-        #region ImmutableCollectionBase Implementation
+		// ************************************************************************
+		// ImmutableCollectionBase Implementation
+		// ************************************************************************
+		#region ImmutableCollectionBase Implementation
 
-        /// <summary>
-        /// Gets the number of elements contained in the collection&lt;T>.
-        /// </summary>
-        public override int Count
-        {
-            get
-            {
-                return _dictionary.Count;
-            }
-        }
+		/// <summary>
+		/// Gets the number of elements contained in the collection&lt;T>.
+		/// </summary>
+		public override int Count
+		{
+			get
+			{
+				return _dictionary.Count;
+			}
+		}
 
-        /// <summary>
-        /// determines whether an item is contained in the collection or not.
-        /// </summary>
-        /// <param name="item">The object to locate</param>
-        /// <returns>true if item is found otherwise false</returns>
-        public override bool Contains(TKey item)
-        {
-            return _dictionary.ContainsKey(item);
-        }
+		/// <summary>
+		/// determines whether an item is contained in the collection or not.
+		/// </summary>
+		/// <param name="item">The object to locate</param>
+		/// <returns>true if item is found otherwise false</returns>
+		public override bool Contains(TKey item)
+		{
+			return _dictionary.ContainsKey(item);
+		}
 
-        /// <summary>
-        ///  Copies the elements of the collection to an array, starting
-        /// at a particular index.
-        /// </summary>
-        public override void CopyTo(TKey[] array, int arrayIndex)
-        {
-            if (array == null)
-            {
-                throw (new System.ArgumentNullException());
-            }
+		/// <summary>
+		///  Copies the elements of the collection to an array, starting
+		/// at a particular index.
+		/// </summary>
+		public override void CopyTo(TKey[] array, int arrayIndex)
+		{
+			if (array == null)
+			{
+				throw (new System.ArgumentNullException());
+			}
 
-            foreach (KeyValuePair<TKey, TValue> pair in _dictionary)
-            {
-                array[arrayIndex] = pair.Key;
-                ++arrayIndex;
-            }
-        }
+			foreach (KeyValuePair<TKey, TValue> pair in _dictionary)
+			{
+				array[arrayIndex] = pair.Key;
+				++arrayIndex;
+			}
+		}
 
-        /// <summary>
-        /// Gets the enumerator for the collection
-        /// </summary>
-        public override IEnumerator<TKey> GetEnumerator()
-        {
-            foreach (KeyValuePair<TKey, TValue> pair in _dictionary)
-            {
-                yield return pair.Key;
-            }
-        }
-        #endregion ImmutableCollectionBase Implementation
-    }
+		/// <summary>
+		/// Gets the enumerator for the collection
+		/// </summary>
+		public override IEnumerator<TKey> GetEnumerator()
+		{
+			foreach (KeyValuePair<TKey, TValue> pair in _dictionary)
+			{
+				yield return pair.Key;
+			}
+		}
+		#endregion ImmutableCollectionBase Implementation
+	}
 }
