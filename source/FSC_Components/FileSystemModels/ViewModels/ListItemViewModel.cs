@@ -13,11 +13,6 @@
 	internal class ListItemViewModel : ViewModelBase, IListItemViewModel
 	{
 		#region fields
-		/// <summary>
-		/// Logger facility
-		/// </summary>
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private string _ItemName;
 		private IPathModel _PathObject;
 		private string _VolumeLabel;

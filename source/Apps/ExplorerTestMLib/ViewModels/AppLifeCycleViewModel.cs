@@ -7,6 +7,7 @@
 	using Settings.UserProfile;
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.Globalization;
 	using System.Windows.Input;
 
@@ -18,8 +19,6 @@
 	public class AppLifeCycleViewModel : Base.ModelBase
 	{
 		#region fields
-		protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private bool? mDialogCloseResult = null;
 		private bool mShutDownInProgress = false;
 		private bool mShutDownInProgress_Cancel = false;
@@ -264,7 +263,7 @@
 			}
 			catch (Exception exp)
 			{
-				logger.Error(exp.Message, exp);
+				Debug.WriteLine(exp.Message, exp);
 
 				////                var msg = GetService<IMessageBoxService>();
 				////                msg.Show(exp, "Unknown Error",
@@ -306,7 +305,7 @@
 			}
 			catch (Exception exp)
 			{
-				logger.Error(exp.Message, exp);
+				Debug.WriteLine(exp.Message, exp);
 
 				////                var msg = GetService<IMessageBoxService>();
 				////
@@ -359,7 +358,7 @@
 			{
 				mShutDownInProgress = false;
 
-				logger.Error(exp.Message, exp);
+				Debug.WriteLine(exp.Message, exp);
 
 				////                var msg = GetService<IMessageBoxService>();
 				////                msg.Show(exp, "Unexpected Error" //Local.Strings.STR_UnexpectedError_Caption

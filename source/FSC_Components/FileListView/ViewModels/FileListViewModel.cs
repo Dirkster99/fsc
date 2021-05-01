@@ -3,6 +3,7 @@ namespace FileListView.ViewModels
 	using System;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
+	using System.Diagnostics;
 	using System.IO;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -31,11 +32,6 @@ namespace FileListView.ViewModels
 		/// eg: "*.txt;*.ini"
 		/// </summary>
 		public const char FilterSplitCharacter = ';';
-
-		/// <summary>
-		/// Log4Net facility to log errors and warnings for this class.
-		/// </summary>
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
 		private string _FilterString = string.Empty;
 		private string[] _ParsedFilter = null;
@@ -172,8 +168,6 @@ namespace FileListView.ViewModels
 
 			set
 			{
-				Logger.DebugFormat("Set SelectedItem '{0}' property", value);
-
 				if (_SelectedItem != value)
 				{
 					_SelectedItem = value;
@@ -194,8 +188,6 @@ namespace FileListView.ViewModels
 
 			protected set
 			{
-				Logger.DebugFormat("Set ShowFolders '{0}' property", value);
-
 				if (_ShowFolders != value)
 				{
 					_ShowFolders = value;
@@ -216,8 +208,6 @@ namespace FileListView.ViewModels
 
 			protected set
 			{
-				Logger.DebugFormat("Set ShowHidden '{0}' property", value);
-
 				if (_ShowHidden != value)
 				{
 					_ShowHidden = value;
@@ -238,8 +228,6 @@ namespace FileListView.ViewModels
 
 			protected set
 			{
-				Logger.DebugFormat("Set ShowIcons '{0}' property", value);
-
 				if (_ShowIcons != value)
 				{
 					_ShowIcons = value;
@@ -260,8 +248,6 @@ namespace FileListView.ViewModels
 
 			private set
 			{
-				Logger.DebugFormat("Set IsFiltered '{0}' property", value);
-
 				if (_IsFiltered != value)
 				{
 					_IsFiltered = value;
@@ -279,8 +265,6 @@ namespace FileListView.ViewModels
 		{
 			get
 			{
-				Logger.DebugFormat("get CurrentFolder property");
-
 				if (_CurrentFolder != null)
 					return _CurrentFolder.Path;
 
@@ -603,8 +587,6 @@ namespace FileListView.ViewModels
 
 			set
 			{
-				Logger.DebugFormat("Set Notification '{0}' property", value);
-
 				if (_Notification != value)
 				{
 					_Notification = value;
@@ -653,8 +635,6 @@ namespace FileListView.ViewModels
 		/// <param name="filterText"></param>
 		public void ApplyFilter(string filterText)
 		{
-			Logger.DebugFormat("ApplyFilter method with '{0}'", filterText);
-
 			_FilterString = filterText;
 
 			string[] tempParsedFilter = GetParsedFilters(_FilterString);
@@ -674,8 +654,6 @@ namespace FileListView.ViewModels
 		/// <param name="isFolderVisible"></param>
 		public void SetIsFolderVisible(bool isFolderVisible)
 		{
-			Logger.DebugFormat("SetIsFolderVisible method with '{0}'", isFolderVisible);
-
 			ShowFolders = isFolderVisible;
 			PopulateCurrentView(false);
 		}
@@ -687,8 +665,6 @@ namespace FileListView.ViewModels
 		/// <param name="isFiltered"></param>
 		public void SetIsFiltered(bool isFiltered)
 		{
-			Logger.DebugFormat("SetIsFiltered method with '{0}'", isFiltered);
-
 			this.IsFiltered = isFiltered;
 			PopulateCurrentView(false);
 		}
@@ -745,9 +721,6 @@ namespace FileListView.ViewModels
 		protected FinalBrowseResult PopulateView(BrowseRequest request,
 												 bool browseEvent)
 		{
-			Logger.DebugFormat("PopulateView method");
-			Logger.DebugFormat("Populating view for request id: {0} - '{1}'", request.RequestId, request.NewLocation.Path);
-
 			// This can happen when the viewmodel is configured at start-up
 			// but the current folder is not configured, yet
 			if (request == null)
@@ -883,8 +856,6 @@ namespace FileListView.ViewModels
 										, DirectoryInfo cur
 										, bool showIcons)
 		{
-			Logger.DebugFormat("InternalPopulateView method with filterString parameter");
-
 			try
 			{
 				// Retrieve and add (filtered) list of directories
@@ -976,8 +947,6 @@ namespace FileListView.ViewModels
 		/// <param name="parentFolder"></param>
 		private void CreateFolderCommandNewFolder(string parentFolder)
 		{
-			Logger.DebugFormat("CreateFolderCommandNewFolder method with '{0}'", parentFolder);
-
 			if (parentFolder == null)
 				return;
 
@@ -1001,8 +970,6 @@ namespace FileListView.ViewModels
 		/// <returns></returns>
 		private LVItemViewModel CreateNewDirectory(string parentFolder)
 		{
-			Logger.DebugFormat("CreateNewDirectory method with '{0}'", parentFolder);
-
 			try
 			{
 				var model = PathFactory.Create(parentFolder, FSItemType.Folder);
@@ -1019,7 +986,7 @@ namespace FileListView.ViewModels
 			}
 			catch (Exception exp)
 			{
-				Logger.Error(string.Format("Creating new folder underneath '{0}' was not succesful.", parentFolder), exp);
+				Debug.WriteLine(string.Format("Creating new folder underneath '{0}' was not succesful.", parentFolder), exp);
 				this.Notification.ShowNotification(FileSystemModels.Local.Strings.STR_CREATE_FOLDER_ERROR_TITLE,
 												   exp.Message);
 			}

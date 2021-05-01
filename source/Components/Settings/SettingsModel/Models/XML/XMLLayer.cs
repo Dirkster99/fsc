@@ -4,7 +4,8 @@
     using SettingsModel.Models.XML.Converters;
     using System;
     using System.Data;
-    using System.IO;
+	using System.Diagnostics;
+	using System.IO;
     using System.Linq;
     using System.Security;
 
@@ -16,7 +17,6 @@
     {
         #region fields
         public readonly static char[] ResvedOptionListCharacters = new char[] { '$', '{', '}' };
-        protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #endregion fields
 
         /// <summary>
@@ -36,7 +36,7 @@
             }
             catch (Exception exp)
             {
-                logger.Error("Failed to read program options from persistence.", exp);
+                Debug.WriteLine("Failed to read program options from persistence.", exp);
                 throw;
             }
         }
@@ -63,7 +63,7 @@
             }
             catch (Exception exp)
             {
-                logger.Error("Failed to read program options from persistence.", exp);
+                Debug.WriteLine("Failed to read program options from persistence.", exp);
                 throw;
             }
         }
@@ -95,7 +95,7 @@
             }
             catch (Exception exp)
             {
-                logger.Error("Failed to read program options from persistence.", exp);
+                Debug.WriteLine("Failed to read program options from persistence.", exp);
                 throw;
             }
         }
@@ -128,7 +128,7 @@
             }
             catch (Exception exp)
             {
-                logger.Error("Failed to read program options from persistence.", exp);
+                Debug.WriteLine("Failed to read program options from persistence.", exp);
                 throw;
             }
         }

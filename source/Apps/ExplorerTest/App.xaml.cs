@@ -1,8 +1,6 @@
 ﻿namespace ExplorerTest
 {
   using System.Windows;
-  using log4net;
-  using log4net.Config;
 
   /// <summary>
   /// Interaction logic for App.xaml
@@ -10,7 +8,6 @@
   public partial class App : Application
   {
     #region fields
-    protected static log4net.ILog Logger;
     #endregion fields
 
     #region constructor
@@ -30,8 +27,6 @@
     /// </summary>
     static App()
     {
-      XmlConfigurator.Configure();
-      Logger = LogManager.GetLogger("default");
     }
     #endregion constructor
   }

@@ -14,6 +14,7 @@ namespace FolderControlsLib.ViewModels
 	using System.Windows;
 	using System.Threading;
 	using FileSystemModels.ViewModels.Collections.Generics;
+	using System.Diagnostics;
 
 	/// <summary>
 	/// Class implements a viewmodel that can be used for a
@@ -22,8 +23,6 @@ namespace FolderControlsLib.ViewModels
 	internal class FolderComboBoxViewModel : Base.ViewModelBase, IFolderComboBoxViewModel
 	{
 		#region fields
-		protected static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private readonly SortableObservableDictionaryCollection<IFolderItemViewModel> _CurrentItems;
 
 		private IFolderItemViewModel _SelectedItem = null;
@@ -129,7 +128,7 @@ namespace FolderControlsLib.ViewModels
 			{
 				if (_SelectedItem != value)
 				{
-					logger.DebugFormat("SelectedItem changed to '{0}' -> '{1}'", _SelectedItem, value);
+					Debug.WriteLine("SelectedItem changed to '{0}' -> '{1}'", _SelectedItem, value);
 
 					_SelectedItem = value;
 					RaisePropertyChanged(() => SelectedItem);

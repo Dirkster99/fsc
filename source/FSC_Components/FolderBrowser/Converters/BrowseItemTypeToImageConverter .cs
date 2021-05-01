@@ -2,6 +2,7 @@ namespace FolderBrowser.Converters
 {
 	using FileSystemModels.Models.FSItems.Base;
 	using System;
+	using System.Diagnostics;
 	using System.Windows;
 	using System.Windows.Data;
 	using System.Windows.Markup;
@@ -16,11 +17,6 @@ namespace FolderBrowser.Converters
 	public class BrowseItemTypeToImageConverter : MarkupExtension, IMultiValueConverter
 	{
 		#region fields
-		/// <summary>
-		/// Log4net logger facility.
-		/// </summary>
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private static BrowseItemTypeToImageConverter converter;
 		#endregion fields
 
@@ -128,7 +124,7 @@ namespace FolderBrowser.Converters
 				default:
 				case FSItemType.File:
 				case FSItemType.Unknown:
-					Logger.Error("Type of item is not supported:" + itemType.ToString());
+					Debug.WriteLine("Type of item is not supported:" + itemType.ToString());
 					break;
 			}
 
@@ -157,7 +153,7 @@ namespace FolderBrowser.Converters
 				default:
 				case FSItemType.File:
 				case FSItemType.Unknown:
-					Logger.Error("Type of item is not supported:" + itemType.ToString());
+					Debug.WriteLine("Type of item is not supported:" + itemType.ToString());
 					break;
 			}
 
@@ -222,7 +218,7 @@ namespace FolderBrowser.Converters
 				default:
 				case FSItemType.File:
 				case FSItemType.Unknown:
-					Logger.Error("Type of item is not supported:" + itemType.ToString());
+					Debug.WriteLine("Type of item is not supported:" + itemType.ToString());
 					break;
 			}
 
@@ -251,7 +247,7 @@ namespace FolderBrowser.Converters
 				default:
 				case FSItemType.File:
 				case FSItemType.Unknown:
-					Logger.Error("Type of item is not supported:" + itemType.ToString());
+					Debug.WriteLine("Type of item is not supported:" + itemType.ToString());
 					break;
 			}
 

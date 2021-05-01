@@ -9,6 +9,7 @@ namespace ExplorerTestLib.ViewModels
 	using FileSystemModels.Interfaces.Bookmark;
 	using FilterControlsLib.Interfaces;
 	using System;
+	using System.Diagnostics;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows;
@@ -20,8 +21,6 @@ namespace ExplorerTestLib.ViewModels
 	internal class ListControllerViewModel : ControllerBaseViewModel, IListControllerViewModel, IDisposable
 	{
 		#region fields
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private readonly SemaphoreSlim _SlowStuffSemaphore;
 		private readonly OneTaskLimitedScheduler _OneTaskScheduler;
 		private readonly CancellationTokenSource _CancelTokenSource;
@@ -123,11 +122,11 @@ namespace ExplorerTestLib.ViewModels
 			}
 			catch (System.AggregateException e)
 			{
-				Logger.Error(e);
+				Debug.WriteLine(e);
 			}
 			catch (Exception e)
 			{
-				Logger.Error(e);
+				Debug.WriteLine(e);
 			}
 		}
 

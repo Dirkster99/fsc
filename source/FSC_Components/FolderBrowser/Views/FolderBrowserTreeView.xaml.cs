@@ -4,6 +4,7 @@ namespace FolderBrowser.Views
 	using FileSystemModels.Browse;
 	using FileSystemModels.Interfaces;
 	using FolderBrowser.Interfaces;
+	using System.Diagnostics;
 	using System.Windows;
 	using System.Windows.Controls;
 
@@ -12,8 +13,6 @@ namespace FolderBrowser.Views
 	/// </summary>
 	public partial class FolderBrowserTreeView : UserControl
 	{
-		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		/// <summary>
 		/// Standard class constructor
 		/// </summary>
@@ -56,10 +55,10 @@ namespace FolderBrowser.Views
 			else
 			{
 				if (DataContext != null)
-					logger.DebugFormat("FolderBrowserTreeView: Attached vm is: {0}", DataContext.ToString());
+					Debug.WriteLine("FolderBrowserTreeView: Attached vm is: {0}", DataContext.ToString());
 				else
 				{
-					logger.DebugFormat("FolderBrowserTreeView: No Vm Attached!");
+					Debug.WriteLine("FolderBrowserTreeView: No Vm Attached!");
 					this.DataContextChanged += FolderBrowserTreeView_DataContextChangedAsync;
 				}
 			}
@@ -75,7 +74,7 @@ namespace FolderBrowser.Views
 			{
 				if (string.IsNullOrEmpty(vm.InitialPath) == false)
 				{
-					logger.DebugFormat("FolderBrowserTreeView: Browsing Path on DataContextChanged: '{0}'", vm.InitialPath);
+					Debug.WriteLine("FolderBrowserTreeView: Browsing Path on DataContextChanged: '{0}'", vm.InitialPath);
 
 					await vm.NavigateToAsync(new BrowseRequest(PathFactory.Create(vm.InitialPath)));
 				}

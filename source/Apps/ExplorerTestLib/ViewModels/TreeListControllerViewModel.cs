@@ -1,6 +1,7 @@
 namespace ExplorerTestLib.ViewModels
 {
 	using System;
+	using System.Diagnostics;
 	using System.Threading;
 	using System.Threading.Tasks;
 	using System.Windows;
@@ -24,8 +25,6 @@ namespace ExplorerTestLib.ViewModels
 												 ITreeListControllerViewModel, IDisposable
 	{
 		#region fields
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private readonly SemaphoreSlim _SlowStuffSemaphore;
 		private readonly OneTaskLimitedScheduler _OneTaskScheduler;
 		private readonly CancellationTokenSource _CancelTokenSourc;
@@ -141,11 +140,11 @@ namespace ExplorerTestLib.ViewModels
 			}
 			catch (System.AggregateException e)
 			{
-				Logger.Error(e);
+				Debug.WriteLine(e);
 			}
 			catch (Exception e)
 			{
-				Logger.Error(e);
+				Debug.WriteLine(e);
 			}
 		}
 
@@ -330,11 +329,11 @@ namespace ExplorerTestLib.ViewModels
 				}
 				catch (System.AggregateException ex)
 				{
-					Logger.Error(ex);
+					Debug.WriteLine(ex);
 				}
 				catch (Exception ex)
 				{
-					Logger.Error(ex);
+					Debug.WriteLine(ex);
 				}
 			}
 			else

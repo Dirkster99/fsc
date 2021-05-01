@@ -1,6 +1,7 @@
 namespace FileListView.ViewModels
 {
 	using System;
+	using System.Diagnostics;
 	using System.IO;
 	using FileListView.Interfaces;
 	using FileSystemModels;
@@ -15,11 +16,6 @@ namespace FileListView.ViewModels
 	internal class LVItemViewModel : EditInPlaceViewModel, ILVItemViewModel
 	{
 		#region fields
-		/// <summary>
-		/// Logger facility
-		/// </summary>
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private string _ItemName;
 		private IPathModel _PathObject;
 		#endregion fields
@@ -197,7 +193,7 @@ namespace FileListView.ViewModels
 			}
 			catch (Exception exp)
 			{
-				Logger.Error(string.Format("Rename into '{0}' was not succesful.", newFolderName), exp);
+				Debug.WriteLine(string.Format("Rename into '{0}' was not succesful.", newFolderName), exp);
 
 				base.ShowNotification(FileSystemModels.Local.Strings.STR_RenameFolderErrorTitle, exp.Message);
 			}

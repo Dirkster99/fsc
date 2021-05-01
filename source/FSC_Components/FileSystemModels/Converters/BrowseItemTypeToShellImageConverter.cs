@@ -16,10 +16,6 @@ namespace FileSystemModels.Converters
 	public class BrowseItemTypeToShellImageConverter : IValueConverter
 	{
 		#region fields
-		/// <summary>
-		/// Log4net logger facility.
-		/// </summary>
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 		#endregion fields
 
 		#region constructor

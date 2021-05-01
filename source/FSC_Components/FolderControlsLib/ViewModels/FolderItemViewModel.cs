@@ -11,11 +11,6 @@ namespace FolderControlsLib.ViewModels
 	internal class FolderItemViewModel : Base.ViewModelBase, IFolderItemViewModel
 	{
 		#region fields
-		/// <summary>
-		/// Logger facility
-		/// </summary>
-		protected static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
 		private string _ItemName;
 		private IPathModel _PathObject;
 		#endregion fields

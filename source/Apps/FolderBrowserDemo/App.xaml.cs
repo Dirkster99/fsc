@@ -1,7 +1,5 @@
 ﻿namespace FsContentDialogDemo
 {
-    using log4net;
-    using log4net.Config;
     using MLib.Interfaces;
     using Models;
     using MWindowInterfacesLib.Interfaces;
@@ -20,8 +18,6 @@
     public partial class App : Application
     {
         #region fields
-        protected static log4net.ILog Logger;
-
         private ViewModels.AppViewModel _appVM = null;
         private MainWindow _mainWindow = null;
         #endregion fields
@@ -29,9 +25,6 @@
         #region constructors
         static App()
         {
-            XmlConfigurator.Configure();
-            Logger = LogManager.GetLogger("default");
-
             // Create service model to ensure available services
             ServiceInjector.InjectServices();
         }
@@ -143,7 +136,7 @@
             }
             catch (Exception exp)
             {
-                Logger.Error(exp);
+                Debug.WriteLine(exp);
             }
 
             /***
@@ -196,7 +189,7 @@
             }
             catch (Exception exp)
             {
-                Logger.Error(exp);
+                Debug.WriteLine(exp);
             }
         }
 
@@ -241,7 +234,7 @@
             }
             catch (Exception exp)
             {
-                Logger.Error(exp);
+                Debug.WriteLine(exp);
             }
         }
 
@@ -268,7 +261,7 @@
             }
             catch (Exception exp)
             {
-                Logger.Error(exp);
+                Debug.WriteLine(exp);
                 ////                var msg = GetService<IMessageBoxService>();
                 ////
                 ////                msg.Show(exp.ToString(), "Unexpected Error",
