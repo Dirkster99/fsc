@@ -1,5 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/qapqvtyip5e8pis5?svg=true)](https://ci.appveyor.com/project/Dirkster99/fsc)
 [![Release](https://img.shields.io/github/release/Dirkster99/fsc.svg)](https://github.com/Dirkster99/fsc/releases/latest)
+
 # WPF File System Controls
 
 <dl>
